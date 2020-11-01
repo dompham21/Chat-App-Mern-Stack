@@ -2,10 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { MONGOURI } = require('./config/key');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const app = express();
 
-const PORT = 8000;
+const PORT = 5000 || process.env.PORT;
 
 mongoose.connect(MONGOURI, {
     useNewUrlParser: true, 
@@ -20,11 +21,13 @@ mongoose.connection.on('error',(err)=>{
     console.log('MongoDb connection error!',err)
 })
 
-
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
 app.use(require('./routers/auth.routers'));
+
+
+
+
 if(process.env.NODE_ENV=="production"){
     app.use(express.static('client/build'))
     const path = require('path')
