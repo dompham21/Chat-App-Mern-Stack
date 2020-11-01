@@ -10,7 +10,7 @@ import {
 export function registerUser(dataToSubmit){
     const request = axios.post(`/signup`,dataToSubmit)
         .then(response => response.data);
-    
+   
     return {
         type: REGISTER_USER,
         payload: request

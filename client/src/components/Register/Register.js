@@ -17,9 +17,9 @@ function Register(props) {
         const dataToSubmit = {
             email: values.email,
             name: values.username,
-            password: values.password 
+            password: values.password,
+            confirmPassword: values.confirmpassword
         }
-        console.log(dataToSubmit);
         dispatch(registerUser(dataToSubmit))
             .then(res=>{
                 if(res.payload.registerSuccess){
