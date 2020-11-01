@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import logo from '../../image/logo.png';
 import { loginUser } from '../../_actions/user_action';
+import axios from 'axios';
 
 function Login(props) {
     const dispatch = useDispatch();
@@ -54,6 +55,8 @@ function Login(props) {
                 console.log(err)
             })
     }
+
+
     return (
         <div className="login-container">
             <Row>
@@ -99,7 +102,7 @@ function Login(props) {
                             </Form>
                             <ul className="login-social-contact">
                                 <li >
-                                    <Link to="/#" style={{background:'#4867aa',color:'white'}}><FaFacebookF/></Link>
+                                    <a href="http://localhost:5000/auth/facebook" style={{background:'#4867aa',color:'white'}}><FaFacebookF/></a>
                                 </li>
                                 <li>
                                     <Link to="/#" style={{background:'#33CCFF',color:'white'}}><AiOutlineTwitter/></Link>

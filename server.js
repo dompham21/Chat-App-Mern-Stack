@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { MONGOURI } = require('./config/key');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+
 require('dotenv').config();
 
 const app = express();
@@ -21,11 +23,14 @@ mongoose.connection.on('error',(err)=>{
     console.log('MongoDb connection error!',err)
 })
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(require('./routers/auth.routers'));
-
-
 
 
 if(process.env.NODE_ENV=="production"){
