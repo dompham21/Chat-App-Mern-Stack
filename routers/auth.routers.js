@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router()
 
-const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -10,9 +9,11 @@ const { JWT_SECRET } = require('../config/key');
 const sendMail = require('../config/mailer');
 const  transMail   = require('../lang/vn');
 const { v4: uuidv4 } = require('uuid');
-const { findOneAndUpdate } = require('../models/user.models');
+const passport = require('passport');
+const initPassportFacebook = require('../passport/facebook');
 const salt = bcrypt.genSaltSync(10);
 
+initPassportFacebook();
 
 
 router.post('/signup',(req,res) => {
@@ -115,4 +116,7 @@ router.post('/signin',(req,res) => {
         })
 })  
 
+router.get('/auth/facebook', passport.authenticate("facebook", {scope: ["email"]}))
+
+router.get('/auth/facebook/callback', passport.authenticate("facebook"))
 module.exports = router;
