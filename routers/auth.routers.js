@@ -70,7 +70,7 @@ router.post('/signup',(req,res) => {
         })
 })
 
-router.get('/verify/:token',(req,res)=>{
+router.get('/verify/:token',(req,res) => {
     const {token} = req.params;
     User.findOneAndUpdate({"local.verifyToken": token},{"local.isActive": true,"local.verifyToken": null})
     .then(success => {
@@ -81,5 +81,38 @@ router.get('/verify/:token',(req,res)=>{
         console.log(err);
     })
 })
+
+router.post('/signin',(req,res) => {
+    const {email, password} = req.body;
+    if(!email || !password){
+        return res.status(400).json({loginSuccess: false, error:"Please provide email or password!"});
+    }
+    User.findOne({"local.email":email})
+        .then(savedUser => {
+            if(!savedUser){
+                return res.status(400).json({loginSuccess: false, error:"Invalid email or password!"});
+            }
+            if(!savedUser.local.isActive){
+                return res.status(400).json({loginSuccess: false, error:"The email has been registered but not activated"})
+            }
+            bcrypt.compare(password, savedUser.local.password)
+                .then(match => {
+                    if(match){
+                        const token = jwt.sign({_id: savedUser._id},JWT_SECRET);
+                        res.status(200).json({ loginSuccess: true, massage:"Login successfully!", token:token})
+                    }
+                    else{
+                        return res.status(400).json({loginSuccess: false, error:"Invalid email or password!"});
+                    }
+                })
+                .catch(err=>{
+                    console.error(err);
+                })
+           
+        })
+        .catch(err=>{
+            console.error(err);
+        })
+})  
 
 module.exports = router;
