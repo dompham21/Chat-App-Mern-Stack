@@ -5,7 +5,6 @@ import { FaFacebookF,FaLinkedinIn } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 
-import logo from '../../image/logo.png';
 import './Register.css';
 import { registerUser } from '../../_actions/user_action';
 function Register(props) {
@@ -53,7 +52,7 @@ function Register(props) {
                 <Col span={24}>
                     <div className="login-form-box">
                         <div className="login-form-detail">
-                            <img className="login-form-logo" src={logo}></img>
+                            <img className="login-form-logo"></img>
                             <h3 className="login-form-title">Sign into your account</h3>
                             <Form 
                                  onKeyDown={(e)=> e.keyCode == 13 ? handleSubmitForm(e) : ''}

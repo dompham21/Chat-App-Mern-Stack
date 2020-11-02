@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form,Row, Col, Input, Button, Checkbox, notification } from 'antd';
 import './Login.css';
-import {AiOutlineTwitter,AiOutlineGooglePlus } from 'react-icons/ai';
-import { FaFacebookF,FaLinkedinIn } from 'react-icons/fa';
+import {AiOutlineGooglePlus } from 'react-icons/ai';
+import { FaFacebookF } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useDispatch } from "react-redux";
-import logo from '../../image/logo.png';
 import { loginUser } from '../../_actions/user_action';
-import axios from 'axios';
-
 function Login(props) {
     const dispatch = useDispatch();
     const rememberMeChecked = localStorage.getItem("rememberMe") ? true : false;
@@ -63,7 +60,7 @@ function Login(props) {
                 <Col span={24}>
                     <div className="login-form-box">
                         <div className="login-form-detail">
-                            <img className="login-form-logo" alt="logo" src={logo}></img>
+                            <img className="login-form-logo" alt="logo" ></img>
                             <h3 className="login-form-title">Sign into your account</h3>
                             <Form 
                                 onKeyDown={(e)=> e.keyCode === 13 ? handleSubmitForm(e) : ''}
@@ -102,16 +99,10 @@ function Login(props) {
                             </Form>
                             <ul className="login-social-contact">
                                 <li >
-                                    <a href="http://localhost:5000/auth/facebook" style={{background:'#4867aa',color:'white'}}><FaFacebookF/></a>
-                                </li>
-                                <li>
-                                    <Link to="/#" style={{background:'#33CCFF',color:'white'}}><AiOutlineTwitter/></Link>
+                                    <a href="/#" style={{background:'#4867aa',color:'white'}}><FaFacebookF/></a>
                                 </li>
                                 <li>
                                     <Link to="/#" style={{background:'#db4437',color:'white'}}><AiOutlineGooglePlus/></Link>
-                                </li>
-                                <li>
-                                    <Link to="/#" style={{background:'#0177b5',color:'white'}}><FaLinkedinIn/></Link>
                                 </li>
                             </ul>
                         </div>

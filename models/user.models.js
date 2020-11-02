@@ -1,5 +1,4 @@
 const mongooes = require('mongoose');
-
 const Schema = mongooes.Schema;
 
 const UserSchema = new Schema({
@@ -7,7 +6,7 @@ const UserSchema = new Schema({
     gender: {type: String, default: "male"},
     phone: {type: Number, default: null},
     address: {type: String, default: null},
-    avatar: {type: String, default: "avatar.jpg"},
+    avatar: {type: String, default: "logo.png"},
     role: {type: String, default: "user"},
     local: { 
         email: {type: String, trim: true},
