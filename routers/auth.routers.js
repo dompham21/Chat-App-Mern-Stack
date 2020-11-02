@@ -11,10 +11,11 @@ const  transMail   = require('../lang/vn');
 const { v4: uuidv4 } = require('uuid');
 const passport = require('passport');
 const initPassportFacebook = require('../passport/facebook');
+const initPassportGoogle = require('../passport/google');
 const salt = bcrypt.genSaltSync(10);
 
 initPassportFacebook();
-
+initPassportGoogle();
 
 router.post('/signup',(req,res) => {
     console.log(req.body);
@@ -119,4 +120,8 @@ router.post('/signin',(req,res) => {
 router.get('/auth/facebook', passport.authenticate("facebook", {scope: ["email"]}))
 
 router.get('/auth/facebook/callback', passport.authenticate("facebook"))
+
+router.get('/auth/google', passport.authenticate("google", {scope: ["email"]}))
+
+router.get('/auth/goole/callback', passport.authenticate("google"))
 module.exports = router;
