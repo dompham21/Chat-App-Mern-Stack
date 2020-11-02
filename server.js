@@ -31,7 +31,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(require('./routers/auth.routers'));
-
+app.use(require('./routers/user.routers'))
 
 if(process.env.NODE_ENV=="production"){
     app.use(express.static('client/build'))
@@ -40,6 +40,8 @@ if(process.env.NODE_ENV=="production"){
         res.sendFile(path.resolve(__dirname,'client','build','index.html'))
     })
 }
+app.use(express.static('client/public/images'))
+
 
 app.listen(PORT,() => {
     console.log(`Server is running on ${PORT}!`);

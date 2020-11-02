@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../../image/logo.png';
 import { Drawer, Button } from 'antd';
 import RightMenu from './RightMenu';
 import LeftMenu from './LeftMenu';
@@ -17,7 +16,7 @@ function NavBar() {
     return (
         <nav className="menuBar">
             <Link to="/" className="logo" >
-                <img src={logo}></img>
+                <img></img>
             </Link>
             <div className="menuCon">
                 <div className="leftMenu">
