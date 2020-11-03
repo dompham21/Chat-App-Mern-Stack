@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-
-const User = require('../models/user');
-const { JWT_SECRET } = require('../config/keys');
+const User = require('../models/user.models');
+const { JWT_SECRET } = require('../config/key');
 
 module.exports = (req,res,next) => {
     const {authorization} = req.headers

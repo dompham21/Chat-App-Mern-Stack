@@ -8,6 +8,8 @@ import {
     SEARCH_USER,
 } from './types';
 
+console.log(localStorage.getItem('token'));
+
 export function registerUser(dataToSubmit){
     const request = axios.post(`/signup`,dataToSubmit)
         .then(response => response.data);
@@ -28,17 +30,14 @@ export function loginUser(dataToSubmit){
     }
 }
 
-export function auth(){
-    const request = axios.get(`/auth`)
-    .then(response => response.data);
-    return {
-        type: AUTH_USER,
-        payload: request
-    }
-}
 
 export function logoutUser(){
-    const request = axios.get(`/logout`)
+    const request = axios.get(`/logout`,{
+        headers: {
+            "Content-Type":"application/json",
+            "Authorization":"Bearer "+localStorage.getItem('token')
+        }
+    })
     .then(response => response.data);
 
     return {
@@ -48,7 +47,13 @@ export function logoutUser(){
 }
 
 export function searchUser(query){
-    const request = axios.get('/search/byusername',{params:{username:query}})
+    const request = axios.get('/search/byusername',{
+        headers: {
+            "Content-Type":"application/json",
+            "Authorization":"Bearer "+localStorage.getItem('token'),
+            "query": query
+        }
+    })
     .then(response => response.data.users);
 
     return {

@@ -9,10 +9,13 @@ const { JWT_SECRET } = require('../config/key');
 const sendMail = require('../config/mailer');
 const  transMail   = require('../lang/vn');
 const { v4: uuidv4 } = require('uuid');
+
 const passport = require('passport');
 const initPassportFacebook = require('../passport/facebook');
 const initPassportGoogle = require('../passport/google');
 const salt = bcrypt.genSaltSync(10);
+
+const checkLogin = require('../middlewares/checkLogin');
 
 initPassportFacebook();
 initPassportGoogle();
@@ -101,7 +104,8 @@ router.post('/signin',(req,res) => {
                 .then(match => {
                     if(match){
                         const token = jwt.sign({_id: savedUser._id},JWT_SECRET);
-                        res.status(200).json({ loginSuccess: true, massage:"Login successfully!", token:token})
+                        const {_id,username,avatar,role} = savedUser;
+                        res.status(200).json({ loginSuccess: true, massage:"Login successfully!", token:token,user:{_id,username,avatar,role}})
                     }
                     else{
                         return res.status(400).json({loginSuccess: false, error:"Invalid email or password!"});
@@ -117,6 +121,9 @@ router.post('/signin',(req,res) => {
         })
 })  
 
+router.get('/logout',checkLogin,(req,res) => {
+
+})
 router.get('/auth/facebook', passport.authenticate("facebook", {scope: ["email"]}))
 
 router.get('/auth/facebook/callback', passport.authenticate("facebook"))
