@@ -1,20 +1,22 @@
   
-import React, { useEffect, useState } from 'react'
-import Axios from 'axios'
-import { List, Avatar, Input } from 'antd';
+import React, {  useState } from 'react'
+import { List, Avatar, Input, Button } from 'antd';
+import { useDispatch } from 'react-redux';
+import { searchUser } from '../../_actions/user_action';
 
 const { Search } = Input;
 
 function LandingPage() {
-    const [result, setResult] = useState('');
     const [data,setData] = useState('');
-    
+    const dispatch = useDispatch()
 
    const onSearch = (values) => {
-        Axios.get('getall',{params:{username:values}})
+       dispatch(searchUser(values))
         .then(res=>{
-            console.log(res.data.users)
-            setData(res.data.users);
+            setData(res.payload)
+        })
+        .catch(err=>{
+            console.log(err);
         })
    }
 
@@ -37,7 +39,9 @@ function LandingPage() {
                             <List.Item.Meta
                             avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
                             title={<a href="https://ant.design">{item.username}</a>}
-                            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                            description={
+                                <Button type="primary">Add</Button>
+                            }
                             />
                         </List.Item>
                         )}

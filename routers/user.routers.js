@@ -1,19 +1,22 @@
 const express = require('express');
 const router = express.Router()
 const User = require('../models/user.models');
-
-router.get('/getall',(req,res) => {
+const Contact = require('../models/contact.models');
+router.get('/search/byusername',(req,res) => {
     const query = req.query.username;
-    User.find()
-    .then(users=>{
-        if(!users){
-            return res.status(400).json({msg:"false"})
-        }
-        const matchedUser = users.filter((user) => {
-            return user.username.indexOf(query) !== -1
-        })
-        return res.status(200).json({users:matchedUser});
+   
+   
+    User.find({
+        $and: [
+            // {"_id": {$nin: req.user._id}},
+            {"username": {"$regex": new RegExp(query,"i") }}
+        ]
     })
+    .then((users)=>{
+        console.log(users)
+        return res.status(200).json({users:users});
+    })
+
 })
 
 module.exports = router;
