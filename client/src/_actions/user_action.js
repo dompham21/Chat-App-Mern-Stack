@@ -5,6 +5,7 @@ import {
     REGISTER_USER,
     AUTH_USER,
     LOGOUT_USER,
+    SEARCH_USER,
 } from './types';
 
 export function registerUser(dataToSubmit){
@@ -42,6 +43,16 @@ export function logoutUser(){
 
     return {
         type: LOGOUT_USER,
+        payload: request
+    }
+}
+
+export function searchUser(query){
+    const request = axios.get('/search/byusername',{params:{username:query}})
+    .then(response => response.data.users);
+
+    return {
+        type: SEARCH_USER,
         payload: request
     }
 }
