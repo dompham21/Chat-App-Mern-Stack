@@ -8,7 +8,7 @@ router.get('/search/byusername',(req,res) => {
    
     User.find({
         $and: [
-            {"_id": {$nin: req.user._id}},
+            // {"_id": {$nin: req.user._id}},
             {"username": {"$regex": new RegExp(query,"i") }}
         ]
     })
