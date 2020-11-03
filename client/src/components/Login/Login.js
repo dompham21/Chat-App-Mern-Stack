@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Form,Row, Col, Input, Button, Checkbox, notification } from 'antd';
 import './Login.css';
 import {AiOutlineGooglePlus } from 'react-icons/ai';
@@ -26,6 +26,7 @@ function Login(props) {
         console.log(dataToSubmit)
         dispatch(loginUser(dataToSubmit))
             .then(res=>{
+
                 if(res.payload.loginSuccess){
                     if(rememberMe){
                         localStorage.setItem('rememberMe',JSON.stringify(dataToSubmit))
@@ -33,11 +34,15 @@ function Login(props) {
                     else {
                         localStorage.removeItem('rememberMe');
                     }
+                        localStorage.setItem('token',res.payload.token);
+                        localStorage.setItem('user',JSON.stringify(res.payload.user))
+
                     notification['success']({
                         message: 'Login Account Success',
                         description:
                           'Welcome to Job help! ',
                     });
+
                     props.history.push("/");
                 }
                 else {
