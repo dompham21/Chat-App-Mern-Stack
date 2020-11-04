@@ -1,6 +1,6 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import './App.css';
-import { Route, Switch, useLocation, Redirect} from "react-router-dom";
+import {Switch, useLocation} from "react-router-dom";
 import LandingPage from './components/LandingPage/LandingPage';
 import Register from './components/Register/Register';
 import NavBar from './components/NavBar/NavBar';
@@ -8,13 +8,21 @@ import Login from './components/Login/Login';
 import PrivateRouter from './PrivateRouter';
 import PublicRouter from './PublicRouter';
 import Page404 from './components/Page404/Page404';
-
+import socket from './socket';
+const token = localStorage.getItem('token')
 function App() {
     const location = useLocation()
 
     const handleRenderNav = () => {
         return location.pathname === '/login'||location.pathname ===  '/register' ? null : <NavBar/>
     }
+  
+    useEffect(() => {
+      if(token){
+        socket();
+      } 
+    }, [token])
+    
   return (
     <Suspense fallback={(<div>Loading...</div>)}>
       { handleRenderNav() }

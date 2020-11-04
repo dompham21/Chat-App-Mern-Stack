@@ -3,12 +3,20 @@ const mongoose = require('mongoose');
 const { MONGOURI } = require('./config/key');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-
+const initSockets = require('./sockets');
+const socketIo = require('socket.io')
 require('dotenv').config();
 
-const app = express();
-
 const PORT = 5000 || process.env.PORT;
+const app = express()
+//Init server with socket.io & express  
+
+const server = require("http").Server(app);
+const io = require('socket.io').listen(server);
+
+initSockets(io);
+
+//Init mongodb
 
 mongoose.connect(MONGOURI, {
     useNewUrlParser: true, 
@@ -22,6 +30,8 @@ mongoose.connection.on('connected',()=>{
 mongoose.connection.on('error',(err)=>{
     console.log('MongoDb connection error!',err)
 })
+
+//Config bodyParser
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -40,9 +50,8 @@ if(process.env.NODE_ENV=="production"){
         res.sendFile(path.resolve(__dirname,'client','build','index.html'))
     })
 }
-app.use(express.static('client/public/images'))
 
 
-app.listen(PORT,() => {
+server.listen(PORT,() => {
     console.log(`Server is running on ${PORT}!`);
 });
