@@ -1,18 +1,26 @@
   
-import React, {  useState, useRef, createRef } from 'react'
+import React, {  useState, useRef, useEffect } from 'react'
 import { List, Avatar, Input, Button } from 'antd';
 import { useDispatch } from 'react-redux';
 import { searchUser } from '../../_actions/user_action';
 import { addContact, removeContactReq } from '../../_actions/contact_action';
-
+import socket from '../../socket';
 const { Search } = Input;
-
+let socketConnect;
 function LandingPage() {
     const [data,setData] = useState('');
     const dispatch = useDispatch()
     const refAddContact = useRef([]);
     const refRemoveContact = useRef([]);
-   const onSearch = (values) => {
+
+    useEffect(() => {
+        socketConnect = socket();
+        socketConnect.on('response-add-new-contact',data=>{
+            console.log(data);
+        });
+    }, [])
+
+    const onSearch = (values) => {
        dispatch(searchUser(values))
         .then(res=>{
             setData(res.payload)
@@ -31,6 +39,8 @@ function LandingPage() {
                 if(res.payload.addSuccess){
                     refAddContact.current[id].style.display = "none";
                     refRemoveContact.current[id].style.display = "block";
+                    // socket().addNewContact(id);
+                    socketConnect.emit('add-new-contact', {contactId:id})
                 }
             })
             .catch(err=>{
@@ -43,7 +53,7 @@ function LandingPage() {
             .then(res => {
                 if(res.payload.removeSuccess){
                     refAddContact.current[id].style.display = "block";
-                    refRemoveContact.current[id].style.display = "none";
+                    refRemoveContact.current[id].style.display = "none";  
                 }
             })
             .catch(err=>{

@@ -64,13 +64,12 @@ router.delete('/contact/remove-request', checkLogin, async (req,res) => {
     try {
         const currentId = req.user._id;
         const contactId = req.body.uid;
-        let success = await Contact.remove({
+        let success = await Contact.deleteOne({
             $and:[
                 {"userId": currentId },
                 {"contactId": contactId}
             ]
         });
-        console.log(success);
         if(success){
             return res.status(200).json({removeSuccess: true, msg:"Removed successfully"})
         }
