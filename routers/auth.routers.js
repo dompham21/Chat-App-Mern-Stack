@@ -20,9 +20,9 @@ const checkLogin = require('../middlewares/checkLogin');
 initPassportFacebook();
 initPassportGoogle();
 
-router.post('/signup',(req,res) => {
-    console.log(req.body);
+router.post('/signup', async (req,res) => {
     const {name, email, password, confirmPassword} = req.body;
+
     if(!email || !password || !name || !confirmPassword) {
         return res.status(400).json({registerSuccess: false, error:"Please add all the fields!"});
     }
@@ -33,96 +33,79 @@ router.post('/signup',(req,res) => {
         return res.status(400).json({registerSuccess: false, error:"Your password must be 8 characters, and include at least one lowercase letter, one uppercase letter, and a number"})
     }
     
-    User.findOne({"local.email":email})
-        .then(savedUser => {
-            if(savedUser){
-                return res.status(400).json({registerSuccess: false, error:"User already exists with that email!"});
-            }
-            bcrypt.hash(password, salt)
-                .then(hash => {
-                    const newUser = new User({
-                        username: name,
-                        local: { 
-                            email: email,
-                            password: hash,
-                            verifyToken: uuidv4()
-                        }
-                    })
+    let savedUser = await User.findOne({"local.email":email})
 
-                    newUser.save()
-                        .then((user)=>{
-                            let linkVerify = `${req.protocol}://${req.get("host")}/verify/${user.local.verifyToken}`
-                            console.log(transMail.subject)
-                            sendMail(user.local.email,transMail.subject, transMail.template(linkVerify))
-                                .then(success => {
-                                    console.log(success);
-                                    if(success)
-                                        return res.status(200).json({registerSuccess: true, massage:"Saved user successfully "});
-                                })
-                                .catch(err=>{
-                                    User.findByIdAndRemove({_id:user._id}); //remove user when can't send mail
-                                    console.error(err);
-                                    return res.status(400).json({registerSuccess: false, error:"Can't send mail to verify"});
-                                })
-                        })
-                        .catch(err=>{
-                            console.error(err);
-                        })
-                })
-        })
-        .catch(err=>{
-            console.error(err);
-        })
-})
-
-router.get('/verify/:token',(req,res) => {
-    const {token} = req.params;
-    User.findOneAndUpdate({"local.verifyToken": token},{"local.isActive": true,"local.verifyToken": null})
-    .then(success => {
-        if(success)
-        return res.json({msg:"Verify success"});
-    })
-    .catch(err=>{
-        console.log(err);
-    })
-})
-
-router.post('/signin',(req,res) => {
-    const {email, password} = req.body;
-    if(!email || !password){
-        return res.status(400).json({loginSuccess: false, error:"Please provide email or password!"});
+    if(savedUser){
+        return res.status(400).json({registerSuccess: false, error:"User already exists with that email!"});
     }
-    User.findOne({"local.email":email})
-        .then(savedUser => {
-            if(!savedUser){
-                return res.status(400).json({loginSuccess: false, error:"Invalid email or password!"});
-            }
-            if(!savedUser.local.isActive){
-                return res.status(400).json({loginSuccess: false, error:"The email has been registered but not activated"})
-            }
-            bcrypt.compare(password, savedUser.local.password)
-                .then(match => {
-                    if(match){
-                        const token = jwt.sign({_id: savedUser._id},JWT_SECRET);
-                        const {_id,username,avatar,role} = savedUser;
-                        res.status(200).json({ loginSuccess: true, massage:"Login successfully!", token:token,user:{_id,username,avatar,role}})
-                    }
-                    else{
-                        return res.status(400).json({loginSuccess: false, error:"Invalid email or password!"});
-                    }
-                })
-                .catch(err=>{
-                    console.error(err);
-                })
-           
+
+    let hash = await bcrypt.hash(password, salt)
+    const newUser = new User({
+        username: name,
+        local: { 
+            email: email,
+            password: hash,
+            verifyToken: uuidv4()
+        }
+    })
+
+    let user =  await newUser.save()
+    let linkVerify = `${req.protocol}://${req.get("host")}/verify/${user.local.verifyToken}`;
+
+    sendMail(user.local.email,transMail.subject, transMail.template(linkVerify))
+        .then(success => { 
+            return res.status(200).json({registerSuccess: true, massage:"Saved user successfully "});
         })
-        .catch(err=>{
+        .catch(async (error) => {
+            await User.findByIdAndRemove({_id:user._id}); //remove user when can't send mail
             console.error(err);
+            return res.status(400).json({registerSuccess: false, error:"Can't send mail to verify"});
         })
+                           
+})
+
+router.get('/verify/:token', async (req,res) => {
+    try {
+        const {token} = req.params;
+
+        let success = await User.findOneAndUpdate({"local.verifyToken": token},{"local.isActive": true,"local.verifyToken": null})
+        if(success){ 
+        return res.json({msg:"Verify success"});
+        }
+    } catch (error) {
+        console.log(error)   
+    }
+})
+
+router.post('/signin', async (req,res) => {
+    try {
+        const {email, password} = req.body;
+        if(!email || !password){
+            return res.status(400).json({loginSuccess: false, error:"Please provide email or password!"});
+        }
+        let savedUser = await User.findOne({"local.email":email})
+        if(!savedUser){
+            return res.status(400).json({loginSuccess: false, error:"Invalid email or password!"});
+        }
+        if(!savedUser.local.isActive){
+            return res.status(400).json({loginSuccess: false, error:"The email has been registered but not activated"})
+        }
+        let match = await bcrypt.compare(password, savedUser.local.password)
+        if(match){
+            const token = jwt.sign({_id: savedUser._id},JWT_SECRET);
+            const {_id,username,avatar,role} = savedUser;
+            res.status(200).json({ loginSuccess: true, massage:"Login successfully!", token:token,user:{_id,username,avatar,role}})
+        }
+        else{
+            return res.status(400).json({loginSuccess: false, error:"Invalid email or password!"});
+        }
+    } catch (error) {
+        console.log(error);
+    }   
 })  
 
-router.get('/logout',checkLogin,(req,res) => {
-
+router.get('/logout',checkLogin,  (req,res) => {
+    return res.status(200).json({msg:"Logout successfully"})
 })
 router.get('/auth/facebook', passport.authenticate("facebook", {scope: ["email"]}))
 

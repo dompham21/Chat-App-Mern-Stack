@@ -15,8 +15,9 @@ function RightMenu(props) {
 
 
     const handleLogout = () => {
-        cookies.remove('x_auth', { path: '/' });
         dispatch(logoutUser());
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         history.push('/login');    }
     return (
         <Menu mode={props.mode}>

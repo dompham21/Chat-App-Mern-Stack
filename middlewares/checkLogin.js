@@ -5,8 +5,9 @@ const { JWT_SECRET } = require('../config/key');
 
 module.exports = (req,res,next) => {
     const {authorization} = req.headers
+
     if(!authorization){
-        return res.json({
+        return res.status(400).json({
             isAuth: false,
             error: true,
             message: "You must be logged in"
@@ -16,15 +17,17 @@ module.exports = (req,res,next) => {
 
     jwt.verify(token,JWT_SECRET,(err,payload)=>{
         if(err){
-            return res.json({
+            return res.status(400).json({
                 isAuth: false,
                 error: true,
                 message: "You must be logged in"
             });
         }
+
         const {_id} = payload;
         User.findById(_id).then(userData=>{
-            if (!userData) return res.json({ isAuth: false, error: true })
+            if (!userData) return res.status(400).json({ isAuth: false, error: true })
+
             req.user = userData;
             req.user.local.password  = undefined;
             next();
