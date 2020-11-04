@@ -8,56 +8,75 @@ import {
     SEARCH_USER,
 } from './types';
 
-console.log(localStorage.getItem('token'));
 
-export function registerUser(dataToSubmit){
-    const request = axios.post(`/signup`,dataToSubmit)
+export const registerUser = async (dataToSubmit) => {
+    try {
+        const request = await axios.post(`/signup`,dataToSubmit)
         .then(response => response.data);
    
-    return {
-        type: REGISTER_USER,
-        payload: request
+        return {
+            type: REGISTER_USER,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error)
     }
+   
 }
 
-export function loginUser(dataToSubmit){
-    const request = axios.post(`/signin`,(dataToSubmit))
+export const loginUser = async (dataToSubmit) => {
+    try {
+        const request = await axios.post(`/signin`,(dataToSubmit))
                 .then(response => response.data);
 
-    return {
-        type: LOGIN_USER,
-        payload: request
+        return {
+            type: LOGIN_USER,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error)
     }
+    
 }
 
 
-export function logoutUser(){
-    const request = axios.get(`/logout`,{
-        headers: {
-            "Content-Type":"application/json",
-            "Authorization":"Bearer "+localStorage.getItem('token')
+export const logoutUser = async () => {
+    try {
+        const request = axios.get(`/logout`,{
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token')
+            }
+        })
+        .then(response => response.data);
+    
+        return {
+            type: LOGOUT_USER,
+            payload: request
         }
-    })
-    .then(response => response.data);
-
-    return {
-        type: LOGOUT_USER,
-        payload: request
+    } catch (error) {
+        console.log(error)
     }
+    
 }
 
-export function searchUser(query){
-    const request = axios.get('/search/byusername',{
-        headers: {
-            "Content-Type":"application/json",
-            "Authorization":"Bearer "+localStorage.getItem('token'),
-            "query": query
+export const searchUser = async (query) => {
+    try {
+        const request = await axios.get('/contact/find-users',{
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token'),
+                "query": query
+            }
+        })
+        .then(res => res.data.users)
+        console.log(request);
+        return {
+            type: SEARCH_USER,
+            payload: request
         }
-    })
-    .then(response => response.data.users);
-
-    return {
-        type: SEARCH_USER,
-        payload: request
+    } catch (error) {
+        console.log(error);
     }
+    
 }
