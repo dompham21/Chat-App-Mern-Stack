@@ -39,7 +39,6 @@ function LandingPage() {
                 if(res.payload.addSuccess){
                     refAddContact.current[id].style.display = "none";
                     refRemoveContact.current[id].style.display = "block";
-                    // socket().addNewContact(id);
                     socketConnect.emit('add-new-contact', {contactId:id})
                 }
             })
