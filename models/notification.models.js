@@ -3,20 +3,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const NotificationSchema = new Schema({
-    sender: {
-        id: String,
-        username: String,
-        avatar: String
-    },
-    receiver: {
-        id: String,
-        username: String,
-        avatar: String
-    },
-    type: String,
+    senderId: String,
+    receiverId: String,
     content: String,
     isRead: {type: Boolean, default: false},
     createAt: {type: Number,default: Date.now}
 });
 
-module.exports = mongoose.model('notification', NotificationSchema);
+const NOTIFICATION_TYPES = {
+    ADD_CONTACT: "add_contact"
+}
+
+module.exports = {
+    model: mongoose.model('notification', NotificationSchema),
+    types: NOTIFICATION_TYPES
+};

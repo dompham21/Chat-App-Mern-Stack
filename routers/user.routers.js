@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router()
 const User = require('../models/user.models');
 const Contact = require('../models/contact.models');
-
+const Notification = require('../models/notification.models');
 const checkLogin = require('../middlewares/checkLogin');
 
 router.get('/contact/find-users', checkLogin, async (req,res) => {
@@ -46,12 +46,20 @@ router.post('/contact/add-new', checkLogin, async (req,res) => {
             return res.status(400).json({addSucess: false,error:"Contact already exists"})
         }
         else{
+            //create new contact 
             const newContact =  new Contact({
                 userId: currentId,
                 contactId: contactId
             })
             let contact = await newContact.save()
 
+            //create new notification 
+            const newNotification = new Notification.model({
+                senderId: currentId,
+                reaceiverId: contactId,
+                types: Notification.types.ADD_CONTACT
+            })
+            let notification = await newNotification.save();
             return res.status(200).json({addSuccess: true,msg:"Saved successfully"})
         
         }
@@ -64,13 +72,20 @@ router.delete('/contact/remove-request', checkLogin, async (req,res) => {
     try {
         const currentId = req.user._id;
         const contactId = req.body.uid;
-        let success = await Contact.deleteOne({
+        let successAddContact = await Contact.deleteOne({
             $and:[
                 {"userId": currentId },
                 {"contactId": contactId}
             ]
         });
-        if(success){
+        let successAddNotification = await Notification.model.deleteOne({
+            $and:[
+                {"senderId": currentId },
+                {"reaceiverId": contactId},
+                {"types": Notification.types.ADD_CONTACT}
+            ]
+        })
+        if(successAddContact && successAddNotification){
             return res.status(200).json({removeSuccess: true, msg:"Removed successfully"})
         }
         
