@@ -13,23 +13,24 @@ const token = localStorage.getItem('token')
 function App() {
     const location = useLocation()
 
-    const handleRenderNav = () => {
-        return location.pathname === '/login'||location.pathname ===  '/register' ? null : <NavBar/>
-    }
+    // const handleRenderNav = () => {
+    //     return location.pathname === '/login'||location.pathname ===  '/register' ? null : <NavBar/>
+    // }
   
-    useEffect(() => {
-      if(token){
-        socket();
-      } 
-    }, [token])
+    // useEffect(() => {
+    //   if(token){
+    //     socket();
+    //   } 
+    // }, [token])
     
   return (
     <Suspense fallback={(<div>Loading...</div>)}>
-      { handleRenderNav() }
+      {/* { handleRenderNav() } */}
         <Switch>
+          <NavBar/>
           <PublicRouter restricted={true} component={Login} path="/login" exact/>
           <PublicRouter restricted={true} component={Register} path="/register" exact/>
-          <PrivateRouter exact path="/" component={LandingPage}/>
+          {/* <PrivateRouter exact path="/" component={LandingPage}/> */}
           <PublicRouter restricted={false} component={Page404} path="*" exact/>
         </Switch>
     </Suspense>

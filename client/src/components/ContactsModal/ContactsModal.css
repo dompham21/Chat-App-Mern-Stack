@@ -1,0 +1,144 @@
+.ant-modal-content {
+    min-height: 600px;
+    background-color: #18191a;
+    color: white;
+}
+
+.contact-modals-layout {
+
+}
+
+.ant-modal-header {
+   background-color:  #242526;
+   border-bottom: 1px solid #3e4042;
+
+}
+
+div#rcDialogTitle0 {
+    color: white;
+}
+
+.ant-tabs-tab {
+    background-color: #3a3b3c !important;
+    color: white;
+    border: 1px solid #3e4042 !important;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active  {
+    background-color: #1890ff !important;
+}
+.ant-tabs-tab.ant-tabs-tab-active > div{
+    color: white !important;
+}
+.ant-tabs-nav {
+    margin: 0 !important;
+}
+.ant-tabs-nav::before {
+    border-bottom: 1px solid #3e4042 !important;
+}
+
+.contact-modals-search {
+    display: flex;
+}
+.contact-search-user {
+    width: 70%;
+    margin-left: 24px;
+    margin-top: 24px;
+
+}
+.contact-search-filter {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+}
+.contact-search-user-input {
+    width: 550px;
+    height: 40px;
+    background-color: #3a3b3c;
+    outline: none;
+    border: 0;
+    font-size: 18px;
+    color: white;
+}
+
+.contact-search-user-input > input {
+    background-color: #3a3b3c;
+    color: white;
+    font-size: 18px;
+}
+
+
+.contact-search-filter > h3 {
+    color: white;
+    border-top: 1px solid #3e4042 ;
+    padding: 10px 16px;
+}
+
+.contact-search-filter > ul > li:first-child {
+    margin-top: 0 !important;
+}
+
+.contact-search-list {
+    margin-top: 24px;
+    background-color:  #242526;
+    padding: 5px 15px;
+}
+.contact-search-list-item {
+    border-bottom: 1px solid #3e4042 !important;
+
+}
+
+.contact-search-list-item:last-child {
+    border-bottom: 0 !important;
+}
+
+.contact-search-list-item > div > div {
+    color: white ;
+
+}
+
+.contact-search-list-item-avatar {
+    width: 42px;
+    height: 42px;
+}
+
+.contact-search-list-item-name {
+    color: white !important;
+    margin: 0 !important;
+}
+
+.contact-search-list-item-description {
+    color: white !important;
+    font-size: 13px;
+    margin: 0 !important;
+
+}
+
+.search-add-user-icon {
+    color: white !important;
+}
+
+.contact-search-filter-list > .ant-menu-item-selected  {
+    background-color: #252f3c !important;
+}
+.contact-search-filter-list > .ant-menu-submenu >  .ant-menu-sub >.ant-menu-item-selected {
+    background-color: #252f3c !important;
+}
+
+.contact-search-filter-switch {
+    background-color: #242526;
+    margin-left:6px ;
+}
+
+ .ant-switch-checked {
+    background-color: #1890ff !important;
+}
+
+.contact-search-filter-select > div {
+    background-color: #242526 !important;
+    color: white !important;
+}
+
+.button.ant-modal-close  {
+    color: white;
+}
