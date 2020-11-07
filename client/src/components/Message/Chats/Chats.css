@@ -1,0 +1,45 @@
+.message-layout-chats {
+    width: 73%;
+}
+
+.message-layout-chats-title {
+    padding: 8px 16px;
+    background-color: #242526;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #3e4042;
+
+}
+
+.message-layout-chats-title-infomation > span{
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.message-layout-chats-avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+}
+.message-layout-chats-title-icon {
+    display: flex;
+    list-style: none;
+    color: #0099ff;
+    margin: 0;
+}
+.message-layout-chats-title-icon >li {
+    margin-left: 12px;
+    cursor: pointer;
+    font-size: 24px;
+}
+.message-layout-chats-title-icon >li:first-child {
+    font-size: 20px;
+}
+
+.message-layout-chats-list {
+    background-color: #18191a;
+    height: calc(100vh - 56px - 64px - 45px);
+    overflow-y: scroll;
+}

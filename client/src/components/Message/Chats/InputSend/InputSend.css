@@ -1,0 +1,49 @@
+.message-input-send-layout {
+    display: flex;
+    height: 45px;
+    background-color: #18191a ;
+    align-items: center;
+}
+
+.message-input-send-option {
+    list-style: none;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    padding: 0;
+}
+.message-input-send-option > li {
+    font-size: 24px;
+    color: #0099ff;
+    padding:8px 8px 0;
+}
+
+.message-input-send-input {
+    border: 0;
+    border-radius: 18px;
+    height: 36px;
+    background-color: #373737;
+}
+
+.message-input-send-input > input {
+    background-color: #373737;
+    color: white !important;
+    font-size: 16px;
+}
+
+.message-input-send-icon {
+    font-size: 24px;
+    color: #0099ff;
+    margin-right: 0 !important;
+}
+
+span.ant-input-suffix {
+    margin-right: 0 !important;
+
+}
+
+.message-input-send-enterbtn {
+    font-size: 28px;
+    color: #0099ff;
+    margin-left: 8px;
+}

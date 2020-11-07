@@ -9,13 +9,14 @@ import PrivateRouter from './PrivateRouter';
 import PublicRouter from './PublicRouter';
 import Page404 from './components/Page404/Page404';
 import socket from './socket';
+import Message from './components/Message/Message';
 const token = localStorage.getItem('token')
 function App() {
     const location = useLocation()
 
-    // const handleRenderNav = () => {
-    //     return location.pathname === '/login'||location.pathname ===  '/register' ? null : <NavBar/>
-    // }
+    const handleRenderNav = () => {
+        return location.pathname === '/login'||location.pathname ===  '/register' ? null : <NavBar/>
+    }
   
     // useEffect(() => {
     //   if(token){
@@ -25,12 +26,12 @@ function App() {
     
   return (
     <Suspense fallback={(<div>Loading...</div>)}>
-      {/* { handleRenderNav() } */}
+      { handleRenderNav() }
         <Switch>
-          <NavBar/>
           <PublicRouter restricted={true} component={Login} path="/login" exact/>
           <PublicRouter restricted={true} component={Register} path="/register" exact/>
-          {/* <PrivateRouter exact path="/" component={LandingPage}/> */}
+          <PrivateRouter exact path="/message" component={Message}/>
+          <PrivateRouter exact path="/" component={LandingPage}/>
           <PublicRouter restricted={false} component={Page404} path="*" exact/>
         </Switch>
     </Suspense>
