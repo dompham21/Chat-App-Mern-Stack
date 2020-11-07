@@ -139,6 +139,6 @@ div#rcDialogTitle0 {
     color: white !important;
 }
 
-.button.ant-modal-close  {
-    color: white;
+span.anticon.anticon-close.ant-modal-close-icon  {
+    color: white !important;
 }

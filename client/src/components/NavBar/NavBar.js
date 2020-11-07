@@ -103,9 +103,11 @@ function NavBar() {
                         <span>John Dea</span>
                     </li>
                     <li>
-                        <Badge size="small">
-                            <div className="nav-menu-right-item"><AiOutlineMessage/></div>
-                        </Badge>
+                        <Link to="/message" style={{color:"white"}}>
+                            <Badge size="small" >
+                                <div className="nav-menu-right-item"><AiOutlineMessage/></div>
+                            </Badge>
+                        </Link>
                     </li>
                     <li>
                         <Badge count={9} size="small" onClick={() => setVisible(true)}>
