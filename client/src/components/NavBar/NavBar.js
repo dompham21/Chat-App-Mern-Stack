@@ -3,15 +3,26 @@ import { Link } from 'react-router-dom';
 import { Layout, Input, Avatar, Badge, Popover,Modal } from 'antd';
 import {AiOutlineMessage, AiOutlineUserAdd, AiOutlineUser,AiOutlineCaretDown, AiOutlineSearch, AiOutlineArrowLeft} from 'react-icons/ai'
 import {GiEarthAmerica} from 'react-icons/gi'
-import {FiSettings, FiHelpCircle, FiLogOut} from 'react-icons/fi'
-
+import {FiSettings, FiHelpCircle, FiLogOut} from 'react-icons/fi';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../../_actions/user_action';
+import { useHistory } from "react-router-dom";
 
 import './NavBar.css';
-import ContactsModel from '../ContactsModal/ContactsModel';
+import ContactsModal from '../ContactsModal/ContactsModal';
 
 const { Header } = Layout;
 function NavBar() {
     const [visible, setVisible] = useState(false);
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const handleLogout = () => {
+        dispatch(logoutUser());
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        history.push('/login');    
+    }
 
 
     const contentMenuDown = (
@@ -35,7 +46,7 @@ function NavBar() {
                     </Badge>
                     <span>Help & Support</span>
                 </li>
-                <li>
+                <li onClick={handleLogout}>
                     <Badge size="small">
                             <div className="nav-menu-right-item"><FiLogOut/></div>
                     </Badge>
@@ -91,7 +102,9 @@ function NavBar() {
         <Layout className="section-layout">
             <Header className="nav-layout">
                 <div className="nav-menu-left">
-                    <div className="nav-logo" />
+                    <Link to="/">
+                        <div className="nav-logo" />
+                    </Link>
                     <Input className="nav-search"
                         prefix={<AiOutlineSearch /> }
                         placeholder="Search Chat App"
@@ -153,7 +166,7 @@ function NavBar() {
                 onOk={() => setVisible(false)}
                 onCancel={() => setVisible(false)}
             >
-                <ContactsModel/>
+                <ContactsModal/>
             </Modal>
             
       </Layout>

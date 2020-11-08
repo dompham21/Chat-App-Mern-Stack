@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Avatar } from 'antd'; 
 import { FaPhoneAlt, FaVideo } from 'react-icons/fa'
 import { BsInfoCircleFill } from 'react-icons/bs'
@@ -69,13 +69,40 @@ const tempMessages = [
       author: 'orange',
       message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
       timestamp: new Date().getTime()
-    },
+    },{
+        id: 11,
+        author: 'apple',
+        message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+        timestamp: new Date().getTime()
+      },
+      {
+        id: 12,
+        author: 'orange',
+        message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
+        timestamp: new Date().getTime()
+      },
+      {
+        id: 13,
+        author: 'orange',
+        message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+        timestamp: new Date().getTime()
+      },
   ]
 function Chats() {
-    const [messages, setMessages] = useState([])
+    const [messages, setMessages] = useState([]);
     useEffect(() => {
       getMessages();
     },[])
+    let messagesEnd = useRef(null);
+    const scrollToBottom = () => {
+        console.log('a');
+        messagesEnd.current.scrollIntoView({ behavior: "smooth" });
+      };
+    useEffect(() => {
+        scrollToBottom()
+    }, [messages])
+
+  
     const getMessages = () => {
         setMessages([...messages, ...tempMessages])
     }
@@ -150,8 +177,12 @@ function Chats() {
                     <li><BsInfoCircleFill/></li>   
                 </ul>
             </div>
-            <div className="message-layout-chats-list">
-                <div className="message-list-container">{renderMessages()}</div>
+            <div className="message-layout-chats-list" >
+                <div className="message-list-container" >
+                    {renderMessages()}
+                    <div  ref={messagesEnd}/>
+                </div>
+               
             </div>
             <div><InputSend/></div>
         </div>

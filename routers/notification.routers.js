@@ -13,7 +13,7 @@ router.get('/get/notification', checkLogin, async (req,res) => {
         if(!notifications){
             return res.status(400).json({msg:"Emtry notifications"})
         }
-        getNotifications = notifications.map( async (notification) => {
+        let getNotifications = notifications.map( async (notification) => {
             let sender = await User.findById({"_id": notification._id});
             return {senderId: sender._id,notificationType: notification.types,senderName: sender.username,senderAvatar: sender.avatar};
         })

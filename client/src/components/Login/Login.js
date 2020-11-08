@@ -11,6 +11,7 @@ function Login(props) {
     const dispatch = useDispatch();
     const rememberMeChecked = localStorage.getItem("rememberMe") ? true : false;
     const [rememberMe, setRememberMe] = useState(rememberMeChecked);
+    const [loading,setLoading] = useState(false)
 
     const handleRememberMe = () => {
         setRememberMe(!rememberMe)
@@ -24,6 +25,7 @@ function Login(props) {
             email: values.email,
             password: values.password
         }
+        setLoading(true);
         console.log(dataToSubmit)
         dispatch(loginUser(dataToSubmit))
             .then(res=>{
@@ -37,7 +39,7 @@ function Login(props) {
                     }
                         localStorage.setItem('token',res.payload.token);
                         localStorage.setItem('user',JSON.stringify(res.payload.user))
-
+                        setLoading(false);
                     notification['success']({
                         message: 'Login Account Success',
                         description:
@@ -96,7 +98,7 @@ function Login(props) {
                                 </Form.Item>
 
                                 <Form.Item >
-                                    <Button  type="primary" htmlType="submit" className="login-btn-submit">
+                                    <Button  type="primary" htmlType="submit" className="login-btn-submit" loading={loading}>
                                         Login
                                     </Button>
                 

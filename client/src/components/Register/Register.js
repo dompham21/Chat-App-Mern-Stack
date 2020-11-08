@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Form,Row, Col, Input, Button, notification } from 'antd';
 import {AiOutlineTwitter,AiOutlineGooglePlus } from 'react-icons/ai';
 import { FaFacebookF,FaLinkedinIn } from 'react-icons/fa';
@@ -9,10 +9,12 @@ import './Register.css';
 import { registerUser } from '../../_actions/user_action';
 function Register(props) {
     const dispatch = useDispatch();
+    const [loading,setLoading] = useState(false);
     const handleSubmitForm = (values) => {
         if(values.password !== values.confirmpassword){
             return;
         }
+        setLoading(true);
         const dataToSubmit = {
             email: values.email,
             name: values.username,
@@ -84,7 +86,7 @@ function Register(props) {
                                     <Input.Password placeholder="Confirm Password" />
                                 </Form.Item>
                                 <Form.Item >
-                                    <Button type="primary" htmlType="submit" className="login-btn-submit">
+                                    <Button type="primary" htmlType="submit" className="login-btn-submit" loading={loading}>
                                     Signup
                                     </Button>
                 
