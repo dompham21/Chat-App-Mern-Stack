@@ -68,6 +68,96 @@ router.post('/contact/add-new', checkLogin, async (req,res) => {
     } 
 })
 
+router.get('/contact/list-users', checkLogin, async (req,res) => {
+    try {
+        const currentId = req.user._id;
+        let contacts = await Contact.find({
+            $and: [
+                {$or: [
+                    {"userId": currentId},
+                    {"contactId": currentId}
+                ]},{
+                    "status": true
+                }
+            ]
+            
+        }).sort({"createAt":-1}).limit(12)
+        if(contacts){
+            let users = contacts.map(async (contact) => {
+                if(contact.contactId == currentId){
+                    return await User.findById(contact.userId,
+                        {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+                }else {
+                    return await User.findById(contact.contactId,
+                        {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+                     
+                }
+            })
+            console.log(await Promise.all(users))
+             res.status(200).json(await Promise.all(users));
+        } 
+        
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+router.get('/contact/waiting-request', checkLogin, async (req,res) => {
+    try {
+        const currentId = req.user._id;
+        let contacts = await Contact.find({
+            $and: [
+                {
+                    "userId": currentId
+                }
+                ,{
+                    "status": false
+                }
+            ]
+            
+        }).sort({"createAt":-1}).limit(12)
+        if(contacts){
+            let users = contacts.map(async (contact) => {
+                return await User.findById(contact.contactId,
+                        {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+            })
+            console.log(await Promise.all(users))
+             res.status(200).json(await Promise.all(users));
+        } 
+        
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+router.get('/contact/friend-request', checkLogin, async (req,res) => {
+    try {
+        const currentId = req.user._id;
+        let contacts = await Contact.find({
+            $and: [
+                {
+                    "contactId": currentId
+                }
+                ,{
+                    "status": false
+                }
+            ]
+            
+        }).sort({"createAt":-1}).limit(12)
+        if(contacts){
+            let users = contacts.map(async (contact) => {
+                return await User.findById(contact.userId,
+                        {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+            })
+            console.log(await Promise.all(users))
+             res.status(200).json(await Promise.all(users));
+        } 
+        
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 router.delete('/contact/remove-request', checkLogin, async (req,res) => {
     try {
         const currentId = req.user._id;
@@ -86,7 +176,7 @@ router.delete('/contact/remove-request', checkLogin, async (req,res) => {
             ]
         })
         if(successAddContact && successAddNotification){
-            return res.status(200).json({removeSuccess: true, msg:"Removed successfully"})
+            return  res.status(200).json({removeSuccess: true, msg:"Removed successfully"})
         }
         
     } catch (error) {

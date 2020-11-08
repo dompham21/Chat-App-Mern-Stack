@@ -13,12 +13,12 @@ function LandingPage() {
     const refAddContact = useRef([]);
     const refRemoveContact = useRef([]);
 
-    useEffect(() => {
-        socketConnect = socket();
-        socketConnect.on('response-add-new-contact',data=>{
-            console.log(data);
-        });
-    }, [])
+    // useEffect(() => {
+    //     socketConnect = socket();
+    //     socketConnect.on('response-add-new-contact',data=>{
+    //         console.log(data);
+    //     });
+    // }, [])
 
     const onSearch = (values) => {
        dispatch(searchUser(values))

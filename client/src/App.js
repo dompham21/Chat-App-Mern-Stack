@@ -32,7 +32,7 @@ function App() {
           <PublicRouter restricted={true} component={Register} path="/register" exact/>
           <PrivateRouter exact path="/message" component={Message}/>
           <PrivateRouter exact path="/" component={LandingPage}/>
-          <PublicRouter restricted={false} component={Page404} path="*" exact/>
+          <PrivateRouter  component={Page404} path="*" exact/>
         </Switch>
     </Suspense>
   );

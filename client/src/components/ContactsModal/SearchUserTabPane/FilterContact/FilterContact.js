@@ -1,41 +1,12 @@
 import React, { useState } from 'react';
-import { Tabs, Input, Menu, List, Avatar, Badge, Switch, Select} from 'antd';
-import './ContactsModal.css';
-import { AiOutlineSearch } from 'react-icons/ai'
-import { FaUserPlus } from 'react-icons/fa'
-
-
-const { TabPane } = Tabs;
+import {  Menu, Switch, Select} from 'antd';
+import './FilterContact.css';
 const { SubMenu } = Menu;
 const { Option } = Select;
 
-function ContactsModel() {
-    const data = [
-        {
-          title: 'Anh Viet',
-        },
-        {
-          title: 'Trung Quan',
-        },
-        {
-          title: 'Dom Pham',
-        },
-        {
-          title: 'Pham Van Anh',
-        },
-        {
-            title: 'Anh Viet',
-        }
-      ];
-      const children = [];
-      for (let i = 10; i < 36; i++) {
-        children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-      }
-
+function FilterContact() {
     return (
-            <Tabs defaultActiveKey="1" type="card" className="contact-modals-layout">
-                <TabPane tab="Search User" key="1" className="contact-modals-search">
-                    <div className="contact-search-filter">
+        <div className="contact-search-filter">
                         <h3>Filters</h3>
                         <Menu
                             mode="inline"
@@ -100,47 +71,7 @@ function ContactsModel() {
                             </SubMenu>             
                         </Menu>
                     </div>
-                    <div className="contact-search-user">
-                        <Input placeholder="Search Contacts" prefix={<AiOutlineSearch /> } className="contact-search-user-input" />
-                        <List
-                           
-                            itemLayout="horizontal"
-                            className="contact-search-list"
-                            dataSource={data}
-                            renderItem={item => (
-                            <List.Item
-                                className="contact-search-list-item"
-                                actions={[
-                                    <Badge size="small">
-                                        <div className="nav-menu-right-item search-add-user-icon"><FaUserPlus/></div>
-                                    </Badge>
-                                ]}
-                            >
-                                
-                                <List.Item.Meta
-                                avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" className="contact-search-list-item-avatar"/>}
-                                title={<a href="https://ant.design" className="contact-search-list-item-name">{item.title}</a>}
-                                description={<p className="contact-search-list-item-description">Lives in Hoai Nhon, Binh Dinh, Viet Nam</p>}
-                                />
-
-                            </List.Item>
-                            )}
-                        />
-                    </div>
-                    
-                   
-                </TabPane>
-                <TabPane tab="Contacts" key="2">
-                    Content of card tab 2
-                </TabPane>
-                <TabPane tab="Waiting to accept" key="3">
-                    Content of card tab 3
-                </TabPane>
-                <TabPane tab="Friend requests" key="4">
-                    Content of card tab 3
-                </TabPane>
-            </Tabs>
-        )
+    )
 }
 
-export default ContactsModel
+export default FilterContact

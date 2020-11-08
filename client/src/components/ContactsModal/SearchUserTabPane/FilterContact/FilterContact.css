@@ -1,0 +1,36 @@
+.contact-search-filter {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-search-filter > h3 {
+    color: white;
+    border-top: 1px solid #3e4042 ;
+    padding: 10px 16px;
+}
+
+.contact-search-filter > ul > li:first-child {
+    margin-top: 0 !important;
+}
+
+.contact-search-filter-list > .ant-menu-item-selected  {
+    background-color: #252f3c !important;
+}
+.contact-search-filter-list > .ant-menu-submenu >  .ant-menu-sub >.ant-menu-item-selected {
+    background-color: #252f3c !important;
+}
+
+.contact-search-filter-switch {
+    background-color: #242526;
+    margin-left:6px ;
+}
+
+.ant-switch-checked {
+    background-color: #1890ff !important;
+}
+
+.contact-search-filter-select > div {
+    background-color: #242526 !important;
+    color: white !important;
+}

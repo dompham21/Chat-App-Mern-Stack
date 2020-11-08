@@ -1,0 +1,83 @@
+
+.contact-modals-search {
+    display: flex;
+}
+.contact-search-user {
+    width: 70%;
+    margin-left: 24px;
+    margin-top: 24px;
+
+}
+
+.contact-search-user-input {
+    width: 550px;
+    height: 40px;
+    background-color: #3a3b3c;
+    outline: none;
+    border: 0;
+    font-size: 18px;
+    color: white;
+}
+
+.contact-search-user-input > input {
+    background-color: #3a3b3c;
+    color: white;
+    font-size: 18px;
+}
+
+.contact-search-list {
+    margin-top: 24px;
+    background-color:  #242526;
+    padding: 5px 15px;
+}
+.contact-search-list-item {
+    border-bottom: 1px solid #3e4042 !important;
+
+}
+
+.contact-search-list-item:last-child {
+    border-bottom: 0 !important;
+}
+
+.contact-search-list-item > div > div {
+    color: white ;
+
+}
+
+.contact-search-list-item-avatar {
+    width: 42px;
+    height: 42px;
+}
+
+.contact-search-list-item-name {
+    color: white !important;
+    margin: 0 !important;
+}
+
+.contact-search-list-item-description {
+    color: white !important;
+    font-size: 13px;
+    margin: 0 !important;
+}
+
+.search-add-user-icon {
+    color: white !important;
+}
+
+
+.ant-list-item-action-split {
+    display: none;
+}
+
+.search-remove-user-icon {
+    color: #0099ff !important;
+
+}
+
+.ant-list-item-action > li {
+    padding: 0 !important;
+}
+
+p.ant-empty-description {
+    color: white !important;
+}

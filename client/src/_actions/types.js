@@ -12,4 +12,5 @@ export const SEARCH_USER = 'search_user';
 // Contact
 
 export const ADD_CONTACT = 'add_contact'
-export const REMOVE_CONTACT_REQUEST = 'remove_contact_request'
+export const REMOVE_CONTACT_REQUEST = 'remove_contact_request';
+export const GET_CONTACT_LIST = 'get_contact_list';
