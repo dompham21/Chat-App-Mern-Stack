@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Input, Avatar, Badge, Popover,Modal } from 'antd';
-import {AiOutlineMessage, AiOutlineUserAdd, AiOutlineUser,AiOutlineCaretDown, AiOutlineSearch, AiOutlineArrowLeft} from 'react-icons/ai'
-import {GiEarthAmerica} from 'react-icons/gi'
+import {AiOutlineMessage, AiOutlineUserAdd, AiOutlineUser,AiOutlineCaretDown, AiOutlineSearch} from 'react-icons/ai'
 import {FiSettings, FiHelpCircle, FiLogOut} from 'react-icons/fi';
+
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../_actions/user_action';
 import { useHistory } from "react-router-dom";
 
 import './NavBar.css';
 import ContactsModal from '../ContactsModal/ContactsModal';
+import Notification from '../Notification/Notification';
 
 const { Header } = Layout;
 function NavBar() {
@@ -54,48 +55,7 @@ function NavBar() {
                 </li>
           </ul>
       );
-      const contentMenuNotification = (
-        <ul className="nav-menu-list-dropmenu">
-            <li className="nav-menu-dropmenu-infomation nav-menu-dropmenu-notification">
-                <Avatar size="large" icon={<AiOutlineUser /> }   />
-                <div>
-                    <p><span>John Dea</span> send you a friend request </p>
-                    <p className="nav-menu-dropmenu-notification-time">about an hour ago</p>
-                </div>
-            </li>
-            <li className="nav-menu-dropmenu-infomation nav-menu-dropmenu-notification">
-                <Avatar size="large" icon={<AiOutlineUser /> }   />
-                <div>
-                    <p><span>John Dea</span> send you a friend request </p>
-                    <p className="nav-menu-dropmenu-notification-time">about an hour ago</p>
-                </div>
-            </li>
-            <li className="nav-menu-dropmenu-infomation nav-menu-dropmenu-notification">
-                <Avatar size="large" icon={<AiOutlineUser /> } />
-                <div>
-                    <p><span>John Dea</span> send you a friend request </p>
-                    <p className="nav-menu-dropmenu-notification-time">about an hour ago</p>
-                </div>
-            </li>
-            <li className="nav-menu-dropmenu-infomation nav-menu-dropmenu-notification">
-                <Avatar size="large" icon={<AiOutlineUser /> }   />
-                <div>
-                    <p><span>John Dea</span> send you a friend request </p>
-                    <p className="nav-menu-dropmenu-notification-time">about an hour ago</p>
-                </div>
-            </li>
-            <li className="nav-menu-dropmenu-infomation nav-menu-dropmenu-notification">
-                <Avatar size="large" icon={<AiOutlineUser /> }  />
-                <div>
-                    <p><span>John Dea</span> send you a friend request </p>
-                    <p className="nav-menu-dropmenu-notification-time">about an hour ago</p>
-                </div>
-            </li>
-            <li className="nav-menu-dropmenu-infomation nav-menu-dropmenu-notification btn-see-all">
-                <p>See all notifications</p>
-            </li>
-      </ul>
-  );
+      
 
     
     return (
@@ -128,16 +88,7 @@ function NavBar() {
                         </Badge>
                     </li>
                     <li>
-                        <Badge count={1} size="small">
-                            <Popover 
-                                    placement="bottomRight" 
-                                    trigger="click" 
-                                    content={contentMenuNotification}
-                                    className="nav-menu-right-dropmenu"
-                            >
-                                <div className="nav-menu-right-item"><GiEarthAmerica/></div>
-                            </Popover>
-                        </Badge>
+                        <Notification/>
                     </li>
                     <li> 
                         <Badge  size="small">

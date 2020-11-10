@@ -70,7 +70,6 @@ export const searchUser = async (query) => {
             }
         })
         .then(res => res.data.users)
-        console.log(request);
         return {
             type: SEARCH_USER,
             payload: request

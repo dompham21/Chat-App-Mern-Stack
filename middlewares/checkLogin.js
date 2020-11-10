@@ -5,7 +5,6 @@ const { JWT_SECRET } = require('../config/key');
 
 module.exports = (req,res,next) => {
     const {authorization} = req.headers
-
     if(!authorization){
         return res.status(400).json({
             isAuth: false,

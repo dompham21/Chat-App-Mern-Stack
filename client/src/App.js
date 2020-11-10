@@ -14,6 +14,7 @@ const token = localStorage.getItem('token')
 function App() {
     const location = useLocation()
 
+
     const handleRenderNav = () => {
         return location.pathname === '/login'||location.pathname ===  '/register' ? null : <NavBar/>
     }

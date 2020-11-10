@@ -2,15 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import { List, Avatar, Badge} from 'antd';
 import { FaUserPlus,FaUserTimes } from 'react-icons/fa'
 import { useDispatch } from 'react-redux';
-import { getContactList } from '../../../_actions/contact_action';
+import { getFriendRequestList } from '../../../_actions/contact_action';
 
-function ContactUserTabPane() {
-    const [listUser,setListUser] = useState([]);
+function FriendRequestTabPane() {
+    const [friendRequestList,setFriendRequestList] = useState([]);
     const dispatch = useDispatch()
     useEffect(() => {
-        dispatch(getContactList())
+        dispatch(getFriendRequestList())
             .then(res => {
-                setListUser(res.payload);
+                setFriendRequestList(res.payload);
             })
     }, [])
 
@@ -18,7 +18,7 @@ function ContactUserTabPane() {
         <List       
             itemLayout="horizontal"
             className="contact-search-list"
-            dataSource={listUser}
+            dataSource={friendRequestList}
             renderItem={item => (
                 <List.Item
                     className="contact-search-list-item"
@@ -40,4 +40,4 @@ function ContactUserTabPane() {
     )
 }
 
-export default ContactUserTabPane
+export default FriendRequestTabPane

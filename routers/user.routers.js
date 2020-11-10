@@ -56,7 +56,7 @@ router.post('/contact/add-new', checkLogin, async (req,res) => {
             //create new notification 
             const newNotification = new Notification.model({
                 senderId: currentId,
-                reaceiverId: contactId,
+                receiverId: contactId,
                 types: Notification.types.ADD_CONTACT
             })
             let notification = await newNotification.save();
@@ -93,7 +93,6 @@ router.get('/contact/list-users', checkLogin, async (req,res) => {
                      
                 }
             })
-            console.log(await Promise.all(users))
              res.status(200).json(await Promise.all(users));
         } 
         
@@ -121,7 +120,6 @@ router.get('/contact/waiting-request', checkLogin, async (req,res) => {
                 return await User.findById(contact.contactId,
                         {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
             })
-            console.log(await Promise.all(users))
              res.status(200).json(await Promise.all(users));
         } 
         
@@ -149,7 +147,6 @@ router.get('/contact/friend-request', checkLogin, async (req,res) => {
                 return await User.findById(contact.userId,
                         {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
             })
-            console.log(await Promise.all(users))
              res.status(200).json(await Promise.all(users));
         } 
         
@@ -171,7 +168,7 @@ router.delete('/contact/remove-request', checkLogin, async (req,res) => {
         let successAddNotification = await Notification.model.deleteOne({
             $and:[
                 {"senderId": currentId },
-                {"reaceiverId": contactId},
+                {"receiverId": contactId},
                 {"types": Notification.types.ADD_CONTACT}
             ]
         })
