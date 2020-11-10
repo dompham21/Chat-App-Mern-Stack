@@ -6,7 +6,8 @@ import { FaUserPlus } from 'react-icons/fa'
 import FilterContact from './SearchUserTabPane/FilterContact/FilterContact';
 import SearchUserTabPane from './SearchUserTabPane/SearchUserTabPane';
 import ContactUserTabPane from './ContactUserTabPane/ContactUserTabPane';
-
+import WaitingAcceptTabPane from './WaitingAcceptTabPane/WaitingAcceptTabPane';
+import FriendRequestTabPane from './FriendRequestTabPane/FriendRequestTabPane';
 
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
@@ -24,10 +25,10 @@ function ContactsModal() {
                     <ContactUserTabPane/>
                 </TabPane>
                 <TabPane tab="Waiting to accept" key="3">
-                    Content of card tab 3
+                    <WaitingAcceptTabPane/>
                 </TabPane>
                 <TabPane tab="Friend requests" key="4">
-                    Content of card tab 3
+                    <FriendRequestTabPane/>
                 </TabPane>
             </Tabs>
         )

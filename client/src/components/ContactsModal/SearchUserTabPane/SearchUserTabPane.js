@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {  Input, List, Avatar, Badge} from 'antd';
 import './SearchUserTabPane.css';
 import { AiOutlineSearch } from 'react-icons/ai'
@@ -8,20 +8,28 @@ import { searchUser } from '../../../_actions/user_action';
 import { useDispatch } from 'react-redux';
 import { addContact, removeContactReq } from '../../../_actions/contact_action';
 import LoadingListUser from '../../LoadingPage/LoadingListUser/LoadingListUser';
+import socket from '../../../socket';
 
 
-
+let socketConnect;
 
 function SearchUserTabPane() {
     const [nameToSearch, setNameToSearch] = useState('')
     const [listUser, setListUser] = useState([]);
     const [loading,setLoading] = useState(false);
-
     const refAddContact = useRef([]);
     const refRemoveContact = useRef([]);
 
     const dispatch = useDispatch()
 
+
+    useEffect(() => {
+        socketConnect = socket();
+        return () => {
+            socketConnect.emit('disconnect');
+            socketConnect.off();
+        }
+    }, [])
     const handleEnterSubmit = (event) => {
         if(event.key === 'Enter' && nameToSearch !== ''){
             setLoading(true);
@@ -41,7 +49,7 @@ function SearchUserTabPane() {
                 if(res.payload.addSuccess){
                     refAddContact.current[id].style.display = "none";
                     refRemoveContact.current[id].style.display = "block";
-                    // socketConnect.emit('add-new-contact', {contactId:id})
+                    socketConnect.emit('add-new-contact', {contactId:id})
                 }
             })
             .catch(err=>{
@@ -55,7 +63,8 @@ function SearchUserTabPane() {
                 if(res.payload.removeSuccess){
                     console.log(refAddContact.current[id]);
                     refAddContact.current[id].style.display = "block";
-                    refRemoveContact.current[id].style.display = "none";  
+                    refRemoveContact.current[id].style.display = "none";
+                   
                 }
             })
             .catch(err=>{

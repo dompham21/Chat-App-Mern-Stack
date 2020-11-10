@@ -1,4 +1,4 @@
-import { ADD_CONTACT, REMOVE_CONTACT_REQUEST, GET_CONTACT_LIST } from "./types";
+import { ADD_CONTACT, REMOVE_CONTACT_REQUEST, GET_CONTACT_LIST, GET_WAITING_ACCEPT_LIST, GET_FRIEND_REQUEST_LIST } from "./types";
 import axios from 'axios';
 
 
@@ -49,9 +49,44 @@ export const getContactList = async () => {
             }
         })
         .then(res => res.data)
-        console.log(request);
         return {
             type: GET_CONTACT_LIST,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getWaitingAcceptList = async () => {
+    try {
+        const request = await axios.get('/contact/waiting-request',{
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token')
+            }
+        })
+        .then(res => res.data)
+        return {
+            type: GET_WAITING_ACCEPT_LIST,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getFriendRequestList = async () => {
+    try {
+        const request = await axios.get('/contact/friend-request',{
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token')
+            }
+        })
+        .then(res => res.data)
+        return {
+            type: GET_FRIEND_REQUEST_LIST,
             payload: request
         }
     } catch (error) {
