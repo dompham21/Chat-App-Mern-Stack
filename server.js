@@ -41,7 +41,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(require('./routers/auth.routers'));
-app.use(require('./routers/user.routers'));
+app.use(require('./routers/contact.routers'));
 app.use(require('./routers/notification.routers'))
 
 if(process.env.NODE_ENV=="production"){

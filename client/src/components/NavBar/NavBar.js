@@ -4,7 +4,7 @@ import { Layout, Input, Avatar, Badge, Popover,Modal } from 'antd';
 import {AiOutlineMessage, AiOutlineUserAdd, AiOutlineUser,AiOutlineCaretDown, AiOutlineSearch} from 'react-icons/ai'
 import {FiSettings, FiHelpCircle, FiLogOut} from 'react-icons/fi';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../../_actions/user_action';
 import { useHistory } from "react-router-dom";
 
@@ -24,7 +24,6 @@ function NavBar() {
         localStorage.removeItem('user');
         history.push('/login');    
     }
-
 
     const contentMenuDown = (
             <ul className="nav-menu-list-dropmenu">
@@ -83,9 +82,7 @@ function NavBar() {
                         </Link>
                     </li>
                     <li>
-                        <Badge count={9} size="small" onClick={() => setVisible(true)}>
-                            <div className="nav-menu-right-item"><AiOutlineUserAdd/></div>
-                        </Badge>
+                        <ContactsModal/>
                     </li>
                     <li>
                         <Notification/>
@@ -108,17 +105,7 @@ function NavBar() {
                 </ul>
                 
             </Header>
-            <Modal
-                title="Contacts"
-                centered
-                visible={visible}
-                width={1100}
-                footer={null}
-                onOk={() => setVisible(false)}
-                onCancel={() => setVisible(false)}
-            >
-                <ContactsModal/>
-            </Modal>
+           
             
       </Layout>
 

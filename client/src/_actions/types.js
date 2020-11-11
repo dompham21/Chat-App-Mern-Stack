@@ -16,6 +16,10 @@ export const REMOVE_CONTACT_REQUEST = 'remove_contact_request';
 export const GET_CONTACT_LIST = 'get_contact_list';
 export const GET_WAITING_ACCEPT_LIST = 'get_waiting_accept_list';
 export const GET_FRIEND_REQUEST_LIST = 'get_friend_request_list';
+export const GET_COUNT_CONTACT_ALL = 'get_count_contact_all';
+export const GET_COUNT_CONTACT_WAITING_ACCEPT = 'get_count_contact_waiting_accept'
+export const GET_COUNT_CONTACT_FRIEND_REQUEST = 'get_count_contact_friend_request'
+
 
 // Notification
 
