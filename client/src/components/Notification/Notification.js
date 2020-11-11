@@ -83,7 +83,7 @@ const handleNotificationRead = () => {
 }
 
     return (
-        <Badge count={countNotification} size="small" onClick={handleNotificationRead}>
+        <Badge count={countNotification} overflowCount={99} size="small" onClick={handleNotificationRead}>
             <Popover 
                     placement="bottomRight" 
                     trigger="click" 

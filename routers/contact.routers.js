@@ -101,7 +101,7 @@ router.get('/contact/list-users', checkLogin, async (req,res) => {
     }
 })
 
-router.get('/contact/waiting-request', checkLogin, async (req,res) => {
+router.get('/contact/waiting-accept', checkLogin, async (req,res) => {
     try {
         const currentId = req.user._id;
         let contacts = await Contact.find({
@@ -181,4 +181,47 @@ router.delete('/contact/remove-request', checkLogin, async (req,res) => {
     }
 })
 
+router.get('/contract/count/all', checkLogin, async (req,res) => {
+    const currentId  = req.user._id;
+    let countAll = await Contact.countDocuments({
+        $and: [
+            {$or: [
+                {"userId":currentId},
+                {"contactId":currentId}
+            ]},
+            {"status":true}
+        ]
+    })
+    return res.status(200).json(countAll)
+})
+
+router.get('/contact/count/waiting-accept', checkLogin, async (req,res) => {
+    const currentId  = req.user._id;
+    let countWaitingRequest = await Contact.countDocuments({
+        $and: [
+            {
+                "userId": currentId
+            }
+            ,{
+                "status": false
+            }
+        ]
+    })
+    return res.status(200).json(countWaitingRequest)
+})
+
+router.get('/contact/count/friend-request', checkLogin, async (req,res) => {
+    const currentId  = req.user._id;
+    let countFriendRequest = await Contact.countDocuments({
+        $and: [
+            {
+                "contactId": currentId
+            }
+            ,{
+                "status": false
+            }
+        ]
+    })
+    return res.status(200).json(countFriendRequest)
+})
 module.exports = router;

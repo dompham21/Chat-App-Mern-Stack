@@ -33,11 +33,12 @@ div#rcDialogTitle0 {
 .ant-tabs-nav::before {
     border-bottom: 1px solid #3e4042 !important;
 }
-
-
-
  
-
 span.anticon.anticon-close.ant-modal-close-icon  {
     color: white !important;
+}
+
+sup.ant-scroll-number.ant-badge-count.ant-badge-count-sm {
+    z-index: 1;
+    padding: 0 !important;
 }
