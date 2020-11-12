@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Tabs, Menu, Badge, Select, Modal} from 'antd';
+import { Tabs, Menu, Badge , Modal} from 'antd';
 import './ContactsModal.css';
 import {AiOutlineUserAdd} from 'react-icons/ai'
 
@@ -7,8 +7,9 @@ import SearchUserTabPane from './SearchUserTabPane/SearchUserTabPane';
 import ContactUserTabPane from './ContactUserTabPane/ContactUserTabPane';
 import WaitingAcceptTabPane from './WaitingAcceptTabPane/WaitingAcceptTabPane';
 import FriendRequestTabPane from './FriendRequestTabPane/FriendRequestTabPane';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCountContactFriendRequest,getCountContactWaitingAccept } from '../../_actions/contact_action';
+import FilterContact from './FilterContact/FilterContact';
 
 const { TabPane } = Tabs;
 
@@ -16,6 +17,12 @@ function ContactsModal() {
     const [visible, setVisible] = useState(false);
     const [countFriendReq, setCountFriendReq] = useState(0);
     const [countWaitingAccept, setCountWaitingAccpet] = useState(0);
+    const removeSuccess = useSelector(state => state.contact.removeSuccess)
+    const addSuccess = useSelector(state => state.contact.addSuccess)
+    const  notificationAddNew = useSelector(state => state.notification.notificationAddNew)
+    const  notiRemoveReqContactSent = useSelector(state => state.notification.notiRemoveReqContactSent)
+
+
     const dispatch = useDispatch();
     
     
@@ -23,7 +30,6 @@ function ContactsModal() {
         dispatch(getCountContactFriendRequest())
         .then(res => {
             setCountFriendReq(res.payload)
-            console.log(res.payload)
         })
         .catch(err => {
             console.log(err);
@@ -36,7 +42,7 @@ function ContactsModal() {
         .catch(err => {
             console.log(err);
         })
-    }, [])
+    }, [removeSuccess,addSuccess,notificationAddNew,notiRemoveReqContactSent])
 
     return (
         <>
@@ -53,22 +59,25 @@ function ContactsModal() {
             onCancel={() => setVisible(false)}
         >
             <Tabs defaultActiveKey="1" type="card" className="contact-modals-layout">
-                        <TabPane tab="Search User" key="1" className="contact-modals-search">
-                            <SearchUserTabPane/>
-                        </TabPane>
-                    
-                    <TabPane tab={<Badge count="0" offset={[8,-5]} size="small" >Contacts</Badge>} key="2">
+                    <TabPane tab="Search User" key="1" className="contact-modals">
+                        <FilterContact/>
+                        <SearchUserTabPane/>
+                    </TabPane>
+                    <TabPane tab={<Badge count="0" offset={[8,-5]} size="small" >Contacts</Badge>} key="2" className="contact-modals">
+                        <FilterContact/>
                         <ContactUserTabPane/>
                     </TabPane>
-                    <TabPane tab={<Badge count={countWaitingAccept} offset={[8,-5]} size="small" >Waiting to accept</Badge>} key="3">
+                    <TabPane tab={<Badge count={countWaitingAccept} offset={[8,-5]} size="small" >Waiting to accept</Badge>} key="3" className="contact-modals">
+                        <FilterContact/>
                         <WaitingAcceptTabPane/>
                     </TabPane>
-                    <TabPane tab={<Badge count={countFriendReq} offset={[8,-5]} size="small" >Friend requests</Badge>} key="4">
+                    <TabPane tab={<Badge count={countFriendReq} offset={[8,-5]} size="small" >Friend requests</Badge>} key="4" className="contact-modals">
+                        <FilterContact/>
                         <FriendRequestTabPane/>
                     </TabPane>
                 </Tabs>
         </Modal>
-         </>   
+        </>
         )
 }
 

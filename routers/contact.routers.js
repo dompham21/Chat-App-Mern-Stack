@@ -17,7 +17,39 @@ router.get('/contact/find-users', checkLogin, async (req,res) => {
                 {"username": {"$regex": new RegExp(query,"i") }}
             ]
         },{_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+        .lean()
+
         if(users){
+           let status = users.map( async user => {
+                return await Contact.find({
+                    $or: [
+                        {$and:[
+                            {"userId": currentId },
+                            {"contactId": user._id}
+                        ]},
+                        {$and:[
+                            {"userId": user._id },
+                            {"contactId": currentId}
+                        ]}
+                    ]
+                },{status: 1,userId:1,contactId: 1})
+            })
+            const arrStatus = await Promise.all(status)
+
+            users.map(user=> {    
+                arrStatus.map(contact => {
+                    if(contact[0] && contact.length){
+                        if(user._id == contact[0].userId || user._id == contact[0].contactId){
+                            user.status = contact[0].status
+                            user.statusAdd = "yes"
+                        }
+                        else {
+                            user.statusAdd = "no";
+                        }
+                    }
+                    
+                })
+            })
             return res.status(200).json({users:users});
         } 
     } catch (error) {
@@ -181,6 +213,33 @@ router.delete('/contact/remove-request', checkLogin, async (req,res) => {
     }
 })
 
+router.delete('/contact/remove-request-receive', checkLogin, async (req,res) => {
+    try {
+        const currentId = req.user._id;
+        console.log(req.body.uid)
+        const contactId = req.body.uid;
+        let successAddContact = await Contact.deleteOne({
+            $and:[
+                {"userId": contactId },
+                {"contactId": currentId}
+            ]
+        });
+        let successAddNotification = await Notification.model.deleteOne({
+            $and:[
+                {"senderId": contactId },
+                {"receiverId": currentId},
+                {"types": Notification.types.ADD_CONTACT}
+            ]
+        })
+        if(successAddContact && successAddNotification){
+            return  res.status(200).json({removeSuccess: true, msg:"Removed successfully"})
+        }
+        
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 router.get('/contract/count/all', checkLogin, async (req,res) => {
     const currentId  = req.user._id;
     let countAll = await Contact.countDocuments({
@@ -224,4 +283,5 @@ router.get('/contact/count/friend-request', checkLogin, async (req,res) => {
     })
     return res.status(200).json(countFriendRequest)
 })
+
 module.exports = router;
