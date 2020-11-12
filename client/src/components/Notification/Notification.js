@@ -1,32 +1,44 @@
 import React, { useEffect, useState } from 'react'
-import {Badge,Popover, Avatar} from 'antd';
+import {Badge,Popover, Avatar, Tooltip} from 'antd';
 import {AiOutlineUser} from 'react-icons/ai'
 import {GiEarthAmerica} from 'react-icons/gi'
 
 import './Notification.css'
 import socket from '../../socket';
-import { useDispatch } from 'react-redux';
-import { getNotification, markNotification, getCountNotification, } from '../../_actions/notification_action';
+import { useDispatch,useSelector } from 'react-redux';
+import { getNotification, markNotification, getCountNotification, notificationAddNewReq, notificationRemoveReqContactReceived, notificationRemoveReqContactSent } from '../../_actions/notification_action';
 
 function Notification() {
-    const [responseAddNew,setResponseAddNew] = useState('');
     const [notifications,setNotifications] = useState([]);
     const [countNotification,setCountNotification] = useState(0);
+    const  notificationAddNew = useSelector(state => state.notification.notificationAddNew)
+    const  notiRemoveReqContactReceived = useSelector(state => state.notification.notiRemoveReqContactReceived)
+    const  notiRemoveReqContactSent = useSelector(state => state.notification.notiRemoveReqContactSent)
+
+
     const dispatch = useDispatch()
-    
+
     let socketConnect;
     useEffect(() => {
-        
         socketConnect = socket();
         socketConnect.on('response-add-new-contact',data=>{
-            setResponseAddNew(data.currentUser);
+            dispatch(notificationAddNewReq(data.currentUser))
         });
-        
+
+        socketConnect.on('response-remove-req-contact-sent',data => {
+            dispatch(notificationRemoveReqContactSent(data.currentUser))
+        })
+
+        socketConnect.on('response-remove-req-contact-receive',data => {
+            dispatch(notificationRemoveReqContactReceived(data.currentUser))
+        })
+
         return () => {
             socketConnect.emit('disconnect');
             socketConnect.off();
         }
     }, [])
+    
     useEffect(() => {
         dispatch(getNotification())
         .then(res => {
@@ -39,12 +51,11 @@ function Notification() {
         dispatch(getCountNotification())
         .then(res => {
             setCountNotification(res.payload.data)
-            console.log(res.payload.data);
         })
         .catch(err=>{
             console.log(err)
         })
-    }, [responseAddNew])
+    }, [notificationAddNew,notiRemoveReqContactSent])
 
     const contentMenuNotification = (
         <ul className="nav-menu-list-dropmenu">
@@ -83,16 +94,16 @@ const handleNotificationRead = () => {
 }
 
     return (
-        <Badge count={countNotification} overflowCount={99} size="small" onClick={handleNotificationRead}>
-            <Popover 
-                    placement="bottomRight" 
-                    trigger="click" 
-                    content={contentMenuNotification}
-                    className="nav-menu-right-dropmenu"
-            >
-                <div className="nav-menu-right-item"><GiEarthAmerica/></div>
-            </Popover>
-        </Badge>
+            <Badge count={countNotification} overflowCount={99} size="small" onClick={handleNotificationRead}>
+                <Popover 
+                        placement="bottomRight" 
+                        trigger="click" 
+                        content={contentMenuNotification}
+                        className="nav-menu-right-dropmenu"
+                >
+                    <div className="nav-menu-right-item"><GiEarthAmerica/></div>
+                </Popover>
+            </Badge>
     )
 }
 

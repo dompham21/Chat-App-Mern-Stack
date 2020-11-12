@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {  Input, List, Avatar, Badge} from 'antd';
+import {  Input, List, Avatar, Badge, Tooltip} from 'antd';
 import './SearchUserTabPane.css';
 import { AiOutlineSearch } from 'react-icons/ai'
 import { FaUserPlus,FaUserTimes } from 'react-icons/fa'
-import FilterContact from './FilterContact/FilterContact';
 import { searchUser } from '../../../_actions/user_action';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addContact, removeContactReq } from '../../../_actions/contact_action';
 import LoadingListUser from '../../LoadingPage/LoadingListUser/LoadingListUser';
 import socket from '../../../socket';
@@ -19,6 +18,7 @@ function SearchUserTabPane() {
     const [loading,setLoading] = useState(false);
     const refAddContact = useRef([]);
     const refRemoveContact = useRef([]);
+    
 
     const dispatch = useDispatch()
 
@@ -61,10 +61,9 @@ function SearchUserTabPane() {
         dispatch(removeContactReq(id))
             .then(res => {
                 if(res.payload.removeSuccess){
-                    console.log(refAddContact.current[id]);
                     refAddContact.current[id].style.display = "block";
                     refRemoveContact.current[id].style.display = "none";
-                   
+                    socketConnect.emit('remove-req-contact-sent',{contactId:id})
                 }
             })
             .catch(err=>{
@@ -73,9 +72,7 @@ function SearchUserTabPane() {
     }
 
     return (
-        <>
-            <FilterContact/>
-            <div className="contact-search-user">
+            <div className="container-contact-list-user">
                 <Input 
                     placeholder="Search Contacts" 
                     prefix={<AiOutlineSearch/> } 
@@ -92,21 +89,26 @@ function SearchUserTabPane() {
                         <List.Item
                             className="contact-search-list-item"
                             actions={[
-                                <Badge size="small" >
-                                    <div 
-                                        className="nav-menu-right-item search-add-user-icon"
-                                        ref={el => (refAddContact.current[item._id] = el)}   
-                                        onClick={()=>handleAddContact(item._id)}
-                                    ><FaUserPlus/></div>
-                                </Badge>,
-                                <Badge size="small" >
-                                    <div 
-                                        className="nav-menu-right-item search-remove-user-icon"
-                                        ref={el => (refRemoveContact.current[item._id] = el)} 
-                                        style={{display:"none"}} 
-                                        onClick={()=>handleRemoveContact(item._id)}
-                                    ><FaUserTimes/></div>
-                                </Badge>
+                                <Tooltip placement="top" title="Add Friend">
+                                    <Badge size="small" >
+                                        <div 
+                                            className="nav-menu-right-item search-add-user-icon"
+                                            ref={el => (refAddContact.current[item._id] = el)} 
+                                            style={{display:item.statusAdd == "no" || !item.statusAdd ?"inline-block":"none"}}   
+                                            onClick={()=>handleAddContact(item._id)}
+                                        ><FaUserPlus/></div>
+                                    </Badge>
+                                </Tooltip>,
+                                <Tooltip placement="top" title="Remove Request">
+                                    <Badge size="small" >
+                                        <div 
+                                            className="nav-menu-right-item search-remove-user-icon"
+                                            ref={el => (refRemoveContact.current[item._id] = el)} 
+                                            style={{display:item.statusAdd == "yes" ?"inline-block":"none"}} 
+                                            onClick={()=>handleRemoveContact(item._id)}
+                                        ><FaUserTimes/></div>
+                                    </Badge>
+                                </Tooltip>
                             ]}
                         >     
                             <List.Item.Meta
@@ -121,7 +123,6 @@ function SearchUserTabPane() {
                 }
             </div>
                     
-        </>
     )
 }
 

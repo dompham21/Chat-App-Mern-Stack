@@ -1,4 +1,4 @@
-import { ADD_CONTACT, REMOVE_CONTACT_REQUEST, GET_CONTACT_LIST, GET_WAITING_ACCEPT_LIST, GET_FRIEND_REQUEST_LIST, GET_COUNT_CONTACT_ALL, GET_COUNT_CONTACT_WAITING_ACCEPT, GET_COUNT_CONTACT_FRIEND_REQUEST } from "./types";
+import { ADD_CONTACT, REMOVE_CONTACT_REQUEST, GET_CONTACT_LIST, GET_WAITING_ACCEPT_LIST, GET_FRIEND_REQUEST_LIST, GET_COUNT_CONTACT_ALL, GET_COUNT_CONTACT_WAITING_ACCEPT, GET_COUNT_CONTACT_FRIEND_REQUEST, REMOVE_CONTACT_REQUEST_RECEIVE } from "./types";
 import axios from 'axios';
 
 
@@ -33,6 +33,24 @@ export const removeContactReq = async (dataToSubmit) => {
             .then(response => response.data);
         return {
             type: REMOVE_CONTACT_REQUEST,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const removeContactReqReceive = async (dataToSubmit) => {
+    try {
+        const request = await axios.delete('/contact/remove-request-receive',{data:{uid: dataToSubmit},
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token')
+            }
+        })
+            .then(response => response.data);
+        return {
+            type: REMOVE_CONTACT_REQUEST_RECEIVE,
             payload: request
         }
     } catch (error) {

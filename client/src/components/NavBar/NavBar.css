@@ -73,6 +73,10 @@
   cursor: pointer;
 }
 
+.nav-menu-right-item:hover {
+  background-color: #666769;
+}
+
 .nav-menu-right-item-avatar {
   margin-right: 10px;
 }

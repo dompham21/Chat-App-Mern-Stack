@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Layout, Input, Avatar, Badge, Popover,Modal } from 'antd';
-import {AiOutlineMessage, AiOutlineUserAdd, AiOutlineUser,AiOutlineCaretDown, AiOutlineSearch} from 'react-icons/ai'
+import { Layout, Input, Avatar, Badge, Popover } from 'antd';
+import {AiOutlineMessage, AiOutlineUser,AiOutlineCaretDown, AiOutlineSearch} from 'react-icons/ai'
 import {FiSettings, FiHelpCircle, FiLogOut} from 'react-icons/fi';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../_actions/user_action';
 import { useHistory } from "react-router-dom";
 
@@ -14,7 +14,6 @@ import Notification from '../Notification/Notification';
 
 const { Header } = Layout;
 function NavBar() {
-    const [visible, setVisible] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -82,25 +81,25 @@ function NavBar() {
                         </Link>
                     </li>
                     <li>
-                        <ContactsModal/>
+                            <ContactsModal/>
                     </li>
                     <li>
-                        <Notification/>
+                            <Notification/>
                     </li>
                     <li> 
-                        <Badge  size="small">
-                            <Popover 
-                                    placement="bottomRight" 
-                                    trigger="click" 
-                                    content={contentMenuDown}
-                                    className="nav-menu-right-dropmenu"
-                            >
-                                <div className="nav-menu-right-item">
-                                    
-                                        <AiOutlineCaretDown/>
-                                </div>  
-                            </Popover>
-                        </Badge>
+                            <Badge  size="small">
+                                <Popover 
+                                        placement="bottomRight" 
+                                        trigger="click" 
+                                        content={contentMenuDown}
+                                        className="nav-menu-right-dropmenu"
+                                >
+                                    <div className="nav-menu-right-item">
+                                        
+                                            <AiOutlineCaretDown/>
+                                    </div>  
+                                </Popover>
+                            </Badge>
                     </li>
                 </ul>
                 

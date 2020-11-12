@@ -3,3 +3,13 @@
 #root {
     font-size: 18px;
 }
+
+.ant-tooltip-inner {
+    color: black !important;
+    border-radius: 5px;
+    background-color: #c8c8c8;
+}
+
+.ant-tooltip-arrow {
+    display: none;
+}
