@@ -8,7 +8,8 @@ import {
     GET_COUNT_CONTACT_WAITING_ACCEPT, 
     GET_COUNT_CONTACT_FRIEND_REQUEST, 
     REMOVE_CONTACT_REQUEST_RECEIVED, 
-    APPROVE_CONTACT_REQUEST_RECEIVED
+    APPROVE_CONTACT_REQUEST_RECEIVED,
+    REMOVE_CONTACT
 } from "./types";
 import axios from 'axios';
 
@@ -49,6 +50,24 @@ export const approveContactReqReceived = async (dataToSubmit) => {
         }
     } catch (error) {
         console.log(error)
+    }
+}
+
+export const removeContact = async (dataToSubmit) => {
+    try {
+        const request = await axios.delete('/contact/remove-contact',{data:{uid: dataToSubmit},
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token')
+            }
+        })
+            .then(response => response.data);
+        return {
+            type: REMOVE_CONTACT,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error);
     }
 }
 

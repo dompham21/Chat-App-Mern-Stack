@@ -268,6 +268,32 @@ router.put('/contact/approve-request-received', checkLogin, async (req,res) => {
         console.log(error)
     }
 })
+
+router.delete('/contact/remove-contact', checkLogin, async (req,res) => {
+    try {
+        const currentId = req.user._id;
+        const contactId = req.body.uid;
+        let removeSuccess = await Contact.deleteOne({
+            $or: [
+                {$and:[
+                    {"userId": currentId },
+                    {"contactId": contactId},
+                    {"status": true}
+                ]},
+                {$and:[
+                    {"userId": contactId },
+                    {"contactId": currentId},
+                    {"status": true}
+                ]}
+            ]
+        })
+        if(removeSuccess){
+            return res.status(200).json({removeSuccess: true})
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
 router.get('/contract/count/all', checkLogin, async (req,res) => {
     const currentId  = req.user._id;
     let countAll = await Contact.countDocuments({
