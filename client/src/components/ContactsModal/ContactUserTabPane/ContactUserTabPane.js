@@ -1,18 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { List, Avatar, Badge} from 'antd';
 import { FaUserPlus,FaUserTimes } from 'react-icons/fa'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getContactList } from '../../../_actions/contact_action';
 
 function ContactUserTabPane() {
     const [listUser,setListUser] = useState([]);
+    const approveContactReqReceived = useSelector(state => state.contact.approveContactReqReceived)
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(getContactList())
             .then(res => {
                 setListUser(res.payload);
             })
-    }, [])
+    }, [approveContactReqReceived])
 
     return (
         <div className="container-contact-list-user">

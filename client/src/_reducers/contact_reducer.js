@@ -7,7 +7,8 @@ import {
     GET_COUNT_CONTACT_ALL, 
     GET_COUNT_CONTACT_WAITING_ACCEPT, 
     GET_COUNT_CONTACT_FRIEND_REQUEST,
-    REMOVE_CONTACT_REQUEST_RECEIVE
+    REMOVE_CONTACT_REQUEST_RECEIVED,
+    APPROVE_CONTACT_REQUEST_RECEIVED
 } from '../_actions/types';
 
 
@@ -15,10 +16,12 @@ export default function(state={},action){
     switch(action.type){
         case ADD_CONTACT:
             return {...state, addSuccess: action.payload}
+        case APPROVE_CONTACT_REQUEST_RECEIVED:
+            return {...state,approveContactReqReceived: action.payload}
         case REMOVE_CONTACT_REQUEST:
             return {...state, removeSuccess: action.payload}
-        case REMOVE_CONTACT_REQUEST_RECEIVE:
-            return {...state, removeReceiveSuccess: action.payload}
+        case REMOVE_CONTACT_REQUEST_RECEIVED:
+            return {...state, removeReceivedSuccess: action.payload}
         case GET_CONTACT_LIST:
             return {...state, listContact: action.payload}
         case GET_WAITING_ACCEPT_LIST:

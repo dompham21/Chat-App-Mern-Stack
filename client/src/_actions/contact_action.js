@@ -1,4 +1,15 @@
-import { ADD_CONTACT, REMOVE_CONTACT_REQUEST, GET_CONTACT_LIST, GET_WAITING_ACCEPT_LIST, GET_FRIEND_REQUEST_LIST, GET_COUNT_CONTACT_ALL, GET_COUNT_CONTACT_WAITING_ACCEPT, GET_COUNT_CONTACT_FRIEND_REQUEST, REMOVE_CONTACT_REQUEST_RECEIVE } from "./types";
+import { 
+    ADD_CONTACT, 
+    REMOVE_CONTACT_REQUEST, 
+    GET_CONTACT_LIST, 
+    GET_WAITING_ACCEPT_LIST, 
+    GET_FRIEND_REQUEST_LIST, 
+    GET_COUNT_CONTACT_ALL, 
+    GET_COUNT_CONTACT_WAITING_ACCEPT, 
+    GET_COUNT_CONTACT_FRIEND_REQUEST, 
+    REMOVE_CONTACT_REQUEST_RECEIVED, 
+    APPROVE_CONTACT_REQUEST_RECEIVED
+} from "./types";
 import axios from 'axios';
 
 
@@ -22,6 +33,25 @@ export const addContact = async (dataToSubmit) => {
     
 }
 
+export const approveContactReqReceived = async (dataToSubmit) => {
+    try {
+        const request = await axios.put(`/contact/approve-request-received`,{uid:dataToSubmit},{
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token')
+            }
+        })
+            .then(response => response.data);
+       
+        return {
+            type: APPROVE_CONTACT_REQUEST_RECEIVED,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const removeContactReq = async (dataToSubmit) => {
     try {
         const request = await axios.delete('/contact/remove-request',{data:{uid: dataToSubmit},
@@ -40,9 +70,9 @@ export const removeContactReq = async (dataToSubmit) => {
     }
 }
 
-export const removeContactReqReceive = async (dataToSubmit) => {
+export const removeContactReqReceived = async (dataToSubmit) => {
     try {
-        const request = await axios.delete('/contact/remove-request-receive',{data:{uid: dataToSubmit},
+        const request = await axios.delete('/contact/remove-request-received',{data:{uid: dataToSubmit},
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -50,7 +80,7 @@ export const removeContactReqReceive = async (dataToSubmit) => {
         })
             .then(response => response.data);
         return {
-            type: REMOVE_CONTACT_REQUEST_RECEIVE,
+            type: REMOVE_CONTACT_REQUEST_RECEIVED,
             payload: request
         }
     } catch (error) {

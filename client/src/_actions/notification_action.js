@@ -1,5 +1,13 @@
 import axios from "axios";
-import { GET_NOTIFICATION, MARK_NOTIFICATION, GET_COUNT_NOTIFICATION, NOTIFICATION_ADD_NEW, NOTIFICATION_REMOVE_REQ_CONTACT_RECEIVED, NOTIFICATION_REMOVE_REQ_CONTACT_SENT,  } from "./types";
+import { 
+    GET_NOTIFICATION, 
+    MARK_NOTIFICATION, 
+    GET_COUNT_NOTIFICATION, 
+    NOTIFICATION_ADD_NEW, 
+    NOTIFICATION_REMOVE_REQ_CONTACT_RECEIVED, 
+    NOTIFICATION_REMOVE_REQ_CONTACT_SENT,
+    NOTIFICATION_APPROVE_REQ_CONTACT_RECEIVED,  
+} from "./types";
 
 export const getNotification = async () => {
     try {
@@ -57,6 +65,13 @@ export const notificationAddNewReq =  (data) => {
             type: NOTIFICATION_ADD_NEW,
             payload: data
         }
+}
+
+export const notificationApproveReqContactReceived = (data) => {
+    return {
+        type: NOTIFICATION_APPROVE_REQ_CONTACT_RECEIVED,
+        payload: data
+    }
 }
 
 export const notificationRemoveReqContactReceived = (data) => {

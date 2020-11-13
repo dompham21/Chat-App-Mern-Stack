@@ -11,7 +11,8 @@ const NotificationSchema = new Schema({
 });
 
 const NOTIFICATION_TYPES = {
-    ADD_CONTACT: "add_contact"
+    ADD_CONTACT: "add_contact",
+    APPROVE_CONTACT: "approve_contact"
 }
 
 module.exports = {
