@@ -11,7 +11,7 @@ function WaitingAcceptTabPane() {
     const removeSuccess = useSelector(state => state.contact.removeSuccess)
     const addSuccess = useSelector(state => state.contact.addSuccess)
     const  notiRemoveReqContactReceived = useSelector(state => state.notification.notiRemoveReqContactReceived)
-
+    const notiApproveReqContactReceived = useSelector(state => state.notification.notiApproveReqContactReceived)
     useEffect(() => {
         
         socketConnect = socket();
@@ -27,7 +27,7 @@ function WaitingAcceptTabPane() {
             .then(res => {
                 setWaitingAcceptList(res.payload);
             })
-    }, [removeSuccess,addSuccess,notiRemoveReqContactReceived])
+    }, [removeSuccess,addSuccess,notiRemoveReqContactReceived,notiApproveReqContactReceived])
     const handleRemoveContact = (id) => {
         dispatch(removeContactReq(id))  
         .then(res => {

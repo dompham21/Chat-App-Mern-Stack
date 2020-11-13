@@ -6,7 +6,8 @@ import {
     NOTIFICATION_ADD_NEW, 
     NOTIFICATION_REMOVE_REQ_CONTACT_RECEIVED, 
     NOTIFICATION_REMOVE_REQ_CONTACT_SENT,
-    NOTIFICATION_APPROVE_REQ_CONTACT_RECEIVED,  
+    NOTIFICATION_APPROVE_REQ_CONTACT_RECEIVED,
+    NOTIFICATION_REMOVE_CONTACT,  
 } from "./types";
 
 export const getNotification = async () => {
@@ -65,6 +66,13 @@ export const notificationAddNewReq =  (data) => {
             type: NOTIFICATION_ADD_NEW,
             payload: data
         }
+}
+
+export const notificationRemoveContact = (data) => {
+    return {
+        type: NOTIFICATION_REMOVE_CONTACT,
+        payload: data
+    }
 }
 
 export const notificationApproveReqContactReceived = (data) => {

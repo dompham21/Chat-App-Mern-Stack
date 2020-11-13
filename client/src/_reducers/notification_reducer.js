@@ -5,7 +5,8 @@ import {
     NOTIFICATION_ADD_NEW, 
     NOTIFICATION_REMOVE_REQ_CONTACT_RECEIVED,
     NOTIFICATION_REMOVE_REQ_CONTACT_SENT,
-    NOTIFICATION_APPROVE_REQ_CONTACT_RECEIVED, 
+    NOTIFICATION_APPROVE_REQ_CONTACT_RECEIVED,
+    NOTIFICATION_REMOVE_CONTACT, 
 } from '../_actions/types';
 
 
@@ -17,8 +18,11 @@ export default function(state={},action){
             return {...state};
         case GET_COUNT_NOTIFICATION:
             return {...state,countNotification: action.payload}
+        // notification action    
         case NOTIFICATION_ADD_NEW:
             return {...state, notificationAddNew: action.payload}
+        case NOTIFICATION_REMOVE_CONTACT:
+            return {...state, notiRemoveContact: action.payload}
         case NOTIFICATION_APPROVE_REQ_CONTACT_RECEIVED:
             return {...state, notiApproveReqContactReceived: action.payload}
         case NOTIFICATION_REMOVE_REQ_CONTACT_RECEIVED:

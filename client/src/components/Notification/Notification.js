@@ -6,7 +6,7 @@ import {GiEarthAmerica} from 'react-icons/gi'
 import './Notification.css'
 import socket from '../../socket';
 import { useDispatch,useSelector } from 'react-redux';
-import { getNotification, markNotification, getCountNotification, notificationAddNewReq, notificationRemoveReqContactReceived, notificationRemoveReqContactSent, notificationApproveReqContactReceived } from '../../_actions/notification_action';
+import { getNotification, markNotification, getCountNotification, notificationAddNewReq, notificationRemoveReqContactReceived, notificationRemoveReqContactSent, notificationApproveReqContactReceived, notificationRemoveContact } from '../../_actions/notification_action';
 
 function Notification() {
     const [notifications,setNotifications] = useState([]);
@@ -38,7 +38,9 @@ function Notification() {
             dispatch(notificationRemoveReqContactReceived(data.currentUser))
         })
 
-
+        socketConnect.on('response-remove-contact',data => {
+            dispatch(notificationRemoveContact(data.currentUser))
+        })
         return () => {
             socketConnect.emit('disconnect');
             socketConnect.off();
@@ -62,7 +64,8 @@ function Notification() {
             console.log(err)
         })
     }, [notificationAddNew,notiRemoveReqContactSent,notiRemoveReqContactReceived,removeReceivedSuccess,notiApproveReqContactReceived])
-    console.log(notiApproveReqContactReceived)
+   
+
     const renderTypeNotification = (notificationType,senderName) => {
         switch(notificationType){
             case "add_contact":
