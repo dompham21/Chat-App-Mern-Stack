@@ -3,11 +3,23 @@ import { List, Avatar, Badge, Tooltip} from 'antd';
 import { FaUserTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux';
 import { getWaitingAcceptList, removeContactReq } from '../../../_actions/contact_action';
+import socket from '../../../socket';
+let socketConnect;
 
 function WaitingAcceptTabPane() {
     const [waitingAcceptList,setWaitingAcceptList] = useState([]);
     const removeSuccess = useSelector(state => state.contact.removeSuccess)
     const addSuccess = useSelector(state => state.contact.addSuccess)
+    const  notiRemoveReqContactReceived = useSelector(state => state.notification.notiRemoveReqContactReceived)
+
+    useEffect(() => {
+        
+        socketConnect = socket();
+        return () => {
+            socketConnect.emit('disconnect');
+            socketConnect.off();
+        }
+    }, [])
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -15,9 +27,17 @@ function WaitingAcceptTabPane() {
             .then(res => {
                 setWaitingAcceptList(res.payload);
             })
-    }, [removeSuccess,addSuccess])
+    }, [removeSuccess,addSuccess,notiRemoveReqContactReceived])
     const handleRemoveContact = (id) => {
-        dispatch(removeContactReq(id))    
+        dispatch(removeContactReq(id))  
+        .then(res => {
+            if(res.payload.removeSuccess){
+                socketConnect.emit('remove-req-contact-sent',{contactId:id})
+            }
+        })
+        .catch(err=>{
+            console.log(err);
+        })   
     }
     return (
         <div className="container-contact-list-user">

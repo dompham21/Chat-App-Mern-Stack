@@ -194,7 +194,8 @@ router.delete('/contact/remove-request', checkLogin, async (req,res) => {
         let successAddContact = await Contact.deleteOne({
             $and:[
                 {"userId": currentId },
-                {"contactId": contactId}
+                {"contactId": contactId},
+                {"status": false}
             ]
         });
         let successAddNotification = await Notification.model.deleteOne({
@@ -213,15 +214,15 @@ router.delete('/contact/remove-request', checkLogin, async (req,res) => {
     }
 })
 
-router.delete('/contact/remove-request-receive', checkLogin, async (req,res) => {
+router.delete('/contact/remove-request-received', checkLogin, async (req,res) => {
     try {
         const currentId = req.user._id;
-        console.log(req.body.uid)
         const contactId = req.body.uid;
         let successAddContact = await Contact.deleteOne({
             $and:[
                 {"userId": contactId },
-                {"contactId": currentId}
+                {"contactId": currentId},
+                {"status": false}
             ]
         });
         let successAddNotification = await Notification.model.deleteOne({
@@ -240,6 +241,33 @@ router.delete('/contact/remove-request-receive', checkLogin, async (req,res) => 
     }
 })
 
+router.put('/contact/approve-request-received', checkLogin, async (req,res) => {
+    try {
+        const currentId = req.user._id;
+        const contactId = req.body.uid;
+        console.log(req.body.uid)
+        let approveReq = await Contact.updateOne({
+            $and: [
+                {"userId": contactId},
+                {"contactId": currentId},
+                {"status": false}
+            ]
+        },{"status": true})
+
+        if(approveReq.nModified == 0){
+            return res.status(400).json({approveSuccess: false})
+        }
+        let newNotification = new Notification.model({
+            senderId: currentId,
+            receiverId: contactId,
+            types: Notification.types.APPROVE_CONTACT
+        })
+        let notification = await newNotification.save();
+        return res.status(200).json({approveSuccess: true,msg:"Saved successfully"})
+    } catch (error) {
+        console.log(error)
+    }
+})
 router.get('/contract/count/all', checkLogin, async (req,res) => {
     const currentId  = req.user._id;
     let countAll = await Contact.countDocuments({

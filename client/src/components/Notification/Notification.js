@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import {Badge,Popover, Avatar, Tooltip} from 'antd';
+import {Badge,Popover, Avatar, Tooltip, notification} from 'antd';
 import {AiOutlineUser} from 'react-icons/ai'
 import {GiEarthAmerica} from 'react-icons/gi'
 
 import './Notification.css'
 import socket from '../../socket';
 import { useDispatch,useSelector } from 'react-redux';
-import { getNotification, markNotification, getCountNotification, notificationAddNewReq, notificationRemoveReqContactReceived, notificationRemoveReqContactSent } from '../../_actions/notification_action';
+import { getNotification, markNotification, getCountNotification, notificationAddNewReq, notificationRemoveReqContactReceived, notificationRemoveReqContactSent, notificationApproveReqContactReceived } from '../../_actions/notification_action';
 
 function Notification() {
     const [notifications,setNotifications] = useState([]);
@@ -14,7 +14,8 @@ function Notification() {
     const  notificationAddNew = useSelector(state => state.notification.notificationAddNew)
     const  notiRemoveReqContactReceived = useSelector(state => state.notification.notiRemoveReqContactReceived)
     const  notiRemoveReqContactSent = useSelector(state => state.notification.notiRemoveReqContactSent)
-
+    const  removeReceivedSuccess = useSelector(state => state.contact.removeReceivedSuccess)
+    const  notiApproveReqContactReceived = useSelector(state => state.notification.notiApproveReqContactReceived)
 
     const dispatch = useDispatch()
 
@@ -25,13 +26,18 @@ function Notification() {
             dispatch(notificationAddNewReq(data.currentUser))
         });
 
+        socketConnect.on('response-approve-request-contact-received', data => {
+            dispatch(notificationApproveReqContactReceived(data.currentUser))
+        })
+
         socketConnect.on('response-remove-req-contact-sent',data => {
             dispatch(notificationRemoveReqContactSent(data.currentUser))
         })
 
-        socketConnect.on('response-remove-req-contact-receive',data => {
+        socketConnect.on('response-remove-req-contact-received',data => {
             dispatch(notificationRemoveReqContactReceived(data.currentUser))
         })
+
 
         return () => {
             socketConnect.emit('disconnect');
@@ -55,15 +61,25 @@ function Notification() {
         .catch(err=>{
             console.log(err)
         })
-    }, [notificationAddNew,notiRemoveReqContactSent])
-
+    }, [notificationAddNew,notiRemoveReqContactSent,notiRemoveReqContactReceived,removeReceivedSuccess,notiApproveReqContactReceived])
+    console.log(notiApproveReqContactReceived)
+    const renderTypeNotification = (notificationType,senderName) => {
+        switch(notificationType){
+            case "add_contact":
+                return (<p><span>{senderName}</span> send you a friend request </p>)
+            case "approve_contact":
+                return (<p><span>{senderName}</span> accepted your friend request </p>)
+            default:
+                return '';
+        }
+    }
     const contentMenuNotification = (
         <ul className="nav-menu-list-dropmenu">
             {notifications.map((notification,index)=> (
                 <li className="nav-menu-dropmenu-infomation nav-menu-dropmenu-notification" key={index}>
                     <Avatar size="large" icon={<AiOutlineUser /> }   />
                     <div>
-                        <p><span>{notification.senderName}</span> send you a friend request </p>
+                        {renderTypeNotification(notification.notificationType,notification.senderName)}
                         <p className="nav-menu-dropmenu-notification-time">about an hour ago</p>
                     </div>
                 </li> 

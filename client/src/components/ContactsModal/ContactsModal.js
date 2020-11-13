@@ -21,10 +21,13 @@ function ContactsModal() {
     const addSuccess = useSelector(state => state.contact.addSuccess)
     const  notificationAddNew = useSelector(state => state.notification.notificationAddNew)
     const  notiRemoveReqContactSent = useSelector(state => state.notification.notiRemoveReqContactSent)
+    const  notiRemoveReqContactReceived = useSelector(state => state.notification.notiRemoveReqContactReceived)
+    const removeReceivedSuccess = useSelector(state => state.contact.removeReceivedSuccess)   
+    const approveContactReceived = useSelector(state => state.contact.approveContactReqReceived)
+    const notiApproveReqContactReceived = useSelector(state => state.notification.notiApproveReqContactReceived)
 
 
     const dispatch = useDispatch();
-    
     
     useEffect(() => {
         dispatch(getCountContactFriendRequest())
@@ -42,7 +45,7 @@ function ContactsModal() {
         .catch(err => {
             console.log(err);
         })
-    }, [removeSuccess,addSuccess,notificationAddNew,notiRemoveReqContactSent])
+    }, [removeSuccess,addSuccess,notificationAddNew,notiApproveReqContactReceived,notiRemoveReqContactSent,notiRemoveReqContactReceived,removeReceivedSuccess,approveContactReceived])
 
     return (
         <>

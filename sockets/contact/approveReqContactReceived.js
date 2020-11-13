@@ -1,6 +1,6 @@
 const { checkExist, removeAndDelete } = require("../configSocket/configSocket");
 
-let removeReqContactReceived = (io) => {
+let approveReqContactReceived = (io) => {
     let clients = {};
     io.on("connection",(socket) => {
         let currentId = socket.handshake.query.currentId
@@ -12,13 +12,13 @@ let removeReqContactReceived = (io) => {
         //Check currentId existed in clients 
         checkExist(clients,currentId,socket.id)
 
-        socket.on("remove-req-contact-received", (data) => {
+        socket.on("approve-request-contact-received", (data) => {
             let contactId = data.contactId
             // emit noticatied for all socket id of contact id
-            console.log(data)
+            
             if(clients[contactId]){
                 clients[contactId].forEach(socketId => {
-                    io.sockets.connected[socketId].emit('response-remove-req-contact-received', {currentUser})
+                    io.sockets.connected[socketId].emit('response-approve-request-contact-received', {currentUser})
                 })
             }
         })
@@ -29,4 +29,4 @@ let removeReqContactReceived = (io) => {
     })
 }
 
-module.exports = removeReqContactReceived;
+module.exports = approveReqContactReceived;
