@@ -3,6 +3,7 @@ const removeReqContactReceived = require("./contact/removeReqContactReceived");
 const removeReqContactSent = require("./contact/removeReqContactSent");
 const approveReqContactReceived = require("./contact/approveReqContactReceived");
 const removeContact = require("./contact/removeContact");
+const sendMessage = require("./message/sendMessage");
 
 const initSockets = (io) => {
     addNewContact(io);
@@ -10,6 +11,7 @@ const initSockets = (io) => {
     removeReqContactSent(io);
     approveReqContactReceived(io);
     removeContact(io);
+    sendMessage(io);
 }
 
 module.exports = initSockets;

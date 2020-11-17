@@ -14,9 +14,9 @@ import {
 import axios from 'axios';
 
 
-export const addContact = async (dataToSubmit) => {
+export const addContact =  (dataToSubmit) => {
     try {
-        const request = await axios.post(`/contact/add-new`,{uid:dataToSubmit},{
+        const request =  axios.post(`/contact/add-new`,{uid:dataToSubmit},{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -34,9 +34,9 @@ export const addContact = async (dataToSubmit) => {
     
 }
 
-export const approveContactReqReceived = async (dataToSubmit) => {
+export const approveContactReqReceived =  (dataToSubmit) => {
     try {
-        const request = await axios.put(`/contact/approve-request-received`,{uid:dataToSubmit},{
+        const request =  axios.put(`/contact/approve-request-received`,{uid:dataToSubmit},{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -53,9 +53,9 @@ export const approveContactReqReceived = async (dataToSubmit) => {
     }
 }
 
-export const removeContact = async (dataToSubmit) => {
+export const removeContact =  (dataToSubmit) => {
     try {
-        const request = await axios.delete('/contact/remove-contact',{data:{uid: dataToSubmit},
+        const request =  axios.delete('/contact/remove-contact',{data:{uid: dataToSubmit},
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -71,9 +71,9 @@ export const removeContact = async (dataToSubmit) => {
     }
 }
 
-export const removeContactReq = async (dataToSubmit) => {
+export const removeContactReq =  (dataToSubmit) => {
     try {
-        const request = await axios.delete('/contact/remove-request',{data:{uid: dataToSubmit},
+        const request =  axios.delete('/contact/remove-request',{data:{uid: dataToSubmit},
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -89,9 +89,9 @@ export const removeContactReq = async (dataToSubmit) => {
     }
 }
 
-export const removeContactReqReceived = async (dataToSubmit) => {
+export const removeContactReqReceived =  (dataToSubmit) => {
     try {
-        const request = await axios.delete('/contact/remove-request-received',{data:{uid: dataToSubmit},
+        const request =  axios.delete('/contact/remove-request-received',{data:{uid: dataToSubmit},
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -107,9 +107,9 @@ export const removeContactReqReceived = async (dataToSubmit) => {
     }
 }
 
-export const getContactList = async () => {
+export const getContactList =  () => {
     try {
-        const request = await axios.get('/contact/list-users',{
+        const request =  axios.get('/contact/list-users',{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -125,9 +125,9 @@ export const getContactList = async () => {
     }
 }
 
-export const getWaitingAcceptList = async () => {
+export const getWaitingAcceptList =  () => {
     try {
-        const request = await axios.get('/contact/waiting-accept',{
+        const request =  axios.get('/contact/waiting-accept',{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -143,9 +143,9 @@ export const getWaitingAcceptList = async () => {
     }
 }
 
-export const getFriendRequestList = async () => {
+export const getFriendRequestList =  () => {
     try {
-        const request = await axios.get('/contact/friend-request',{
+        const request =  axios.get('/contact/friend-request',{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -161,9 +161,9 @@ export const getFriendRequestList = async () => {
     }
 }
 
-export const getCountContactAll = async () => {
+export const getCountContactAll =  () => {
     try {
-        const request = await axios.get('/contract/count/all',{
+        const request =  axios.get('/contract/count/all',{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -179,9 +179,9 @@ export const getCountContactAll = async () => {
     }
 }
 
-export const getCountContactWaitingAccept = async () => {
+export const getCountContactWaitingAccept =  () => {
     try {
-        const request = await axios.get('/contact/count/waiting-accept',{
+        const request =  axios.get('/contact/count/waiting-accept',{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -197,9 +197,9 @@ export const getCountContactWaitingAccept = async () => {
     }
 }
 
-export const getCountContactFriendRequest = async () => {
+export const getCountContactFriendRequest =  () => {
     try {
-        const request = await axios.get('/contact/count/friend-request',{
+        const request =  axios.get('/contact/count/friend-request',{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')

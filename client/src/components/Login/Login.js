@@ -71,7 +71,7 @@ function Login(props) {
                             <img className="login-form-logo" alt="logo" ></img>
                             <h3 className="login-form-title">Sign into your account</h3>
                             <Form 
-                                onKeyDown={(e)=> e.keyCode === 13 ? handleSubmitForm(e) : ''}
+                                // onKeyDown={(e)=> e.keyCode === 13 ? handleSubmitForm(e) : ''}
                                 onFinish={(values)=>handleSubmitForm(values)}
                                 name="basic"
                                 initialValues = {{
@@ -80,7 +80,6 @@ function Login(props) {
                                 }}
                             >
                                 <Form.Item 
-                                    
                                     name="email"
                                     rules={[{ required: true, message: 'Please input your email!' }]}
                                 >
@@ -101,7 +100,6 @@ function Login(props) {
                                     <Button  type="primary" htmlType="submit" className="login-btn-submit" loading={loading}>
                                         Login
                                     </Button>
-                
                                 </Form.Item>
                                 
                             </Form>

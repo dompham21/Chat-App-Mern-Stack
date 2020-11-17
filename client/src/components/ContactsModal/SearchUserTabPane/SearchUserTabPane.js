@@ -5,7 +5,7 @@ import { AiOutlineSearch } from 'react-icons/ai'
 import { FaUserPlus,FaUserTimes } from 'react-icons/fa'
 import { searchUser } from '../../../_actions/user_action';
 import { useDispatch } from 'react-redux';
-import { addContact, removeContactReq, removeContact } from '../../../_actions/contact_action';
+import { addContact, removeContactReq, removeContact, approveContactReqReceived, removeContactReqReceived } from '../../../_actions/contact_action';
 import LoadingListUser from '../../LoadingPage/LoadingListUser/LoadingListUser';
 import socket from '../../../socket';
 
@@ -19,6 +19,8 @@ function SearchUserTabPane() {
     const refAddContact = useRef([]);
     const refRemoveContact = useRef([]);
     const refRemoveRequest = useRef([]);
+    const refApproveReq = useRef([])
+    const refRemoveReceived = useRef([])
 
     
 
@@ -38,6 +40,7 @@ function SearchUserTabPane() {
             dispatch(searchUser(nameToSearch))
             .then(res=>{
                 setListUser(res.payload);
+                console.log(res.payload)
                 setLoading(false);
             })
             .catch(err=>{
@@ -74,7 +77,7 @@ function SearchUserTabPane() {
     }
 
     const handleRemoveRequest = (id) => {
-        dispatch(removeContactReq(id))
+        dispatch(removeContactReqReceived(id))
             .then(res => {
                 if(res.payload.removeSuccess){
                     refAddContact.current[id].style.display = "block";
@@ -87,6 +90,35 @@ function SearchUserTabPane() {
             })       
     }
 
+    const handleDeleteFriend = (id) => {
+        dispatch(removeContactReqReceived(id))
+        .then(res => {
+            if(res.payload.removeSuccess){
+                refAddContact.current[id].style.display = "block";
+                refApproveReq.current[id].style.display = "none";
+                refRemoveReceived.current[id].style.display = "none";
+                socketConnect.emit('remove-req-contact-received',{contactId:id})
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
+    const handleApproveFriendReq = (id) => {
+        dispatch(approveContactReqReceived(id))
+        .then(res => {
+            if(res.payload.approveSuccess){
+                refRemoveContact.current[id].style.display = "block";
+                refApproveReq.current[id].style.display = "none";
+                refRemoveReceived.current[id].style.display = "none";
+                socketConnect.emit('approve-request-contact-received',{contactId:id})
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
     return (
             <div className="container-contact-list-user">
                 <Input 
@@ -115,7 +147,7 @@ function SearchUserTabPane() {
                                         <div 
                                             className="nav-menu-right-item search-add-user-icon"
                                             ref={el => (refAddContact.current[item._id] = el)} 
-                                            style={{display:item.statusAdd == "no" || !item.statusAdd ?"inline-block":"none"}}   
+                                            style={{display: !item.statusSend && !item.statusAdd ? "inline-block":"none"}}   
                                             onClick={()=>handleAddContact(item._id)}
                                         ><FaUserPlus/></div>
                                     </Badge>
@@ -125,7 +157,7 @@ function SearchUserTabPane() {
                                         <div 
                                             className="nav-menu-right-item search-remove-user-icon"
                                             ref={el => (refRemoveRequest.current[item._id] = el)} 
-                                            style={{display:item.statusAdd == "yes" && item.status == false ?"inline-block":"none"}} 
+                                            style={{display:item.statusAdd  && !item.status ?"inline-block":"none"}} 
                                             onClick={()=>handleRemoveRequest(item._id)}
                                         ><FaUserTimes/></div>
                                     </Badge>
@@ -135,10 +167,25 @@ function SearchUserTabPane() {
                                         type="primary"
                                         ref={el => (refRemoveContact.current[item._id] = el)}  
                                         className="btn-delete-req"
-                                        style={{display:item.status == true && item.statusAdd == "yes" ? "inline-block":"none"}}
+                                        style={{display:(item.status && item.statusSend )|| (item.status && item.statusAdd) ? "inline-block":"none"}}
                                         onClick={()=>handleRemoveContact(item._id)}
                                     >Remove</Button>    
                                 </Tooltip>
+                                <div style={{display: !item.status &&  item.statusSend? "inline-block": "none"}}>
+                                    <Button 
+                                        type="primary" 
+                                        className="btn-confirm-req"
+                                        ref={el => (refApproveReq.current[item._id] = el)} 
+
+                                        onClick={()=>handleApproveFriendReq(item._id)}
+                                    >Confirm</Button>
+                                    <Button 
+                                        type="primary" 
+                                        className="btn-delete-req" 
+                                        ref={el => (refRemoveReceived.current[item._id] = el)} 
+                                        onClick={()=>handleDeleteFriend(item._id)}
+                                    >Delete</Button>  
+                                </div>
                         </List.Item>
                     )}
                 />

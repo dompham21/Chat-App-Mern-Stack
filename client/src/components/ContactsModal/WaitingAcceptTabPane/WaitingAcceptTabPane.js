@@ -28,6 +28,7 @@ function WaitingAcceptTabPane() {
                 setWaitingAcceptList(res.payload);
             })
     }, [removeSuccess,addSuccess,notiRemoveReqContactReceived,notiApproveReqContactReceived])
+    
     const handleRemoveContact = (id) => {
         dispatch(removeContactReq(id))  
         .then(res => {

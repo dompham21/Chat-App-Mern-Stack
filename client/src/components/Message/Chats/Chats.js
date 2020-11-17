@@ -3,120 +3,74 @@ import { Avatar } from 'antd';
 import { FaPhoneAlt, FaVideo } from 'react-icons/fa'
 import { BsInfoCircleFill } from 'react-icons/bs'
 import moment from 'moment';
-
-
 import './Chats.css'
 import ChatCard from './ChatCard/ChatCard';
 import InputSend from './InputSend/InputSend';
-const MY_USER_ID = 'apple';
-const tempMessages = [
-    {
-      id: 1,
-      author: 'apple',
-      message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-      timestamp: new Date().getTime()
-    },
-    {
-      id: 2,
-      author: 'orange',
-      message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-      timestamp: new Date().getTime()
-    },
-    {
-      id: 3,
-      author: 'orange',
-      message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-      timestamp: new Date().getTime()
-    },
-    {
-      id: 4,
-      author: 'apple',
-      message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-      timestamp: new Date().getTime()
-    },
-    {
-      id: 5,
-      author: 'apple',
-      message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-      timestamp: new Date().getTime()
-    },
-    {
-      id: 6,
-      author: 'apple',
-      message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-      timestamp: new Date().getTime()
-    },
-    {
-      id: 7,
-      author: 'orange',
-      message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-      timestamp: new Date().getTime()
-    },
-    {
-      id: 8,
-      author: 'orange',
-      message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-      timestamp: new Date().getTime()
-    },
-    {
-      id: 9,
-      author: 'apple',
-      message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-      timestamp: new Date().getTime()
-    },
-    {
-      id: 10,
-      author: 'orange',
-      message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-      timestamp: new Date().getTime()
-    },{
-        id: 11,
-        author: 'apple',
-        message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-        timestamp: new Date().getTime()
-      },
-      {
-        id: 12,
-        author: 'orange',
-        message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-        timestamp: new Date().getTime()
-      },
-      {
-        id: 13,
-        author: 'orange',
-        message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-        timestamp: new Date().getTime()
-      },
-  ]
-function Chats() {
+import { useDispatch, useSelector } from 'react-redux';
+import { getMessagesUser, afterPostMessage } from '../../../_actions/message_action';
+import socket from '../../../socket';
+let socketConnect;
+
+function Chats(props) {
+    const {id,username,avatar} = props
     const [messages, setMessages] = useState([]);
-    useEffect(() => {
-      getMessages();
-    },[])
+    const [messageFromBe,setMessageFromBe] = useState([])
+    const user = JSON.parse(localStorage.getItem('user'))
+
+    const dispatch = useDispatch()
     let messagesEnd = useRef(null);
+
+    useEffect(() => {
+      socketConnect = socket();
+      socketConnect.on("Output Chat Message", messageFromBackEnd => {
+          dispatch(afterPostMessage(messageFromBackEnd))
+          .then(res => {
+           
+            setMessageFromBe(res.payload)
+          })
+      })
+      return () => {
+          socketConnect.emit('disconnect');
+          socketConnect.off();
+      }
+    }, [])
+
     const scrollToBottom = () => {
-        console.log('a');
         messagesEnd.current.scrollIntoView({ behavior: "smooth" });
-      };
+    };
+    
     useEffect(() => {
         scrollToBottom()
     }, [messages])
-
+    
+    useEffect(() => {
+      dispatch(getMessagesUser(id))
+      .then(res=> {
+        setMessages(res.payload)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },[messageFromBe])
   
-    const getMessages = () => {
-        setMessages([...messages, ...tempMessages])
-    }
+
     const renderMessages = () => {
+      if(messages && messages.length){
         let i = 0;
-        let messageCount = messages.length;
+        let messageCount = messages.length; 
         let tempMessages = [];
     
-        while (i < messageCount) {
+        while (i < messageCount) { 
           let previous = messages[i - 1];
           let current = messages[i];
           let next = messages[i + 1];
-          let isMine = current.author === MY_USER_ID;
-          let currentMoment = moment(current.timestamp);
+          let isMine;
+          if(current.senderId == user._id){
+            isMine = true;
+          }
+
+          let currentMoment = moment(current.createAt);
+
           let prevBySameAuthor = false;
           let nextBySameAuthor = false;
           let startsSequence = true;
@@ -124,9 +78,15 @@ function Chats() {
           let showTimestamp = true;
     
           if (previous) {
-            let previousMoment = moment(previous.timestamp);
+            let previousMoment = moment(previous.createAt);
             let previousDuration = moment.duration(currentMoment.diff(previousMoment));
-            prevBySameAuthor = previous.author === current.author;
+
+            if(previous.senderId === current.senderId){
+              prevBySameAuthor = true;
+            }
+            else if(previous.receiverId === current.receiverId){
+              prevBySameAuthor = true;
+            }
             
             if (prevBySameAuthor && previousDuration.as('hours') < 1) {
               startsSequence = false;
@@ -136,11 +96,15 @@ function Chats() {
               showTimestamp = false;
             }
           }
-    
           if (next) {
             let nextMoment = moment(next.timestamp);
             let nextDuration = moment.duration(nextMoment.diff(currentMoment));
-            nextBySameAuthor = next.author === current.author;
+            if(next.senderId === current.senderId){
+              nextBySameAuthor = true;
+            }
+            else if(next.receiverId === current.receiverId){
+              nextBySameAuthor = true;
+            }
     
             if (nextBySameAuthor && nextDuration.as('hours') < 1) {
               endsSequence = false;
@@ -164,12 +128,14 @@ function Chats() {
     
         return tempMessages;
       }
+        
+    }
     return (
         <div className="message-layout-chats">
             <div className="message-layout-chats-title">
                 <div className="message-layout-chats-title-infomation">
                     <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" className="message-layout-chats-avatar"/>
-                    <span>Dom Pham</span>
+                    <span>{username}</span>
                 </div>
                 <ul className="message-layout-chats-title-icon">
                     <li> <FaPhoneAlt/></li>
@@ -184,7 +150,7 @@ function Chats() {
                 </div>
                
             </div>
-            <div><InputSend/></div>
+            <div><InputSend id={id} username={username} avatar={avatar}/></div>
         </div>
     )
 }

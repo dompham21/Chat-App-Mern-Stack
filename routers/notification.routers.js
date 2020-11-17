@@ -9,7 +9,7 @@ router.get('/get/notification', checkLogin, async (req,res) => {
     try {
         const currentId = req.user._id;
 
-        let notifications = await Notification.model.find({"receiverId": currentId}).sort({"createAt": 1}).limit(10);
+        let notifications = await Notification.model.find({"receiverId": currentId}).sort({"createAt": -1}).limit(10);
         if(!notifications){
             return res.status(400).json({msg:"Emtry notifications"})
         }
@@ -60,7 +60,6 @@ router.put('/notification/all-as-read', checkLogin, async (req,res) => {
         },{
             $set:{"isRead": true}
         })
-        console.log(notificationRead);
         if(notificationRead.ok == 1){
             res.status(200).json({readSuccess:true})
         }
