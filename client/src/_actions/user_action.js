@@ -3,15 +3,14 @@ import axios from 'axios';
 import {
     LOGIN_USER,
     REGISTER_USER,
-    AUTH_USER,
     LOGOUT_USER,
     SEARCH_USER,
 } from './types';
 
 
-export const registerUser = async (dataToSubmit) => {
+export const registerUser =  (dataToSubmit) => {
     try {
-        const request = await axios.post(`/signup`,dataToSubmit)
+        const request =  axios.post(`/signup`,dataToSubmit)
         .then(response => response.data);
    
         return {
@@ -24,9 +23,9 @@ export const registerUser = async (dataToSubmit) => {
    
 }
 
-export const loginUser = async (dataToSubmit) => {
+export const loginUser =  (dataToSubmit) => {
     try {
-        const request = await axios.post(`/signin`,(dataToSubmit))
+        const request =  axios.post(`/signin`,(dataToSubmit))
                 .then(response => response.data);
 
         return {
@@ -40,7 +39,7 @@ export const loginUser = async (dataToSubmit) => {
 }
 
 
-export const logoutUser = async () => {
+export const logoutUser =  () => {
     try {
         const request = axios.get(`/logout`,{
             headers: {
@@ -60,9 +59,9 @@ export const logoutUser = async () => {
     
 }
 
-export const searchUser = async (query) => {
+export const searchUser =  (query) => {
     try {
-        const request = await axios.get('/contact/find-users',{
+        const request =  axios.get('/contact/find-users',{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token'),

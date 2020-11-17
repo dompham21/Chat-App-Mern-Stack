@@ -35,19 +35,18 @@ router.get('/contact/find-users', checkLogin, async (req,res) => {
                 },{status: 1,userId:1,contactId: 1})
             })
             const arrStatus = await Promise.all(status)
-
             users.map(user=> {    
                 arrStatus.map(contact => {
                     if(contact[0] && contact.length){
-                        if(user._id == contact[0].userId || user._id == contact[0].contactId){
+                        if(user._id == contact[0].userId){
                             user.status = contact[0].status
-                            user.statusAdd = "yes"
+                            user.statusSend = true
                         }
-                        else {
-                            user.statusAdd = "no";
+                        else if(user._id == contact[0].contactId){
+                            user.status = contact[0].status
+                            user.statusAdd = true
                         }
-                    }
-                    
+                    }    
                 })
             })
             return res.status(200).json({users:users});
@@ -113,7 +112,7 @@ router.get('/contact/list-users', checkLogin, async (req,res) => {
                 }
             ]
             
-        }).sort({"createAt":-1}).limit(12)
+        }).sort({"updateAt":-1}).limit(12)
         if(contacts){
             let users = contacts.map(async (contact) => {
                 if(contact.contactId == currentId){
@@ -245,14 +244,16 @@ router.put('/contact/approve-request-received', checkLogin, async (req,res) => {
     try {
         const currentId = req.user._id;
         const contactId = req.body.uid;
-        console.log(req.body.uid)
         let approveReq = await Contact.updateOne({
             $and: [
                 {"userId": contactId},
                 {"contactId": currentId},
                 {"status": false}
             ]
-        },{"status": true})
+        },{
+            "status": true,
+            "updateAt": Date.now()
+        })
 
         if(approveReq.nModified == 0){
             return res.status(400).json({approveSuccess: false})

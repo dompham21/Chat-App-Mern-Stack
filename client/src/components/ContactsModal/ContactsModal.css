@@ -19,18 +19,22 @@ div#rcDialogTitle0 {
     display: flex;
 }
 
-.ant-tabs-tab {
-    background-color: #3a3b3c !important;
+.contact-modals-layout > div > div > .ant-tabs-nav-list  >.ant-tabs-tab {
+    background-color: #3a3b3c;
     color: white;
-    border: 1px solid #3e4042 !important;
+    border-bottom: 1px solid #3e4042;
+    border: none;
+    padding: 10px 18px;
 }
 
-.ant-tabs-tab.ant-tabs-tab-active  {
-    background-color: #1890ff !important;
+.contact-modals-layout > div > .ant-tabs-nav-wrap > .ant-tabs-nav-list  > .ant-tabs-tab.ant-tabs-tab-active  {
+    background-color: #1890ff !important ;
 }
-.ant-tabs-tab.ant-tabs-tab-active > div{
-    color: white !important;
+
+.contact-modals-layout > div > .ant-tabs-nav-wrap > .ant-tabs-nav-list  > .ant-tabs-tab.ant-tabs-tab-active > div{
+    color: white !important ;
 }
+
 .ant-tabs-nav {
     margin: 0 !important;
 }

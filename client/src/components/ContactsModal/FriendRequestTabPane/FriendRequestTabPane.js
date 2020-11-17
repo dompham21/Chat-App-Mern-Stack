@@ -30,7 +30,7 @@ function FriendRequestTabPane() {
             })
     }, [notificationAddNew,notiRemoveReqContactSent,removeReceivedSuccess,approveContactReceived])
 
-    const handleDeleteFriendReq = (id) => {
+    const handleDeleteFriend = (id) => {
         dispatch(removeContactReqReceived(id))
         .then(res => {
             if(res.payload.removeSuccess){
@@ -70,7 +70,7 @@ function FriendRequestTabPane() {
                             description={<p className="contact-search-list-item-description">Lives in Hoai Nhon, Binh Dinh, Viet Nam</p>}
                         /> 
                             <Button type="primary" className="btn-confirm-req" onClick={()=>handleApproveFriendReq(item._id)}>Confirm</Button>
-                            <Button type="primary" className="btn-delete-req" onClick={()=>handleDeleteFriendReq(item._id)}>Delete</Button>    
+                            <Button type="primary" className="btn-delete-req" onClick={()=>handleDeleteFriend(item._id)}>Delete</Button>    
                     </List.Item>
                 )}
             />

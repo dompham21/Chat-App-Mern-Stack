@@ -2,7 +2,6 @@
 
 export const LOGIN_USER = 'login_user';
 export const REGISTER_USER = 'register_user';
-export const AUTH_USER = 'auth_user';
 export const LOGOUT_USER = 'logout_user';
 
 // Method user
@@ -36,3 +35,8 @@ export const NOTIFICATION_REMOVE_CONTACT = 'notification_remove_contact'
 export const NOTIFICATION_APPROVE_REQ_CONTACT_RECEIVED = 'notification_approve_req_contact_received'
 export const NOTIFICATION_REMOVE_REQ_CONTACT_RECEIVED = 'notification_remove_req_contact_received'
 export const NOTIFICATION_REMOVE_REQ_CONTACT_SENT = 'notification_remove_req_contact_sent'
+
+// Message
+export const GET_ALL_CONVERSATIONS = 'get_all_conversations'
+export const GET_MESSAGES_USER = 'get_messages_user'
+export const AFTER_POST_MESSAGE = 'after_post_message'

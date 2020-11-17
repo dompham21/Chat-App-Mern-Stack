@@ -57,7 +57,6 @@ function Register(props) {
                             <img className="login-form-logo"></img>
                             <h3 className="login-form-title">Sign into your account</h3>
                             <Form 
-                                 onKeyDown={(e)=> e.keyCode == 13 ? handleSubmitForm(e) : ''}
                                  onFinish={(values)=>handleSubmitForm(values)}
                                 name="basic"
                             >

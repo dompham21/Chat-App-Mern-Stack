@@ -10,9 +10,9 @@ import {
     NOTIFICATION_REMOVE_CONTACT,  
 } from "./types";
 
-export const getNotification = async () => {
+export const getNotification =  () => {
     try {
-        const request = await axios.get('/get/notification',{
+        const request =  axios.get('/get/notification',{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -28,7 +28,7 @@ export const getNotification = async () => {
     }
 }
 
-export const markNotification = async (targetUsers) => {
+export const markNotification =  async (targetUsers) => {
     try {
         const request = await axios.put('/notification/all-as-read',{targetUsers:targetUsers},{
             headers: {
@@ -44,9 +44,9 @@ export const markNotification = async (targetUsers) => {
     }
 }
 
-export const getCountNotification = async () => {
+export const getCountNotification =  () => {
     try {
-        const request = await axios.get('/count/notification',{
+        const request =  axios.get('/count/notification',{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')

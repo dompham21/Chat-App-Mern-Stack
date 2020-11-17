@@ -26,7 +26,7 @@ function ChatCard(props) {
                    !isMine && endsSequence &&  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" size="small"/>
                } 
               <div className="bubble" title={friendlyTimestamp}>
-                { data.message }
+                { data.text }
               </div>
             </div>
         </div>

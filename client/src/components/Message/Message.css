@@ -1,4 +1,125 @@
 .message-layout {
+    height: calc(100vh - 63px);
+}
+
+.message-tabs-list-conversations  {
+    height: 100%;
+}
+
+.message-tabs-list-conversations > .ant-tabs-nav {
+    width: 350px;
+    overflow-y: scroll;
+    height: 100%;
+    background-color: #242526;
+    border-right: 1px solid #3e4042;
+
+}
+.message-tabs-list-conversations > .ant-tabs-nav >  div > .ant-tabs-nav-list {
+    padding: 0px 8px;
+
+}
+
+.message-tabs-list-conversations > .ant-tabs-nav > div >div > .ant-tabs-tab {
+    padding: 5px;
+    margin: 0px;
+    border-radius: 12px !important;
+    border:none !important;
+    outline: none;
+    background-color: #242526;
+}
+.message-tabs-list-conversations > .ant-tabs-nav >  div > div > .ant-tabs-tab > .ant-tabs-tab-btn {
+    width: 100%;
+}
+
+.message-tabs-conversations-navbar {
     display: flex;
-    height: calc(100vh - 64px);
+    align-items: center;
+    position: relative;
+    padding: 5px 0;
+}
+
+
+.message-list-conversations-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+}
+
+.message-list-conversations-avatar {
+    width: 50px;
+    height: 50px;
+}
+
+.message-list-conversations-name {
+    color: white !important;
+    font-size: 15px;
+}
+
+.message-list-conversations-description {
+    color: #95999d !important;
+    font-size: 13px;
+    margin: 0;
+}
+
+.message-list-conversations-avatar-seen {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    right: 5px;
+}
+
+.ant-tabs-extra-content {
+    width: 100%;
+}
+
+.message-list-contact-title {
+    padding: 10px 16px;
+    font-size: 24px;
+    font-weight: 800;
+    color: white;
+    margin: 0;
+}
+
+.message-list-contact-search {
+    height: 35px;
+    font-size: 20px;
+    background-color: #3a3b3c;
+    outline: none;
+    border: 0;
+    color: #95999d;
+    border-radius: 50px;
+    width: 315px;
+    margin-left: 10px;
+    margin-bottom: 12px;
+}
+
+.message-list-contact-search > span {
+    font-size: 20px;
+}
+
+.message-list-contact-search > input {
+    background-color: #3a3b3c;
+    color: #95999d;
+    font-size: 16px;
+}
+
+.ant-tabs-nav-list > .ant-tabs-tab.ant-tabs-tab-active  {
+    background-color: #18191a !important;
+    border: none !important;
+    color: white;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+::-webkit-scrollbar-track {
+   background-color: #242526;
+}
+::-webkit-scrollbar-thumb {
+    background: #161617; 
+}
+
+.message-tabs-list-conversations > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane {
+    padding: 0;
 }

@@ -45,7 +45,14 @@ function ContactsModal() {
         .catch(err => {
             console.log(err);
         })
-    }, [removeSuccess,addSuccess,notificationAddNew,notiApproveReqContactReceived,notiRemoveReqContactSent,notiRemoveReqContactReceived,removeReceivedSuccess,approveContactReceived])
+    }, [removeSuccess,
+        addSuccess,
+        notificationAddNew,
+        notiApproveReqContactReceived,
+        notiRemoveReqContactSent,
+        notiRemoveReqContactReceived,
+        removeReceivedSuccess,
+        approveContactReceived])
 
     return (
         <>
@@ -66,7 +73,7 @@ function ContactsModal() {
                         <FilterContact/>
                         <SearchUserTabPane/>
                     </TabPane>
-                    <TabPane tab={<Badge count="0" offset={[8,-5]} size="small" >Contacts</Badge>} key="2" className="contact-modals">
+                    <TabPane tab={<Badge count="0" offset={[8,-5]} size="small" className="contact-tab-nav" >Contacts</Badge>} key="2" className="contact-modals">
                         <FilterContact/>
                         <ContactUserTabPane/>
                     </TabPane>

@@ -47,3 +47,27 @@ span.ant-input-suffix {
     color: #0099ff;
     margin-left: 8px;
 }
+
+.message-form-submit {
+    display: flex;
+    width: 100%;
+}
+
+.message-form-submit > .ant-form-item {
+    margin-bottom: 0;
+
+}
+
+.message-input-send-form-item {
+    width: 92%;
+    margin-left: 10px;
+}
+
+.message-btn-submit {
+    background-color: #18191a;
+    border: none;
+}
+.message-btn-submit:hover {
+    background-color: #18191a;
+
+}
