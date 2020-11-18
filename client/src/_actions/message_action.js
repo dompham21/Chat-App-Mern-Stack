@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ALL_CONVERSATIONS, GET_MESSAGES_USER, AFTER_POST_MESSAGE } from "./types";
+import { GET_ALL_CONVERSATIONS, GET_MESSAGES_USER, AFTER_POST_MESSAGE, GET_KEY_TABS } from "./types";
 
 export const getAllConversations =  () => {
     try {
@@ -52,4 +52,15 @@ export const afterPostMessage  = async (data) => {
     } catch (error) {
         console.log(error)
     }  
+}
+
+export const getKeyTabs = (data) => {
+    try {
+        return {
+            type: GET_KEY_TABS,
+            payload: data
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }

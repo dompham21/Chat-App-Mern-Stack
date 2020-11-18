@@ -4,7 +4,7 @@ import Chats from './Chats/Chats'
 import { Tabs, Avatar, Input} from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import {AiOutlineSearch} from 'react-icons/ai'
-import { getAllConversations } from '../../_actions/message_action'
+import { getAllConversations, getKeyTabs } from '../../_actions/message_action'
 import moment from 'moment'
 
 const { TabPane } = Tabs;
@@ -22,29 +22,31 @@ function Message() {
     const [listAllConversations, setListAllConversations] = useState([])
     const dispatch = useDispatch()
     const receiveMessage = useSelector(state => state.message.receiveMessage)
-
     useEffect(() => {
        dispatch(getAllConversations())
        .then(res=>{
-           console.log(res.payload.allConversations)
            setListAllConversations(res.payload.allConversations)
        })
        .catch(error=>{
            console.log(error)
        })
     }, [receiveMessage])
- 
+
+    const handleGetKey = (key) => {
+        dispatch(getKeyTabs(key))
+
+    }
     return (
         <div className="message-layout">            
             <Tabs  
-            defaultActiveKey="5faf42164055fe2a8ffbafa4" 
             type="card"
             tabPosition="left" 
             className="message-tabs-list-conversations" 
             tabBarExtraContent={ OperationsSlot}
+            onChange={handleGetKey}
             >
                 {listAllConversations.map(pane => (
-                <TabPane 
+                <TabPane
                     tab={
                         <div className="message-tabs-conversations-navbar">
                             <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" className="message-list-conversations-avatar"/>
@@ -60,10 +62,12 @@ function Message() {
                     key={pane._id} 
                     className="message-tabs-conversations-item"
                 >
-                    <Chats id={pane._id} username={pane.username} avatar={pane.avatar}/>
+                    <Chats id={pane._id} username={pane.username}/>
                 </TabPane>
             ))}
             </Tabs>
+          
+        
         </div>
     )
 }

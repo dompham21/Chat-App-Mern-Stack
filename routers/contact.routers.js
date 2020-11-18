@@ -115,18 +115,20 @@ router.get('/contact/list-users', checkLogin, async (req,res) => {
             ]
             
         }).sort({"updateAt":-1}).limit(12)
+        .populate("user", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+        .populate("contacter", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+
         if(contacts){
-            let users = contacts.map(async (contact) => {
+            let users = contacts.map( (contact) => {
                 if(contact.contactId == currentId){
-                    return await User.findById(contact.userId,
-                        {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+                    let getUserContact = contact.user
+                    return getUserContact
                 }else {
-                    return await User.findById(contact.contactId,
-                        {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
-                     
+                    let getUserContact = contact.contacter
+                    return getUserContact
                 }
             })
-             res.status(200).json(await Promise.all(users));
+             res.status(200).json(users);
         } 
         
     } catch (error) {
@@ -148,12 +150,14 @@ router.get('/contact/waiting-accept', checkLogin, async (req,res) => {
             ]
             
         }).sort({"createAt":-1}).limit(12)
+        .populate("contacter", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+
         if(contacts){
-            let users = contacts.map(async (contact) => {
-                return await User.findById(contact.contactId,
-                        {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+            let users = contacts.map( (contact) => {
+                let getUserContact = contact.contacter
+                return getUserContact
             })
-             res.status(200).json(await Promise.all(users));
+             res.status(200).json(users);
         } 
         
     } catch (error) {
@@ -175,12 +179,14 @@ router.get('/contact/friend-request', checkLogin, async (req,res) => {
             ]
             
         }).sort({"createAt":-1}).limit(12)
+        .populate("user", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+
         if(contacts){
-            let users = contacts.map(async (contact) => {
-                return await User.findById(contact.userId,
-                        {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+            let users = contacts.map( (contact) => {
+                let getUserContact = contact.user
+                return getUserContact
             })
-             res.status(200).json(await Promise.all(users));
+             res.status(200).json(users);
         } 
         
     } catch (error) {

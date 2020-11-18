@@ -10,6 +10,7 @@ import PublicRouter from './PublicRouter';
 import Page404 from './components/Page404/Page404';
 import socket from './socket';
 import Message from './components/Message/Message';
+import Chats from './components/Message/Chats/Chats';
 const token = localStorage.getItem('token')
 function App() {
     const location = useLocation()
@@ -19,11 +20,6 @@ function App() {
         return location.pathname === '/login'||location.pathname ===  '/register' ? null : <NavBar/>
     }
   
-    // useEffect(() => {
-    //   if(token){
-    //     socket();
-    //   } 
-    // }, [token])
     
   return (
     <Suspense fallback={(<div>Loading...</div>)}>

@@ -40,3 +40,4 @@ export const NOTIFICATION_REMOVE_REQ_CONTACT_SENT = 'notification_remove_req_con
 export const GET_ALL_CONVERSATIONS = 'get_all_conversations'
 export const GET_MESSAGES_USER = 'get_messages_user'
 export const AFTER_POST_MESSAGE = 'after_post_message'
+export const GET_KEY_TABS = 'get_key_tabs'
