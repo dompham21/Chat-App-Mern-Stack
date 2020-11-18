@@ -8,7 +8,7 @@ export default function(state={},action){
         case GET_MESSAGES_USER:
             return {...state,dataMessages: action.payload}
         case AFTER_POST_MESSAGE:
-            return {...state,dataMessages: state.dataMessages.concat(action.payload)}
+            return {...state,dataMessages: state.dataMessages.concat(action.payload),receiveMessage: action.payload}
         default:
             return state;
     }

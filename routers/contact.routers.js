@@ -80,7 +80,9 @@ router.post('/contact/add-new', checkLogin, async (req,res) => {
             //create new contact 
             const newContact =  new Contact({
                 userId: currentId,
-                contactId: contactId
+                contactId: contactId,
+                user: currentId,
+                contacter: contactId
             })
             let contact = await newContact.save()
 
