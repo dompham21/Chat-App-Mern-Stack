@@ -6,7 +6,6 @@ import './ChatCard.css'
 function ChatCard(props) {
     const {data,isMine,startsSequence,endsSequence, showTimestamp} = props;
     const friendlyTimestamp = moment(data.timestamp).format('LLLL');
-
     return (
         <div className={[
             'message',

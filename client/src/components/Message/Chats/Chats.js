@@ -16,7 +16,7 @@ function Chats(props) {
     const [messages, setMessages] = useState([]);
     const [messageFromBe,setMessageFromBe] = useState([])
     const user = JSON.parse(localStorage.getItem('user'))
-
+    const activeKey = useSelector(state => state.message.activeKey)
     const dispatch = useDispatch()
     let messagesEnd = useRef(null);
 
@@ -25,7 +25,6 @@ function Chats(props) {
       socketConnect.on("Output Chat Message", messageFromBackEnd => {
           dispatch(afterPostMessage(messageFromBackEnd))
           .then(res => {
-           
             setMessageFromBe(res.payload)
           })
       })
@@ -44,16 +43,25 @@ function Chats(props) {
     }, [messages])
     
     useEffect(() => {
-      dispatch(getMessagesUser(id))
-      .then(res=> {
-        setMessages(res.payload)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    },[messageFromBe])
+      if(activeKey){
+        dispatch(getMessagesUser(activeKey))
+        .then(res=> {
+          setMessages(res.payload)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }else{
+        dispatch(getMessagesUser(id))
+        .then(res=> {
+          setMessages(res.payload)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
   
-    // console.log(messages)
+    },[messageFromBe,activeKey])
     const renderMessages = () => {
       if(messages && messages.length){
         let i = 0;
@@ -121,9 +129,7 @@ function Chats(props) {
               data={current}
             />
           );
-    
-          // Proceed to the next message.
-          i += 1;
+            i += 1;
         }
     
         return tempMessages;

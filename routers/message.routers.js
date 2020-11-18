@@ -70,12 +70,13 @@ router.get('/message/get-all-conversations',checkLogin , async (req,res) => {
             "members": {$elemMatch: {"userId": currentId}}
         }).sort({"updateAt": -1}).limit(20).lean();
       
+
         let allConversations = userConversations.concat(groupConversations)
 
-        allConversations = _.sortBy(allConversations,(item)=> {
-            return item.updateAt
+        allConversations.sort((a,b)=>{
+            return b.updateAt-a.updateAt;
         })
-        
+        console.log(allConversations)
 
         return res.status(200).json({
             allConversations:allConversations,
