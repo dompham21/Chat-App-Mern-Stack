@@ -53,7 +53,7 @@ function Chats(props) {
       })
     },[messageFromBe])
   
-
+    // console.log(messages)
     const renderMessages = () => {
       if(messages && messages.length){
         let i = 0;

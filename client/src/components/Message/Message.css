@@ -43,7 +43,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-
 }
 
 .message-list-conversations-avatar {
@@ -60,6 +59,10 @@
     color: #95999d !important;
     font-size: 13px;
     margin: 0;
+}
+
+.message-list-conversations-time {
+
 }
 
 .message-list-conversations-avatar-seen {

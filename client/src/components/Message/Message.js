@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import './Message.css'
 import Chats from './Chats/Chats'
 import { Tabs, Avatar, Input} from 'antd'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {AiOutlineSearch} from 'react-icons/ai'
 import { getAllConversations } from '../../_actions/message_action'
+import moment from 'moment'
 
 const { TabPane } = Tabs;
 const OperationsSlot = {
@@ -16,19 +17,22 @@ const OperationsSlot = {
             />
         </div>
   };
+
 function Message() {
     const [listAllConversations, setListAllConversations] = useState([])
     const dispatch = useDispatch()
+    const receiveMessage = useSelector(state => state.message.receiveMessage)
 
     useEffect(() => {
        dispatch(getAllConversations())
        .then(res=>{
+           console.log(res.payload.allConversations)
            setListAllConversations(res.payload.allConversations)
        })
        .catch(error=>{
            console.log(error)
        })
-    }, [])
+    }, [receiveMessage])
  
     return (
         <div className="message-layout">            
@@ -46,7 +50,9 @@ function Message() {
                             <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" className="message-list-conversations-avatar"/>
                             <div className="message-list-conversations-info">
                                 <span className="message-list-conversations-name">{pane.username}</span>
-                                <p className="message-list-conversations-description">You: i don't know <span>· 12:02AM</span></p>
+                                <p className="message-list-conversations-description">{pane.preview.length?pane.preview[0].text:''} 
+                                    <span className="message-list-conversations-time"> · {pane.preview.length?moment(pane.preview[0].createAt).locale('vi').startOf("seconds").fromNow():''}</span>
+                                </p>
                             </div>
                             <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" className="message-list-conversations-avatar-seen"/>
                         </div>
@@ -63,3 +69,6 @@ function Message() {
 }
 
 export default Message
+//AKIARYKYC4QEXN3HSRHT
+//vI9yLBmp5wuwqgg9c9iN8LercjbrqLdIWfKgm2Of
+// arn:aws:iam::120980694025:user/dompham21
