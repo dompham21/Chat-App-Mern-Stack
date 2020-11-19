@@ -55,6 +55,7 @@ function Chats(props) {
         dispatch(getMessagesUser(id))
         .then(res=> {
           setMessages(res.payload)
+          console.log(res.payload)
         })
         .catch(err => {
           console.log(err)

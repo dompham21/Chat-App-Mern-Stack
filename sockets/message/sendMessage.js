@@ -20,7 +20,7 @@ let sendMessage = (io) => {
                     messageType: "text",
                     text: data.message
                 })
-
+                console.log(data)
                 messages.save((err,doc) => {
                     if(err) return res.json({ success: false, err })
 

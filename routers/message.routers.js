@@ -105,7 +105,7 @@ router.get('/message/:id', checkLogin, async (req,res)=> {
                     {"receiverId": userId}
                 ]}
             ]
-        }).sort({"createT": -1 }).limit(30)
+        }).sort({"createAt": -1 }).limit(15)
         .populate("sender", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
         .populate("receiver", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1}) 
 
@@ -125,7 +125,9 @@ router.get('/message/:id', checkLogin, async (req,res)=> {
         },{
             "updateAt": Date.now()
         })
-
+        messages.sort((a,b)=>{
+            return a.createAt-b.createAt;
+        })
         res.status(200).json(messages)
     } catch (error) {
         console.log(error)
