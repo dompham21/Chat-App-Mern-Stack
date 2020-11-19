@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {Badge,Popover, Avatar, Tooltip, notification} from 'antd';
+import {Badge,Popover, Avatar} from 'antd';
 import {AiOutlineUser} from 'react-icons/ai'
 import {GiEarthAmerica} from 'react-icons/gi'
 
@@ -17,33 +17,37 @@ function Notification() {
     const  removeReceivedSuccess = useSelector(state => state.contact.removeReceivedSuccess)
     const  notiApproveReqContactReceived = useSelector(state => state.notification.notiApproveReqContactReceived)
 
+    const token = localStorage.getItem('token')
+
     const dispatch = useDispatch()
 
     let socketConnect;
     useEffect(() => {
-        socketConnect = socket();
-        socketConnect.on('response-add-new-contact',data=>{
-            dispatch(notificationAddNewReq(data.currentUser))
-        });
-
-        socketConnect.on('response-approve-request-contact-received', data => {
-            dispatch(notificationApproveReqContactReceived(data.currentUser))
-        })
-
-        socketConnect.on('response-remove-req-contact-sent',data => {
-            dispatch(notificationRemoveReqContactSent(data.currentUser))
-        })
-
-        socketConnect.on('response-remove-req-contact-received',data => {
-            dispatch(notificationRemoveReqContactReceived(data.currentUser))
-        })
-
-        socketConnect.on('response-remove-contact',data => {
-            dispatch(notificationRemoveContact(data.currentUser))
-        })
-        return () => {
-            socketConnect.emit('disconnect');
-            socketConnect.off();
+        if(token){
+            socketConnect = socket();
+            socketConnect.on('response-add-new-contact',data=>{
+                dispatch(notificationAddNewReq(data.currentUser))
+            });
+    
+            socketConnect.on('response-approve-request-contact-received', data => {
+                dispatch(notificationApproveReqContactReceived(data.currentUser))
+            })
+    
+            socketConnect.on('response-remove-req-contact-sent',data => {
+                dispatch(notificationRemoveReqContactSent(data.currentUser))
+            })
+    
+            socketConnect.on('response-remove-req-contact-received',data => {
+                dispatch(notificationRemoveReqContactReceived(data.currentUser))
+            })
+    
+            socketConnect.on('response-remove-contact',data => {
+                dispatch(notificationRemoveContact(data.currentUser))
+            })
+            return () => {
+                socketConnect.emit('disconnect');
+                socketConnect.off();
+            }
         }
     }, [])
     

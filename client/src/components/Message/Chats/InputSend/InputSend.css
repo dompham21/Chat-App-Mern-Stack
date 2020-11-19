@@ -35,6 +35,7 @@
     font-size: 24px;
     color: #0099ff;
     margin-right: 0 !important;
+    cursor: pointer;
 }
 
 span.ant-input-suffix {
