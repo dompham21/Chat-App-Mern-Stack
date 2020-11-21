@@ -62,7 +62,7 @@ function Message() {
                     key={pane._id} 
                     className="message-tabs-conversations-item"
                 >
-                    <Chats id={pane._id} username={pane.username}/>
+                    <Chats id={pane._id} username={pane.username} avatar={pane.avatar}/>
                 </TabPane>
             ))}
             </Tabs>

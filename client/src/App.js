@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense } from 'react';
 import './App.css';
 import {Switch, useLocation} from "react-router-dom";
 import LandingPage from './components/LandingPage/LandingPage';
@@ -8,10 +8,7 @@ import Login from './components/Login/Login';
 import PrivateRouter from './PrivateRouter';
 import PublicRouter from './PublicRouter';
 import Page404 from './components/Page404/Page404';
-import socket from './socket';
 import Message from './components/Message/Message';
-import Chats from './components/Message/Chats/Chats';
-const token = localStorage.getItem('token')
 function App() {
     const location = useLocation()
 

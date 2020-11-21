@@ -6,6 +6,8 @@ const User = require('../models/user.models');
 const Contact = require('../models/contact.models');
 const ChatGroup = require('../models/chatGroup.models');
 const _ = require('lodash');
+const request = require('request');
+
 
 
 router.get('/message/get-all-conversations',checkLogin , async (req,res) => {
@@ -76,7 +78,6 @@ router.get('/message/get-all-conversations',checkLogin , async (req,res) => {
         allConversations.sort((a,b)=>{
             return b.updateAt-a.updateAt;
         })
-        console.log(allConversations)
 
         return res.status(200).json({
             allConversations:allConversations,
@@ -152,6 +153,34 @@ router.get('/test',checkLogin, async (req,res)=>{
     .populate("user")
     .populate("contacter")
     res.status(200).json(contacts)
+})
+
+router.get('/chatvideo/get-ice-turnserver',checkLogin, async (req,res) => {
+    let o = {
+        format: "urls"
+    };
+
+    let bodyString = JSON.stringify(o);
+    let options = {
+        url:"https://global.xirsys.net/_turn/MyFirstApp",
+        // host: "global.xirsys.net",
+        // path: "/_turn/MyFirstApp",
+        method: "PUT",
+        headers: {
+            "Authorization": "Basic " + Buffer.from("dompham21:beb100f2-2b0c-11eb-a35d-0242ac150003").toString("base64"),
+            "Content-Type": "application/json",
+            "Content-Length": bodyString.length
+        }
+    };
+
+    request(options,(error,response,body)=>{
+        if(error){
+            console.log(error)
+            return;
+        }
+        let bodyJson = JSON.parse(body);
+        res.status(200).json(bodyJson.v)
+    })
 })
 
 

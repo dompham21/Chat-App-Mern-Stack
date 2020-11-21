@@ -1,4 +1,4 @@
-import { GET_ALL_CONVERSATIONS, GET_MESSAGES_USER, AFTER_POST_MESSAGE, GET_KEY_TABS } from '../_actions/types';
+import { GET_ALL_CONVERSATIONS, GET_MESSAGES_USER, AFTER_POST_MESSAGE, GET_KEY_TABS, GET_DATA_TO_EMIT_CALL_VIDEO, GET_ICE_TURN_SERVER } from '../_actions/types';
 
 
 export default function(state={},action){
@@ -11,6 +11,10 @@ export default function(state={},action){
             return {...state,dataMessages: state.dataMessages.concat(action.payload),receiveMessage: action.payload}
         case GET_KEY_TABS:
             return {...state,activeKey: action.payload}
+        case GET_DATA_TO_EMIT_CALL_VIDEO:
+            return {...state,dataToEmitCallVideo: action.payload}
+        case GET_ICE_TURN_SERVER:
+            return {...state,iceTurnServer: action.payload}
         default:
             return state;
     }
