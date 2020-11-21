@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Avatar } from 'antd'; 
-import { FaPhoneAlt, FaVideo } from 'react-icons/fa'
-import { BsInfoCircleFill } from 'react-icons/bs'
+
 import moment from 'moment';
 import './Chats.css'
 import ChatCard from './ChatCard/ChatCard';
@@ -9,6 +8,7 @@ import InputSend from './InputSend/InputSend';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMessagesUser, afterPostMessage } from '../../../_actions/message_action';
 import socket from '../../../socket';
+import ChatVideo from './ChatVideo/ChatVideo';
 let socketConnect;
 
 function Chats(props) {
@@ -55,7 +55,6 @@ function Chats(props) {
         dispatch(getMessagesUser(id))
         .then(res=> {
           setMessages(res.payload)
-          console.log(res.payload)
         })
         .catch(err => {
           console.log(err)
@@ -144,11 +143,7 @@ function Chats(props) {
                     <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" className="message-layout-chats-avatar"/>
                     <span>{username}</span>
                 </div>
-                <ul className="message-layout-chats-title-icon">
-                    <li> <FaPhoneAlt/></li>
-                    <li><FaVideo/></li>
-                    <li><BsInfoCircleFill/></li>   
-                </ul>
+                <ChatVideo id={id} username={username} avatar={avatar}/>
             </div>
             <div className="message-layout-chats-list" >
                 <div className="message-list-container" >

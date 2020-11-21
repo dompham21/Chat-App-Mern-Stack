@@ -16,6 +16,7 @@
     font-size: 24px;
     color: #0099ff;
     padding:8px 8px 0;
+    cursor: pointer;
 }
 
 .message-input-send-input {

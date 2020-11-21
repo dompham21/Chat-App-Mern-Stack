@@ -41,3 +41,5 @@ export const GET_ALL_CONVERSATIONS = 'get_all_conversations'
 export const GET_MESSAGES_USER = 'get_messages_user'
 export const AFTER_POST_MESSAGE = 'after_post_message'
 export const GET_KEY_TABS = 'get_key_tabs'
+export const GET_DATA_TO_EMIT_CALL_VIDEO = "get_data_to_emit_call_video"
+export const GET_ICE_TURN_SERVER = "get_ice_turn_server"

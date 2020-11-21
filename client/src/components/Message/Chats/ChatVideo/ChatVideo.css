@@ -1,0 +1,88 @@
+.message-call-video-modal{
+
+}
+
+.message-call-video-avatar {
+    height: 100px;
+    width: 100px;
+}
+
+.message-call-video-modal > .ant-modal-content > .ant-modal-body{
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.message-call-video-username {
+    color: white;
+    margin: 0;
+    margin-top: 12px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.message-call-video-option {
+    display: flex;
+    list-style: none;
+    position: absolute;
+    bottom: 24px;
+    padding: 0;
+}
+.message-call-video-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border: 0;
+    border-radius: 100%;
+    background-color: #3a3b3c;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    margin-left: 12px;
+}
+.message-call-video-item:hover {
+    background-color: #666769;
+}
+
+
+.message-call-video-item > svg {
+    font-size: 24px;
+}
+
+.cancel-call {
+    background-color: #ff4242;
+
+}
+
+.start-call {
+    background-color: #4ec54e;
+}
+.start-call:hover {
+    background-color: #6be26b;
+}
+.cancel-call:hover {
+    background-color: #e44f50;
+}
+
+.message-video-send {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top:-24px;
+    right: 0;
+}
+.message-video-receiver {
+    width: 100%;
+    max-height: 600px;
+}
+
+.message-video {
+    position: relative;
+    width: 800px;
+    max-height: 600px;
+}

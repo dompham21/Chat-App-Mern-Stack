@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ALL_CONVERSATIONS, GET_MESSAGES_USER, AFTER_POST_MESSAGE, GET_KEY_TABS } from "./types";
+import { GET_ALL_CONVERSATIONS, GET_MESSAGES_USER, AFTER_POST_MESSAGE, GET_KEY_TABS, GET_DATA_TO_EMIT_CALL_VIDEO, GET_ICE_TURN_SERVER } from "./types";
 
 export const getAllConversations =  () => {
     try {
@@ -62,5 +62,37 @@ export const getKeyTabs = (data) => {
         }
     } catch (error) {
         console.log(error)
+    }
+}
+
+export const getDataToEmitCallVideo = (data) => {
+    try {
+        return {
+            type: GET_DATA_TO_EMIT_CALL_VIDEO,
+            payload:data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getIceTurnServer =  () => {
+    try {
+        const request =  axios.get(`/chatvideo/get-ice-turnserver`,{
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token')
+            }
+        })
+        .then(response => response.data);
+   
+        return {
+            type: GET_ICE_TURN_SERVER,
+            payload: request
+        }
+        
+    } catch (error) {
+        console.log(error)
+
     }
 }
