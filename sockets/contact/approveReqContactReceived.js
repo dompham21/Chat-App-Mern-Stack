@@ -10,7 +10,7 @@ let approveReqContactReceived = (io) => {
             avatar: socket.handshake.query.currentAvatar
         }
         //Check currentId existed in clients 
-        checkExist(clients,currentId,socket.id)
+        clients =  checkExist(clients,currentId,socket.id)
 
         socket.on("approve-request-contact-received", (data) => {
             let contactId = data.contactId
@@ -24,7 +24,7 @@ let approveReqContactReceived = (io) => {
         })
         socket.on('disconnect',() => {
             //remove socket.id from clients when refresh
-            removeAndDelete(clients,currentId,socket.id)
+            clients =   removeAndDelete(clients,currentId,socket.id)
         })
     })
 }

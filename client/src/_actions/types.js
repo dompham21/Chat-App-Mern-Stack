@@ -7,6 +7,7 @@ export const LOGOUT_USER = 'logout_user';
 // Method user
 
 export const SEARCH_USER = 'search_user';
+export const SEARCH_USER_GROUP_CHAT = 'search_user_group_chat'
 
 // Contact
 
@@ -36,10 +37,17 @@ export const NOTIFICATION_APPROVE_REQ_CONTACT_RECEIVED = 'notification_approve_r
 export const NOTIFICATION_REMOVE_REQ_CONTACT_RECEIVED = 'notification_remove_req_contact_received'
 export const NOTIFICATION_REMOVE_REQ_CONTACT_SENT = 'notification_remove_req_contact_sent'
 
+export const NOTIFICATION_CREATE_NEW_GROUP = 'notification_create_new_group'
+
+export const CONNECT_SOCKET_IO = 'connect_socket_io'
 // Message
 export const GET_ALL_CONVERSATIONS = 'get_all_conversations'
+export const ADD_NEW_GROUP_CHAT = 'add_new_group_chat'
+
 export const GET_MESSAGES_USER = 'get_messages_user'
+export const GET_MESSAGES_GROUP = 'get_messages_group'
 export const AFTER_POST_MESSAGE = 'after_post_message'
+
 export const GET_KEY_TABS = 'get_key_tabs'
 export const GET_DATA_TO_EMIT_CALL_VIDEO = "get_data_to_emit_call_video"
 export const GET_ICE_TURN_SERVER = "get_ice_turn_server"

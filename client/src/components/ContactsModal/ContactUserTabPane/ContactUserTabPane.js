@@ -2,23 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { List, Avatar, Button} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContactList, removeContact } from '../../../_actions/contact_action';
-import socket from '../../../socket';
-let socketConnect;
+
 function ContactUserTabPane() {
     const [listUser,setListUser] = useState([]);
     const approveContactReqReceived = useSelector(state => state.contact.approveContactReqReceived)
     const removeContactSuccess = useSelector(state => state.contact.removeContactSuccess)
     const notiRemoveContact = useSelector(state => state.notification.notiRemoveContact)
     const notiApproveReqContactReceived = useSelector(state => state.notification.notiApproveReqContactReceived)
+    const socket = useSelector(state => state.notification.connectSocketIo)
 
     const dispatch = useDispatch()
-    useEffect(() => {
-        socketConnect = socket();
-        return () => {
-            socketConnect.emit('disconnect');
-            socketConnect.off();
-        }
-    }, [])
+ 
 
     useEffect(() => {
         dispatch(getContactList())
@@ -31,7 +25,7 @@ function ContactUserTabPane() {
         dispatch(removeContact(id))
         .then(res => {
             if(res.payload.removeSuccess){
-                socketConnect.emit('remove-contact',{contactId:id})
+                socket.emit('remove-contact',{contactId:id})
             }
         })
         .catch(err => {

@@ -107,6 +107,10 @@
     font-size: 16px;
 }
 
+.modal-create-group-input {
+    width: 90%;
+}
+
 .ant-tabs-nav-list > .ant-tabs-tab.ant-tabs-tab-active  {
     background-color: #18191a !important;
     border: none !important;

@@ -1,11 +1,10 @@
 const { checkExist, removeAndDelete } = require("../configSocket/configSocket");
-const Message  = require("../../models/message.models");
 let chatVideo = (io) => {
     let clients = {};
     io.on("connection",(socket) => {
         let currentId = socket.handshake.query.currentId
         //Check currentId existed in clients 
-        checkExist(clients,currentId,socket.id)
+        clients =  checkExist(clients,currentId,socket.id)
 
         socket.on("caller-check-listener-online", (data) => {
             let response = {
@@ -115,7 +114,7 @@ let chatVideo = (io) => {
 
         socket.on('disconnect',() => {
             //remove socket.id from clients when refresh
-            removeAndDelete(clients,currentId,socket.id)
+        clients =    removeAndDelete(clients,currentId,socket.id)
         })
     })
 }

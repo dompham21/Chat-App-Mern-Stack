@@ -5,6 +5,8 @@ const approveReqContactReceived = require("./contact/approveReqContactReceived")
 const removeContact = require("./contact/removeContact");
 const sendMessage = require("./message/sendMessage");
 const chatVideo = require("./message/chatVideo");
+const userOnlineOffline = require("./status/userOnlineOffline");
+const groupChat = require("./message/groupChat");
 
 const initSockets = (io) => {
     addNewContact(io);
@@ -14,6 +16,8 @@ const initSockets = (io) => {
     removeContact(io);
     sendMessage(io);
     chatVideo(io);
+    userOnlineOffline(io);
+    groupChat(io)
 }
 
 module.exports = initSockets;

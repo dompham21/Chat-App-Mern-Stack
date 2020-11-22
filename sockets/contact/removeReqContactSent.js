@@ -10,7 +10,7 @@ let removeReqContactSent = (io) => {
             avatar: socket.handshake.query.currentAvatar
         }
         //Check currentId existed in clients 
-        checkExist(clients,currentId,socket.id)
+        clients =  checkExist(clients,currentId,socket.id)
 
         socket.on("remove-req-contact-sent", (data) => {
             let contactId = data.contactId
@@ -24,7 +24,7 @@ let removeReqContactSent = (io) => {
         })
         socket.on('disconnect',() => {
             //remove socket.id from clients when refresh
-            removeAndDelete(clients,currentId,socket.id)
+        clients =    removeAndDelete(clients,currentId,socket.id)
         })
     })
 }

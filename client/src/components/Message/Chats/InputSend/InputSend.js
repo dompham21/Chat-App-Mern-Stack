@@ -8,10 +8,8 @@ import 'emoji-mart/css/emoji-mart.css'
 import { Picker } from 'emoji-mart'
 
 import { Input, Form, Button} from 'antd'
-import { useDispatch } from 'react-redux'
-import socket from '../../../../socket'
+import { useDispatch, useSelector } from 'react-redux'
 
-let socketConnect;
 function InputSend(props) {
     const [form] = Form.useForm();
     const user = JSON.parse(localStorage.getItem('user'))
@@ -19,17 +17,9 @@ function InputSend(props) {
     const inputElement = useRef(null);
     const [showPickerEmoji,setShowPickerEmoji] = useState(false);
     const [text,setText] = useState('');
+    const socket = useSelector(state => state.notification.connectSocketIo)
 
-
-
-    useEffect(() => {
-        socketConnect = socket();
-        return () => {
-            socketConnect.emit('disconnect');
-            socketConnect.off();
-        }
-    }, [])
-    const {id, usename, avatar} = props
+    const {id, usename, avatar,members} = props
     const handleSubmitMessage = () => {
         if(text=== ''){
             return;
@@ -37,11 +27,15 @@ function InputSend(props) {
         let message = text;
         let senderId = user._id;
         let receiverId = id;
-
-        socketConnect.emit("Input Chat Message",{
+        let groupId;
+        if(members){
+            groupId = id;
+        }
+        socket.emit("Input Chat Message",{
             message,
             senderId,
-            receiverId
+            receiverId,
+            groupId
         })
         console.log(message)
         if (inputElement.current) {

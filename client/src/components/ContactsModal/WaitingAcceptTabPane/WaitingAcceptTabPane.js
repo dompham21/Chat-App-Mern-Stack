@@ -3,8 +3,7 @@ import { List, Avatar, Badge, Tooltip} from 'antd';
 import { FaUserTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux';
 import { getWaitingAcceptList, removeContactReq } from '../../../_actions/contact_action';
-import socket from '../../../socket';
-let socketConnect;
+
 
 function WaitingAcceptTabPane() {
     const [waitingAcceptList,setWaitingAcceptList] = useState([]);
@@ -12,14 +11,8 @@ function WaitingAcceptTabPane() {
     const addSuccess = useSelector(state => state.contact.addSuccess)
     const  notiRemoveReqContactReceived = useSelector(state => state.notification.notiRemoveReqContactReceived)
     const notiApproveReqContactReceived = useSelector(state => state.notification.notiApproveReqContactReceived)
-    useEffect(() => {
-        
-        socketConnect = socket();
-        return () => {
-            socketConnect.emit('disconnect');
-            socketConnect.off();
-        }
-    }, [])
+    const socket = useSelector(state => state.notification.connectSocketIo)
+
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -33,7 +26,7 @@ function WaitingAcceptTabPane() {
         dispatch(removeContactReq(id))  
         .then(res => {
             if(res.payload.removeSuccess){
-                socketConnect.emit('remove-req-contact-sent',{contactId:id})
+                socket.emit('remove-req-contact-sent',{contactId:id})
             }
         })
         .catch(err=>{

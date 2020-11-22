@@ -4,7 +4,7 @@ import moment from 'moment';
 import './ChatCard.css'
 
 function ChatCard(props) {
-    const {data,isMine,startsSequence,endsSequence, showTimestamp} = props;
+    const {data,isMine,startsSequence,endsSequence, showTimestamp, avatar, members} = props;
     const friendlyTimestamp = moment(data.timestamp).format('LLLL');
     return (
         <div className={[
@@ -21,7 +21,7 @@ function ChatCard(props) {
             }
     
             <div className="bubble-container">
-               {
+               {    
                    !isMine && endsSequence &&  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" size="small"/>
                } 
               <div className="bubble" title={friendlyTimestamp}>

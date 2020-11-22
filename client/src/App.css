@@ -13,3 +13,7 @@
 .ant-tooltip-arrow {
     display: none;
 }
+
+.ant-modal-title {
+    color: white;
+}

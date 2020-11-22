@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import {Badge,Popover, Avatar} from 'antd';
+import {Badge,Popover, Avatar, notification} from 'antd';
 import {AiOutlineUser} from 'react-icons/ai'
 import {GiEarthAmerica} from 'react-icons/gi'
 
 import './Notification.css'
 import socket from '../../socket';
 import { useDispatch,useSelector } from 'react-redux';
-import { getNotification, markNotification, getCountNotification, notificationAddNewReq, notificationRemoveReqContactReceived, notificationRemoveReqContactSent, notificationApproveReqContactReceived, notificationRemoveContact } from '../../_actions/notification_action';
+import { getNotification, markNotification, getCountNotification, notificationAddNewReq, notificationRemoveReqContactReceived, notificationRemoveReqContactSent, notificationApproveReqContactReceived, notificationRemoveContact, connectSocketIo, notificationCreateNewGroup } from '../../_actions/notification_action';
 
 function Notification() {
     const [notifications,setNotifications] = useState([]);
@@ -25,6 +25,8 @@ function Notification() {
     useEffect(() => {
         if(token){
             socketConnect = socket();
+            dispatch(connectSocketIo(socketConnect))
+            
             socketConnect.on('response-add-new-contact',data=>{
                 dispatch(notificationAddNewReq(data.currentUser))
             });
@@ -43,6 +45,15 @@ function Notification() {
     
             socketConnect.on('response-remove-contact',data => {
                 dispatch(notificationRemoveContact(data.currentUser))
+            })
+            socketConnect.on('response-new-group-created',data => {
+                dispatch(notificationCreateNewGroup(data.response))
+                notification['success']({
+                    message: 'Group Created Success',
+                    description:
+                      'Welcome to Job help! ',
+                });
+                console.log("a")
             })
             return () => {
                 socketConnect.emit('disconnect');
