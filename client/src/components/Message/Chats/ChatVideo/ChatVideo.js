@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react'
-import socket from '../../../../socket'
 import Peer from 'peerjs';
 import {Tooltip,Modal,Avatar} from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,7 +9,6 @@ import {ImPhoneHangUp} from 'react-icons/im'
 import { getDataToEmitCallVideo } from '../../../../_actions/message_action';
 
 
-let socketConnect;
 function ChatVideo(props) {
     const {id,username,avatar} = props
     const user = JSON.parse(localStorage.getItem('user'))
@@ -22,12 +20,13 @@ function ChatVideo(props) {
 
     const dispatch = useDispatch()
     const dataToEmitCallVideo = useSelector(state => state.message.dataToEmitCallVideo)
+    const socket = useSelector(state => state.notification.connectSocketIo)
+
     const videoRefListener =  useRef(null)
     const videoRefCaller = useRef(null)
     const videoRefReceiver = useRef(null)
     const videoRefSend = useRef(null)
     useEffect(() => {
-        socketConnect = socket();
         
         let getPeerId = ''
 
@@ -36,13 +35,12 @@ function ChatVideo(props) {
 
         peer.on('open',(peerId)=>{
             getPeerId = peerId
-            console.log(peerId)
         })
 
-        socketConnect.on("server-send-listenner-is-offline",()=>{
+        socket.on("server-send-listenner-is-offline",()=>{
             //listener is offline
         })
-        socketConnect.on("server-req-peerId-listener",(response)=>{
+        socket.on("server-req-peerId-listener",(response)=>{
             let dataToSubmit = {
                 callerId: response.callerId,
                 listenerId: response.listenerId,
@@ -51,9 +49,9 @@ function ChatVideo(props) {
                 listenerName: user.username
             }
             dispatch(getDataToEmitCallVideo(dataToSubmit))
-            socketConnect.emit("listener-emit-peerId-server",dataToSubmit)
+            socket.emit("listener-emit-peerId-server",dataToSubmit)
         })
-        socketConnect.on("server-req-peerId-caller",(response)=>{
+        socket.on("server-req-peerId-caller",(response)=>{
             let dataToSubmit = {
                 callerId: response.callerId,
                 listenerId: response.listenerId,
@@ -62,9 +60,9 @@ function ChatVideo(props) {
                 listenerName: response.listenerName
             }
             dispatch(getDataToEmitCallVideo(dataToSubmit))
-            socketConnect.emit("caller-req-call-server",dataToSubmit)
+            socket.emit("caller-req-call-server",dataToSubmit)
         })
-        socketConnect.on("server-send-req-call-listener",(response)=>{
+        socket.on("server-send-req-call-listener",(response)=>{
             let dataToSubmit = {
                 callerId: response.callerId,
                 listenerId: response.listenerId,
@@ -74,7 +72,7 @@ function ChatVideo(props) {
             }
             setListenerVisible(true);
         })
-        socketConnect.on("server-send-cancel-req-call-listener",(response)=>{
+        socket.on("server-send-cancel-req-call-listener",(response)=>{
             const streamListener = videoRefListener.current.srcObject;
             console.log(streamListener)
             const tracksListener = streamListener.getTracks();
@@ -88,7 +86,7 @@ function ChatVideo(props) {
             setListenerVisible(false);
 
         })
-        socketConnect.on("server-send-cancel-req-call-caller",(response)=>{
+        socket.on("server-send-cancel-req-call-caller",(response)=>{
             const streamCaller = videoRefCaller.current.srcObject;
             const tracksCaller = streamCaller.getTracks();
 
@@ -103,7 +101,7 @@ function ChatVideo(props) {
             setVisible(false);
 
         })
-        socketConnect.on("server-send-reject-call-caller",response => {
+        socket.on("server-send-reject-call-caller",response => {
           
             const streamCaller = videoRefCaller.current.srcObject;
             const tracksCaller = streamCaller.getTracks();
@@ -118,7 +116,7 @@ function ChatVideo(props) {
             peer.destroy();
             setVisible(false);
         })
-        socketConnect.on("server-send-reject-call-listener",response => {
+        socket.on("server-send-reject-call-listener",response => {
           
             const streamListener = videoRefListener.current.srcObject;
             console.log(streamListener)
@@ -133,7 +131,7 @@ function ChatVideo(props) {
             setListenerVisible(false);
 
         })
-        socketConnect.on("server-send-accept-call-caller",response => {
+        socket.on("server-send-accept-call-caller",response => {
             let getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
             getUserMedia({video: true, audio: false},  function(stream) {
                 console.log(stream)
@@ -153,7 +151,7 @@ function ChatVideo(props) {
                
             })
         })
-        socketConnect.on("server-send-accept-call-listener",response => {
+        socket.on("server-send-accept-call-listener",response => {
             let getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
             peer.on("call", function(call) {
                 console.log(call)
@@ -178,8 +176,8 @@ function ChatVideo(props) {
             });
         })
         return () => {
-            socketConnect.emit('disconnect');
-            socketConnect.off();
+            socket.emit('disconnect');
+            socket.off();
         }
       }, [])
 
@@ -189,19 +187,18 @@ function ChatVideo(props) {
             listenerId: id,
             callerName: user.username
         }
-        socketConnect.emit("caller-check-listener-online",dataToEmit);
+        socket.emit("caller-check-listener-online",dataToEmit);
     }
 
     const handleCancelCall = () => {
-        socketConnect.emit("caller-cancel-req-call-server",dataToEmitCallVideo)
+        socket.emit("caller-cancel-req-call-server",dataToEmitCallVideo)
     }
 
     const handleCancelCallListener = () => {
-        socketConnect.emit("listener-reject-req-call-server",dataToEmitCallVideo)
+        socket.emit("listener-reject-req-call-server",dataToEmitCallVideo)
     }
     const handleAcceptCallListener = () => {
-        console.log(dataToEmitCallVideo)
-        socketConnect.emit("listener-accept-req-call-server",dataToEmitCallVideo)
+        socket.emit("listener-accept-req-call-server",dataToEmitCallVideo)
     }
 
     return (

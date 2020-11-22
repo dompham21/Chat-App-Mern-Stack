@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { List, Avatar, Button} from 'antd';
 import { useDispatch,useSelector } from 'react-redux';
 import { getFriendRequestList, removeContactReqReceived, approveContactReqReceived } from '../../../_actions/contact_action';
-import socket from '../../../socket';
 
-let socketConnect;
 function FriendRequestTabPane() {
     const [friendRequestList,setFriendRequestList] = useState([]);
     const  notificationAddNew = useSelector(state => state.notification.notificationAddNew)
@@ -12,16 +10,10 @@ function FriendRequestTabPane() {
     const  notiRemoveReqContactReceived = useSelector(state => state.notification.notiRemoveReqContactReceived)
     const removeReceivedSuccess = useSelector(state => state.contact.removeReceivedSuccess)
     const approveContactReceived = useSelector(state => state.contact.approveContactReqReceived)
+    const socket = useSelector(state => state.notification.connectSocketIo)
 
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        socketConnect = socket();
-        return () => {
-            socketConnect.emit('disconnect');
-            socketConnect.off();
-        }
-    }, [])
 
     useEffect(() => {
         dispatch(getFriendRequestList())
@@ -34,7 +26,7 @@ function FriendRequestTabPane() {
         dispatch(removeContactReqReceived(id))
         .then(res => {
             if(res.payload.removeSuccess){
-                socketConnect.emit('remove-req-contact-received',{contactId:id})
+                socket.emit('remove-req-contact-received',{contactId:id})
             }
         })
         .catch(err => {
@@ -46,7 +38,7 @@ function FriendRequestTabPane() {
         dispatch(approveContactReqReceived(id))
         .then(res => {
             if(res.payload.approveSuccess){
-                socketConnect.emit('approve-request-contact-received',{contactId:id})
+                socket.emit('approve-request-contact-received',{contactId:id})
             }
         })
         .catch(err => {

@@ -5,9 +5,9 @@ const Contact = require('../models/contact.models');
 const Notification = require('../models/notification.models');
 const checkLogin = require('../middlewares/checkLogin');
 
-router.get('/contact/find-users', checkLogin, async (req,res) => {
+router.get('/contact/find-users/:query', checkLogin, async (req,res) => {
     try {
-        const query = req.headers.query;
+        let query = req.params.query
         const currentId = req.user._id;
 
         let users = await User.find({
@@ -25,7 +25,7 @@ router.get('/contact/find-users', checkLogin, async (req,res) => {
                     $or: [
                         {$and:[
                             {"userId": currentId },
-                            {"contactId": user._id}
+                            {"contactId": user._id},
                         ]},
                         {$and:[
                             {"userId": user._id },
@@ -51,6 +51,58 @@ router.get('/contact/find-users', checkLogin, async (req,res) => {
             })
             return res.status(200).json({users:users});
         } 
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+router.get('/contact/group-chat/find-users/:query',checkLogin, async (req,res) => {
+    try {
+        const query = req.params.query;
+        const currentId = req.user._id;
+        let contacts = await Contact.find({
+            $and: [
+                {$or: [
+                    {"userId": currentId},
+                    {"contactId": currentId}
+                ]},{
+                    "status": true
+                }
+            ]
+            
+        }).sort({"updateAt":-1}).limit(12)
+        .populate("user", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+        .populate("contacter", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+     
+        let usersPromise = contacts.map(async contact => {
+            if(contact.contactId == currentId){
+               let getUser =   await User.find({
+                    $and: [
+                        {"_id": contact.user._id },
+                        {"username": {"$regex": new RegExp(query,"i") }}
+                    ]
+                },{_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+               
+                return getUser[0]
+            }
+            else{
+              let getUser =   await User.find({
+                    $and: [
+                        {"_id":  contact.contacter._id},
+                        {"username": {"$regex": new RegExp(query,"i") }}
+                    ]
+                },{_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+                return getUser[0]
+            }
+            
+        })
+        let users  =  await Promise.all(usersPromise)
+
+       users = users.filter(function( e ) {
+            return e !== undefined;
+        });
+        res.status(200).json({users})
+
     } catch (error) {
         console.log(error);
     }

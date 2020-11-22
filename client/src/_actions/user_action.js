@@ -5,6 +5,7 @@ import {
     REGISTER_USER,
     LOGOUT_USER,
     SEARCH_USER,
+    SEARCH_USER_GROUP_CHAT
 } from './types';
 
 
@@ -61,12 +62,10 @@ export const logoutUser =  () => {
 
 export const searchUser =  (query) => {
     try {
-        const request =  axios.get('/contact/find-users',{
+        const request =  axios.get(`/contact/find-users/${encodeURI(query)}`,{
             headers: {
                 "Content-Type":"application/json",
-                "Authorization":"Bearer "+localStorage.getItem('token'),
-                "query": query
-            }
+                "Authorization":"Bearer "+localStorage.getItem('token')            }
         })
         .then(res => res.data.users)
         return {
@@ -75,6 +74,24 @@ export const searchUser =  (query) => {
         }
     } catch (error) {
         console.log(error);
-    }
-    
+    }   
 }
+
+export const searchUserGroupChat = (query) => {
+    try {
+        const request =  axios.get(`/contact/group-chat/find-users/${encodeURI(query)}`,{
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token')
+            }
+        })
+        .then(res => res.data.users)
+        return {
+            type: SEARCH_USER_GROUP_CHAT,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+

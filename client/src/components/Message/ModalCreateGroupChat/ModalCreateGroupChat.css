@@ -1,0 +1,47 @@
+.create-group-modal-layout > .ant-modal-content> .ant-modal-body {
+    min-height: 545px;
+}
+
+.create-group-list-container {
+    display: flex;
+}
+
+.create-group-search-list {
+    width: 50%;
+}
+
+.create-group-search-list-add {
+    flex: 1;
+}
+
+
+.create-group-list-border {
+    width: 2px;
+    margin: 0 5px;
+    min-height: 540px;
+    background-color: #3e4042;
+}
+.btn-create {
+    margin-right: 12px;
+    color: white;
+    background-color: #4ec54e;
+    border: none;
+}
+.btn-cancel {
+    color: white;
+    background-color: #ff4242;
+    border: none;
+}
+
+.btn-create:hover {
+    background-color: #6be26b;
+    color: white;
+
+}
+
+
+.btn-cancel:hover {
+    background-color: #e44f50;
+    color: white;
+
+}

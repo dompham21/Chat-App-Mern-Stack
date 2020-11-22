@@ -1,4 +1,4 @@
-const { checkExist, removeAndDelete } = require("../configSocket/configSocket");
+const { checkExist,removeAndDelete } = require("../configSocket/configSocket");
 
 let addNewContact = (io) => {
     let clients = {};
@@ -9,8 +9,9 @@ let addNewContact = (io) => {
             username: socket.handshake.query.currentUsername,
             avatar: socket.handshake.query.currentAvatar
         }
+        
         //Check currentId existed in clients 
-        checkExist(clients,currentId,socket.id)
+        clients = checkExist(clients,currentId,socket.id)
 
         socket.on("add-new-contact", (data) => {
             let contactId = data.contactId
@@ -24,7 +25,7 @@ let addNewContact = (io) => {
         })
         socket.on('disconnect',() => {
             //remove socket.id from clients when refresh
-            removeAndDelete(clients,currentId,socket.id)
+            clients = removeAndDelete(clients,currentId,socket.id)
         })
     })
 }

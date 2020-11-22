@@ -1,5 +1,14 @@
 import axios from "axios";
-import { GET_ALL_CONVERSATIONS, GET_MESSAGES_USER, AFTER_POST_MESSAGE, GET_KEY_TABS, GET_DATA_TO_EMIT_CALL_VIDEO, GET_ICE_TURN_SERVER } from "./types";
+import { 
+    GET_ALL_CONVERSATIONS, 
+    GET_MESSAGES_USER, 
+    AFTER_POST_MESSAGE, 
+    GET_KEY_TABS, 
+    GET_DATA_TO_EMIT_CALL_VIDEO, 
+    GET_ICE_TURN_SERVER, 
+    ADD_NEW_GROUP_CHAT,
+    GET_MESSAGES_GROUP
+} from "./types";
 
 export const getAllConversations =  () => {
     try {
@@ -42,6 +51,26 @@ export const getMessagesUser =  (dataToSubmit) => {
     } 
 }
 
+export const getMessagesGroup =  (dataToSubmit) => {
+    try {
+        const request =  axios.get(`/message/group/${dataToSubmit}`,{
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token')
+            }
+        })
+        .then(response => response.data);
+   
+        return {
+            type: GET_MESSAGES_GROUP,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error)
+    } 
+}
+
+
 
 export const afterPostMessage  = async (data) => {
     try {
@@ -76,9 +105,11 @@ export const getDataToEmitCallVideo = (data) => {
     }
 }
 
-export const getIceTurnServer =  () => {
+
+
+export const addNewGroupChat = (dataToSubmit) => {
     try {
-        const request =  axios.get(`/chatvideo/get-ice-turnserver`,{
+        const request =  axios.post(`/group-chat/add-new`,{data:dataToSubmit},{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')
@@ -87,12 +118,10 @@ export const getIceTurnServer =  () => {
         .then(response => response.data);
    
         return {
-            type: GET_ICE_TURN_SERVER,
+            type: ADD_NEW_GROUP_CHAT,
             payload: request
         }
-        
     } catch (error) {
         console.log(error)
-
     }
 }

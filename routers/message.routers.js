@@ -31,7 +31,7 @@ router.get('/message/get-all-conversations',checkLogin , async (req,res) => {
         let userConversationsPromise = contacts.map(async (contact) => {
             if(contact.contactId == currentId){
                     let getUserContact = contact.user
-                    getUserContact.updateAt = contact.updateAt 
+                    // getUserContact.updateAt = contact.updateAt 
                     let previewLastMsg = await Message.model.find({
                         $or: [
                             {$and: [
@@ -44,12 +44,13 @@ router.get('/message/get-all-conversations',checkLogin , async (req,res) => {
                             ]}
                         ]
                     }).sort({"createAt": -1}).limit(1)
+                    getUserContact.updateAt = previewLastMsg[0].createAt
                     getUserContact.preview = previewLastMsg;
 
                     return getUserContact
             } else {
                     let getUserContact = contact.contacter
-                    getUserContact.updateAt = contact.updateAt
+                    // getUserContact.updateAt = contact.updateAt
                     let previewLastMsg = await Message.model.find({
                         $or: [
                             {$and: [
@@ -62,20 +63,30 @@ router.get('/message/get-all-conversations',checkLogin , async (req,res) => {
                             ]}
                         ]
                     }).sort({"createAt": -1}).limit(1)
+                    getUserContact.updateAt = previewLastMsg[0].createAt
                     getUserContact.preview = previewLastMsg; 
                     return getUserContact
             }
         })
         
+
         let userConversations = await Promise.all(userConversationsPromise);
-        let groupConversations = await ChatGroup.find({
-            "members": {$elemMatch: {"userId": currentId}}
-        }).sort({"updateAt": -1}).limit(20).lean();
-      
-
+        let groups = await ChatGroup.find({
+            "members": {$elemMatch:{"id":currentId.toString()}}
+        }).sort({"updateAt": -1}).limit(20).lean()
+        groupConversationsPromise = groups.map(async (group) => {
+            let previewLastMsg = await Message.model.find({
+                    $and: [       
+                        {"senderId": group.members.map(member=> member.id)},
+                        {"receiverId": group._id}
+                    ]
+                }).sort({"createAt": -1}).limit(1)
+                group.preview = previewLastMsg;
+                return group
+        })
+        let groupConversations = await Promise.all(groupConversationsPromise);
         let allConversations = userConversations.concat(groupConversations)
-
-        allConversations.sort((a,b)=>{
+        allConversations = allConversations.sort((a,b)=>{
             return b.updateAt-a.updateAt;
         })
 
@@ -110,22 +121,6 @@ router.get('/message/:id', checkLogin, async (req,res)=> {
         .populate("sender", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
         .populate("receiver", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1}) 
 
-        await Contact.updateOne({
-            $or: [
-                {$and: [
-                    {"userId": userId},
-                    {"contactId": currentId},
-                    {"status": true}
-                ]},
-                {$and: [
-                    {"userId": currentId},
-                    {"contactId": userId},
-                    {"status": true}
-                ]}
-            ]
-        },{
-            "updateAt": Date.now()
-        })
         messages.sort((a,b)=>{
             return a.createAt-b.createAt;
         })
@@ -135,53 +130,39 @@ router.get('/message/:id', checkLogin, async (req,res)=> {
     }
 })
 
-router.get('/test',checkLogin, async (req,res)=>{
-    // let userId = req.params.id
-    let currentId = req.user._id
+router.get('/message/group/:id', checkLogin, async (req,res)=> {
+    try {
+        let groupId = req.params.id
+        messages = await Message.model.find({
+            "receiverId": groupId
+        }).sort({"createAt": -1 }).limit(15)
+        .populate("sender", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
 
-    let contacts = await Contact.find({
-        $and: [
-            {$or: [
-                {"userId": currentId},
-                {"contactId": currentId}
-            ]},{
-                "status": true
-            }
-        ]
         
-    }).sort({"updateAt":-1}).limit(20)
-    .populate("user")
-    .populate("contacter")
-    res.status(200).json(contacts)
+        messages.sort((a,b)=>{
+            return a.createAt-b.createAt;
+        })
+        res.status(200).json(messages)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
-router.get('/chatvideo/get-ice-turnserver',checkLogin, async (req,res) => {
-    let o = {
-        format: "urls"
-    };
 
-    let bodyString = JSON.stringify(o);
-    let options = {
-        url:"https://global.xirsys.net/_turn/MyFirstApp",
-        // host: "global.xirsys.net",
-        // path: "/_turn/MyFirstApp",
-        method: "PUT",
-        headers: {
-            "Authorization": "Basic " + Buffer.from("dompham21:beb100f2-2b0c-11eb-a35d-0242ac150003").toString("base64"),
-            "Content-Type": "application/json",
-            "Content-Length": bodyString.length
-        }
-    };
-
-    request(options,(error,response,body)=>{
-        if(error){
-            console.log(error)
-            return;
-        }
-        let bodyJson = JSON.parse(body);
-        res.status(200).json(bodyJson.v)
+router.post('/group-chat/add-new', checkLogin, async (req,res) => {
+    const {listUser,nameGroup} = req.body.data
+    const currentId = req.user._id;
+    
+    const usernameCurrent = req.user.username;
+    listUser.push({id:currentId.toString(),username:usernameCurrent})
+    let newGroup = new ChatGroup({
+        name: nameGroup,
+        UserAmount: listUser.length,
+        userId: currentId,
+        members: listUser
     })
+    let group = await newGroup.save();
+    group && res.status(200).json({group})
 })
-
 
 module.exports = router;

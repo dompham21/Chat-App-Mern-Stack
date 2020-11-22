@@ -6,7 +6,9 @@ import {
     NOTIFICATION_REMOVE_REQ_CONTACT_RECEIVED,
     NOTIFICATION_REMOVE_REQ_CONTACT_SENT,
     NOTIFICATION_APPROVE_REQ_CONTACT_RECEIVED,
-    NOTIFICATION_REMOVE_CONTACT, 
+    NOTIFICATION_REMOVE_CONTACT,
+    CONNECT_SOCKET_IO,
+    NOTIFICATION_CREATE_NEW_GROUP, 
 } from '../_actions/types';
 
 
@@ -29,6 +31,10 @@ export default function(state={},action){
             return {...state, notiRemoveReqContactReceived: action.payload}
         case NOTIFICATION_REMOVE_REQ_CONTACT_SENT:
             return {...state, notiRemoveReqContactSent: action.payload}
+        case NOTIFICATION_CREATE_NEW_GROUP:
+            return {...state,notiCreateNewGroup: action.payload}
+        case CONNECT_SOCKET_IO:
+            return {...state, connectSocketIo: action.payload}
         default:
             return state;
     }

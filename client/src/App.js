@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import './App.css';
 import {Switch, useLocation} from "react-router-dom";
-import LandingPage from './components/LandingPage/LandingPage';
 import Register from './components/Register/Register';
 import NavBar from './components/NavBar/NavBar';
 import Login from './components/Login/Login';
@@ -24,8 +23,7 @@ function App() {
         <Switch>
           <PublicRouter restricted={true} component={Login} path="/login" exact/>
           <PublicRouter restricted={true} component={Register} path="/register" exact/>
-          <PrivateRouter exact path="/message" component={Message}/>
-          <PrivateRouter exact path="/" component={LandingPage}/>
+          <PrivateRouter exact path="/" component={Message}/>
           <PrivateRouter  component={Page404} path="*" exact/>
         </Switch>
     </Suspense>

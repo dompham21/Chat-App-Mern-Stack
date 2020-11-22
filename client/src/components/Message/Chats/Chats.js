@@ -1,36 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Avatar } from 'antd'; 
-
 import moment from 'moment';
 import './Chats.css'
 import ChatCard from './ChatCard/ChatCard';
 import InputSend from './InputSend/InputSend';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMessagesUser, afterPostMessage } from '../../../_actions/message_action';
-import socket from '../../../socket';
+import { getMessagesUser, afterPostMessage, getMessagesGroup } from '../../../_actions/message_action';
 import ChatVideo from './ChatVideo/ChatVideo';
-let socketConnect;
 
 function Chats(props) {
-    const {id,username,avatar} = props
+    const {id,username,avatar,members} = props
     const [messages, setMessages] = useState([]);
     const [messageFromBe,setMessageFromBe] = useState([])
     const user = JSON.parse(localStorage.getItem('user'))
     const activeKey = useSelector(state => state.message.activeKey)
     const dispatch = useDispatch()
+    const socket = useSelector(state => state.notification.connectSocketIo)
     let messagesEnd = useRef(null);
-
     useEffect(() => {
-      socketConnect = socket();
-      socketConnect.on("Output Chat Message", messageFromBackEnd => {
+      socket.on("Output Chat Message", messageFromBackEnd => {
           dispatch(afterPostMessage(messageFromBackEnd))
           .then(res => {
             setMessageFromBe(res.payload)
           })
       })
       return () => {
-          socketConnect.emit('disconnect');
-          socketConnect.off();
+        socket.emit('disconnect');
+        socket.off();
       }
     }, [])
 
@@ -40,25 +36,46 @@ function Chats(props) {
     
     useEffect(() => {
         scrollToBottom()
+
     }, [messages])
     
     useEffect(() => {
       if(activeKey){
-        dispatch(getMessagesUser(activeKey))
-        .then(res=> {
-          setMessages(res.payload)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+        if(members){
+          dispatch(getMessagesGroup(activeKey))
+          .then(res=> {
+            setMessages(res.payload)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        }else{
+          dispatch(getMessagesUser(activeKey))
+          .then(res=> {
+            setMessages(res.payload)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        }
       }else{
-        dispatch(getMessagesUser(id))
-        .then(res=> {
-          setMessages(res.payload)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+        if(members){
+          dispatch(getMessagesGroup(id))
+          .then(res=> {
+            setMessages(res.payload)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        }else{
+          dispatch(getMessagesUser(id))
+          .then(res=> {
+            setMessages(res.payload)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        }
       }
   
     },[messageFromBe,activeKey])
@@ -127,6 +144,8 @@ function Chats(props) {
               endsSequence={endsSequence}
               showTimestamp={showTimestamp}
               data={current}
+              avatar={avatar}
+              members={members}
             />
           );
             i += 1;
@@ -136,6 +155,7 @@ function Chats(props) {
       }
         
     }
+    console.log(messages)
     return (
         <div className="message-layout-chats">
             <div className="message-layout-chats-title">
@@ -143,7 +163,9 @@ function Chats(props) {
                     <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" className="message-layout-chats-avatar"/>
                     <span>{username}</span>
                 </div>
-                <ChatVideo id={id} username={username} avatar={avatar}/>
+                {
+                  members ? '' : <ChatVideo id={id} username={username} avatar={avatar}/>
+                }
             </div>
             <div className="message-layout-chats-list" >
                 <div className="message-list-container" >
@@ -152,7 +174,7 @@ function Chats(props) {
                 </div>
                
             </div>
-            <div><InputSend id={id} username={username} avatar={avatar}/></div>
+            <div><InputSend id={id} username={username} avatar={avatar} members={members}/></div>
         </div>
     )
 }

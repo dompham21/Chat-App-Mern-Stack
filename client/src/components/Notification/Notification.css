@@ -4,11 +4,11 @@
     top: 7px !important;
   }
   .ant-popover-inner-content {
-    height: 350px;
+    max-height: 350px;
     overflow-y: scroll;
     background: #242526;
-    border-radius: 5px;
     color: white;
+    border: 1px solid #3e4042;
   }
   
   .ant-popover-placement-bottomRight {

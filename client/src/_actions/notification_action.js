@@ -7,7 +7,9 @@ import {
     NOTIFICATION_REMOVE_REQ_CONTACT_RECEIVED, 
     NOTIFICATION_REMOVE_REQ_CONTACT_SENT,
     NOTIFICATION_APPROVE_REQ_CONTACT_RECEIVED,
-    NOTIFICATION_REMOVE_CONTACT,  
+    NOTIFICATION_REMOVE_CONTACT,
+    CONNECT_SOCKET_IO,
+    NOTIFICATION_CREATE_NEW_GROUP,  
 } from "./types";
 
 export const getNotification =  () => {
@@ -93,6 +95,19 @@ export const notificationRemoveReqContactReceived = (data) => {
 export const notificationRemoveReqContactSent = (data) => {
     return {
         type: NOTIFICATION_REMOVE_REQ_CONTACT_SENT,
+        payload: data
+    }
+}
+export const connectSocketIo = (data) => {
+    return {
+        type: CONNECT_SOCKET_IO,
+        payload: data
+    }
+}
+
+export const notificationCreateNewGroup = (data) => {
+    return {
+        type: NOTIFICATION_CREATE_NEW_GROUP,
         payload: data
     }
 }

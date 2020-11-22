@@ -4,13 +4,11 @@ import './SearchUserTabPane.css';
 import { AiOutlineSearch } from 'react-icons/ai'
 import { FaUserPlus,FaUserTimes } from 'react-icons/fa'
 import { searchUser } from '../../../_actions/user_action';
-import { useDispatch } from 'react-redux';
-import { addContact, removeContactReq, removeContact, approveContactReqReceived, removeContactReqReceived } from '../../../_actions/contact_action';
+import { useDispatch, useSelector} from 'react-redux';
+import { addContact, removeContact, approveContactReqReceived, removeContactReqReceived } from '../../../_actions/contact_action';
 import LoadingListUser from '../../LoadingPage/LoadingListUser/LoadingListUser';
-import socket from '../../../socket';
 
 
-let socketConnect;
 
 function SearchUserTabPane() {
     const [nameToSearch, setNameToSearch] = useState('')
@@ -21,19 +19,10 @@ function SearchUserTabPane() {
     const refRemoveRequest = useRef([]);
     const refApproveReq = useRef([])
     const refRemoveReceived = useRef([])
-
-    
+    const socket = useSelector(state => state.notification.connectSocketIo)
 
     const dispatch = useDispatch()
 
-
-    useEffect(() => {
-        socketConnect = socket();
-        return () => {
-            socketConnect.emit('disconnect');
-            socketConnect.off();
-        }
-    }, [])
     const handleEnterSubmit = (event) => {
         if(event.key === 'Enter' && nameToSearch !== ''){
             setLoading(true);
@@ -54,7 +43,7 @@ function SearchUserTabPane() {
                 if(res.payload.addSuccess){
                     refAddContact.current[id].style.display = "none";
                     refRemoveRequest.current[id].style.display = "block";
-                    socketConnect.emit('add-new-contact', {contactId:id})
+                    socket.emit('add-new-contact', {contactId:id})
                 }
             })
             .catch(err=>{
@@ -68,7 +57,7 @@ function SearchUserTabPane() {
             if(res.payload.removeSuccess){
                 refAddContact.current[id].style.display = "block";
                 refRemoveContact.current[id].style.display = "none";
-                socketConnect.emit('remove-contact',{contactId:id})
+                socket.emit('remove-contact',{contactId:id})
             }
         })
         .catch(err => {
@@ -82,7 +71,7 @@ function SearchUserTabPane() {
                 if(res.payload.removeSuccess){
                     refAddContact.current[id].style.display = "block";
                     refRemoveRequest.current[id].style.display = "none";
-                    socketConnect.emit('remove-req-contact-sent',{contactId:id})
+                    socket.emit('remove-req-contact-sent',{contactId:id})
                 }
             })
             .catch(err=>{
@@ -97,7 +86,7 @@ function SearchUserTabPane() {
                 refAddContact.current[id].style.display = "block";
                 refApproveReq.current[id].style.display = "none";
                 refRemoveReceived.current[id].style.display = "none";
-                socketConnect.emit('remove-req-contact-received',{contactId:id})
+                socket.emit('remove-req-contact-received',{contactId:id})
             }
         })
         .catch(err => {
@@ -112,7 +101,7 @@ function SearchUserTabPane() {
                 refRemoveContact.current[id].style.display = "block";
                 refApproveReq.current[id].style.display = "none";
                 refRemoveReceived.current[id].style.display = "none";
-                socketConnect.emit('approve-request-contact-received',{contactId:id})
+                socket.emit('approve-request-contact-received',{contactId:id})
             }
         })
         .catch(err => {

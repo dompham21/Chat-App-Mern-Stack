@@ -1,47 +1,65 @@
 const { checkExist, removeAndDelete } = require("../configSocket/configSocket");
 const Message  = require("../../models/message.models");
+const GroupChat = require("../../models/chatGroup.models")
 let sendMessage = (io) => {
     let clients = {};
-    io.on("connection",(socket) => {
+    io.on("connection", async (socket) => {
         let currentId = socket.handshake.query.currentId
+        let groupIds;
+        groupIds = await GroupChat.find({
+            "members": {$elemMatch:{"id":currentId}}
+        })
         //Check currentId existed in clients 
-        checkExist(clients,currentId,socket.id)
-
-        socket.on("Input Chat Message", (data) => {
+        clients = checkExist(clients,currentId,socket.id)
+        groupIds.forEach(group=>{
+            clients = checkExist(clients,group._id,socket.id)
+        })
+        socket.on("Input Chat Message", async (data) => {
             try {
-                let receiverId = data.receiverId
+                console.log(data);
+                if(data.groupId){
+                    let newMessage = new Message.model({
+                        senderId: currentId,
+                        receiverId: data.groupId,
+                        ConversationType: "group",
+                        messageType: "text",
+                        text: data.message
+                    })
+                    let savedMessage = await newMessage.save();
+                    let message = await Message.model.find({ "_id": savedMessage._id })
+                        .populate("sender", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+                        console.log(clients)
+                    if(clients[data.groupId] ){
+                        clients[data.groupId].forEach(socketId => {
+                            io.sockets.connected[socketId].emit('Output Chat Message', message)
+                        })
+                    }
+                }else {
+                    let receiverId = data.receiverId
 
-                let messages  = new Message.model({
-                    senderId: currentId,
-                    receiverId: receiverId,
-                    sender: currentId,
-                    receiver: receiverId,
-                    ConversationType: "personal",
-                    messageType: "text",
-                    text: data.message
-                })
-                console.log(data)
-                messages.save((err,doc) => {
-                    if(err) return res.json({ success: false, err })
-
-                    Message.model.find({ "_id": doc._id })
-                    .populate("sender", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
-                    .populate("receiver", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})         
-                    .exec((err, doc)=> {
-                        // emit noticatied for all socket id of contact id
-                        if(clients[receiverId] ){
-                            clients[receiverId].forEach(socketId => {
-                                io.sockets.connected[socketId].emit('Output Chat Message', doc)
-                            })
-                        }
-                        if(clients[currentId]){
-                            clients[currentId].forEach(socketId => {
-                                io.sockets.connected[socketId].emit('Output Chat Message', doc)
-                            })
-                        }
-                        
-                    })         
-                })
+                    let newMessage = new Message.model({
+                        senderId: currentId,
+                        receiverId: receiverId,
+                        sender: currentId,
+                        receiver: receiverId,
+                        ConversationType: "personal",
+                        messageType: "text",
+                        text: data.message
+                    })
+                    let savedMessage = await newMessage.save();
+                    let message = await Message.model.find({ "_id": savedMessage._id })
+                       
+                    if(clients[receiverId] ){
+                        clients[receiverId].forEach(socketId => {
+                            io.sockets.connected[socketId].emit('Output Chat Message', message)
+                        })
+                    }
+                    if(clients[currentId]){
+                        clients[currentId].forEach(socketId => {
+                            io.sockets.connected[socketId].emit('Output Chat Message', message)
+                        })
+                    }
+                }
             }  
             catch (error) {
                 console.error(error);
@@ -49,7 +67,10 @@ let sendMessage = (io) => {
         })
         socket.on('disconnect',() => {
             //remove socket.id from clients when refresh
-            removeAndDelete(clients,currentId,socket.id)
+            clients =  removeAndDelete(clients,currentId,socket.id)
+            groupIds.forEach(group=>{
+                clients =  removeAndDelete(clients,group._id,socket.id)
+            })
         })
     })
 }
