@@ -11,7 +11,7 @@ router.get('/get/notification', checkLogin, async (req,res) => {
 
         let notifications = await Notification.model.find({"receiverId": currentId}).sort({"createAt": -1}).limit(10);
         if(!notifications){
-            return res.status(400).json({msg:"Emtry notifications"})
+            return res.json({msg:"Emtry notifications"})
         }
         let getNotifications = notifications.map( async (notification) => {
             let sender = await User.findById({"_id": notification.senderId});

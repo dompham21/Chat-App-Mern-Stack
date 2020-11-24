@@ -40,7 +40,7 @@ function ChatVideo(props) {
         socket.on("server-send-listenner-is-offline",()=>{
             //listener is offline
         })
-        socket.on("server-req-peerId-listener",(response)=>{
+        socket.on("server-req-peerId-listener",async (response)=>{
             let dataToSubmit = {
                 callerId: response.callerId,
                 listenerId: response.listenerId,
@@ -48,10 +48,10 @@ function ChatVideo(props) {
                 listenerPeerId: getPeerId,
                 listenerName: user.username
             }
-            dispatch(getDataToEmitCallVideo(dataToSubmit))
+            await dispatch(getDataToEmitCallVideo(dataToSubmit))
             socket.emit("listener-emit-peerId-server",dataToSubmit)
         })
-        socket.on("server-req-peerId-caller",(response)=>{
+        socket.on("server-req-peerId-caller",async(response)=>{
             let dataToSubmit = {
                 callerId: response.callerId,
                 listenerId: response.listenerId,
@@ -59,7 +59,7 @@ function ChatVideo(props) {
                 listenerPeerId: response.listenerPeerId,
                 listenerName: response.listenerName
             }
-            dispatch(getDataToEmitCallVideo(dataToSubmit))
+            await dispatch(getDataToEmitCallVideo(dataToSubmit))
             socket.emit("caller-req-call-server",dataToSubmit)
         })
         socket.on("server-send-req-call-listener",(response)=>{

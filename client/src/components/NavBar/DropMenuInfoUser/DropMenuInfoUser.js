@@ -6,6 +6,8 @@ import {FiSettings, FiHelpCircle, FiLogOut} from 'react-icons/fi';
 import { useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import { logoutUser } from '../../../_actions/user_action';
+import GeneralSetting from './GeneralSetting/GeneralSetting';
+import PasswordManager from './PasswordManager/PasswordManager';
 
 const { TabPane } = Tabs;
 
@@ -16,8 +18,11 @@ function DropMenuInfoUser() {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const handleLogout = () => {
-        dispatch(logoutUser());
+    const user = JSON.parse(localStorage.getItem('user'))
+
+
+    const handleLogout = async () => {
+        await dispatch(logoutUser());
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         history.push('/login');    
@@ -33,9 +38,9 @@ function DropMenuInfoUser() {
     const contentMenuDown = (
         <ul className="nav-menu-list-dropmenu">
             <li className="nav-menu-dropmenu-infomation" onClick={handleOpenModal}>
-                <Avatar size="large" icon={<AiOutlineUser /> } className="nav-menu-dropmenu-avatar-large"  />
+                <Avatar size="large" src={user.avatar} className="nav-menu-dropmenu-avatar-large"  />
                 <div>
-                    <span>John Dea</span>
+                    <span>{user.username}</span>
                     <p>See your profile</p>
                 </div>
             </li>
@@ -75,7 +80,7 @@ function DropMenuInfoUser() {
                 </div>  
             </Popover>
             <Modal
-                title="Contacts"
+                title="Information user"
                 visible={visible}
                 width={1100}
                 footer={null}
@@ -84,9 +89,10 @@ function DropMenuInfoUser() {
             >
                 <Tabs defaultActiveKey="1" type="card" className="contact-modals-layout">
                     <TabPane tab="General setting" key="1" className="contact-modals">
-                        
+                        <GeneralSetting/>
                     </TabPane>
-                    <TabPane tab="Manage password" key="2" className="contact-modals">
+                    <TabPane tab="Password manager" key="2" className="contact-modals">
+                        <PasswordManager/>
                     </TabPane>
                 </Tabs>
             </Modal>

@@ -4,9 +4,9 @@ const Schema = mongooes.Schema;
 const UserSchema = new Schema({
     username: String,
     gender: {type: String, default: "male"},
-    phone: {type: Number, default: null},
+    phone: {type: String, default: null},
     address: {type: String, default: null},
-    avatar: {type: String, default: "logo.png"},
+    avatar: {type: String, default: "https://firebasestorage.googleapis.com/v0/b/chat-app-224c7.appspot.com/o/download.jpeg?alt=media&token=8efe1384-671b-49ae-892f-8342590c06df"},
     role: {type: String, default: "user"},
     local: { 
         email: {type: String, trim: true},

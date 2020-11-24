@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import {HiPencilAlt} from 'react-icons/hi'
 import {AiOutlineSearch} from 'react-icons/ai'
 import { useDispatch,useSelector } from 'react-redux';
-import {  Modal, Tooltip, Input,List,Button,Avatar} from 'antd'
+import {  Modal, Tooltip, Input,List,Button,Avatar,notification} from 'antd'
 import './ModalCreateGroupChat.css'
 import { searchUserGroupChat } from '../../../_actions/user_action';
 import { addNewGroupChat } from '../../../_actions/message_action';
@@ -10,7 +10,6 @@ import { addNewGroupChat } from '../../../_actions/message_action';
 
 function ModalCreateGroupChat() {
     const [visible,setVisible] = useState(false);
-    const [visibleAddGroupTemp,setVisibleAddGroupTemp] = useState(true)
     const [nameToSearch, setNameToSearch] = useState('')
     const [listUserSearch,setListUserSearch] = useState([])
     const [listUserAddToGroupTemp,setListUserAddToGroupTemp] = useState([])
@@ -23,21 +22,22 @@ function ModalCreateGroupChat() {
     const refBtnRemove = useRef([]);
 
 
-    const handleEnterSubmit = (event) => {
+    const handleEnterSubmit = async (event) => {
         if(event.key === 'Enter' && nameToSearch !== ''){
-            dispatch(searchUserGroupChat(nameToSearch))
-            .then(res=>{
-                setListUserSearch(res.payload)
-            })
-            .catch(err=>{
-                console.log(err);
-            })
-        }
+            try {
+                let response = await dispatch(searchUserGroupChat(nameToSearch))
+                setListUserSearch(response.payload)
+            } catch (error) {
+                console.log(error)
+            }
+        } 
     }
-    const handleAddUserToGroup = (id,username) => {
+    const handleAddUserToGroup = (id,username,avatar,address) => {
         let infoUser = {
             id: id,
-            username: username
+            username: username,
+            avatar: avatar,
+            address: address
         }
 
         setListUserAddToGroupTemp([...listUserAddToGroupTemp,infoUser]);
@@ -47,7 +47,6 @@ function ModalCreateGroupChat() {
         if(refBtnRemove.current){
             refBtnRemove.current[id].style.display = "block"
         }
-        setVisibleAddGroupTemp(false)
     }
     const handleRemoveUserToGroup = (id,username) => {
         setListUserAddToGroupTemp(listUserAddToGroupTemp.filter(item=>{
@@ -70,24 +69,34 @@ function ModalCreateGroupChat() {
         setListUserAddToGroupTemp([]);
 
     }
-    const handleCreateAddGroup = () => {
-        if(!nameOfGroup || nameOfGroup.length < 3 || nameOfGroup.length > 30){
-            //notification please enter your group name, min name is 3 and max is 30
-            return;
-        }
+    const handleCreateAddGroup = async () => {
         if(listUserAddToGroupTemp.length < 2){
-            //notification min of group is two people
+            notification['error']({
+                message: 'Create group chat fail',
+                description:
+                    'Min members of group is two people ',
+            });
             return;
         }
+        if(!nameOfGroup || nameOfGroup.length < 3 || nameOfGroup.length > 30){
+            notification['error']({
+                message: 'Create group chat fail',
+                description:
+                    'Please enter your group name, min name is 3 and max is 30 ',
+            });
+            return;
+        }
+       
         const dataToEmit = {
             listUser: listUserAddToGroupTemp,
             nameGroup: nameOfGroup
         }
-        dispatch(addNewGroupChat(dataToEmit))
-        .then(res => {
-            console.log(res.payload)
-            socket.emit("new-group-created",res.payload)
-        })
+        try {
+            let response = await dispatch(addNewGroupChat(dataToEmit))
+            socket.emit("new-group-created",response.payload)
+        } catch (error) {
+            console.log(error)
+        } 
         listUserAddToGroupTemp.forEach(item => {
             if( refBtnRemove.current[item.id].style.display == "block"){
                 refBtnRemove.current[item.id].style.display = "none"
@@ -138,14 +147,14 @@ function ModalCreateGroupChat() {
                                         className="contact-search-list-item"
                                     >     
                                         <List.Item.Meta
-                                            avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" className="contact-search-list-item-avatar"/>}
-                                            title={<a href="https://ant.design" className="contact-search-list-item-name">{item.username}</a>}
-                                            description={<p className="contact-search-list-item-description">Lives in Hoai Nhon, Binh Dinh, Viet Nam</p>}
+                                            avatar={<Avatar src={item.avatar} className="contact-search-list-item-avatar"/>}
+                                            title={<span className="contact-search-list-item-name">{item.username}</span>}
+                                            description={<p className="contact-search-list-item-description">{item.address?item.address:''}</p>}
                                         />
                                         <Button 
                                             className="btn-create" 
                                             ref={el => (refBtnAdd.current[item._id] = el)}  
-                                            onClick={()=>handleAddUserToGroup(item._id,item.username)}
+                                            onClick={()=>handleAddUserToGroup(item._id,item.username,item.avatar,item.address)}
                                         >Add to group</Button>
                                         <Button 
                                             style={{display: "none"}}
@@ -160,8 +169,8 @@ function ModalCreateGroupChat() {
                            ''
                         }
                     </div>
-                    <div className="create-group-list-border"  style={{display: visibleAddGroupTemp ? "none" : "block"}}/>
-                    <div className="create-group-search-list-add"  style={{display:visibleAddGroupTemp ? "none" : "block"}}>
+                    <div className="create-group-list-border"/>
+                    <div className="create-group-search-list-add">
                         <Input className="message-list-contact-search"
                                 placeholder="Enter name of group"
                                 required
@@ -178,9 +187,9 @@ function ModalCreateGroupChat() {
                                         className="contact-search-list-item"
                                     >     
                                         <List.Item.Meta
-                                            avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" className="contact-search-list-item-avatar"/>}
-                                            title={<a href="https://ant.design" className="contact-search-list-item-name">{item.username}</a>}
-                                            description={<p className="contact-search-list-item-description">Lives in Hoai Nhon, Binh Dinh, Viet Nam</p>}
+                                            avatar={<Avatar src={item.avatar} className="contact-search-list-item-avatar"/>}
+                                            title={<span className="contact-search-list-item-name">{item.username}</span>}
+                                            description={<p className="contact-search-list-item-description">{item.address?item.address:''}</p>}
                                         />
                                     </List.Item>
                                 )}
@@ -196,8 +205,6 @@ function ModalCreateGroupChat() {
                     
                 </div>
 
-                
-                
             </Modal>
         </>
     )

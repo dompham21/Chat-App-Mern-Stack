@@ -8,6 +8,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "antd": "^4.7.3",
+    "antd-img-crop": "^3.13.2",
     "axios": "^0.21.0",
     "emoji-mart": "^3.0.0",
     "firebase": "^8.1.1",
@@ -26,6 +27,7 @@
     "simple-peer": "^9.9.3",
     "socket.io-client": "^2.3.1",
     "universal-cookie": "^4.0.4",
+    "uuid": "^8.3.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

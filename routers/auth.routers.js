@@ -24,19 +24,19 @@ router.post('/signup', async (req,res) => {
     const {name, email, password, confirmPassword} = req.body;
 
     if(!email || !password || !name || !confirmPassword) {
-        return res.status(400).json({registerSuccess: false, error:"Please add all the fields!"});
+        return res.json({registerSuccess: false, error:"Please add all the fields!"});
     }
     if(password !== confirmPassword) {
-        return res.status(400).json({registerSuccess: false, error:"The password confirm doesn't macth "});
+        return res.json({registerSuccess: false, error:"The password confirm doesn't macth "});
     }
     if(!password.match(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9]{8,})$/)){
-        return res.status(400).json({registerSuccess: false, error:"Your password must be 8 characters, and include at least one lowercase letter, one uppercase letter, and a number"})
+        return res.json({registerSuccess: false, error:"Your password must be 8 characters, and include at least one lowercase letter, one uppercase letter, and a number"})
     }
     
     let savedUser = await User.findOne({"local.email":email})
 
     if(savedUser){
-        return res.status(400).json({registerSuccess: false, error:"User already exists with that email!"});
+        return res.json({registerSuccess: false, error:"User already exists with that email!"});
     }
 
     let hash = await bcrypt.hash(password, salt)
@@ -59,7 +59,7 @@ router.post('/signup', async (req,res) => {
         .catch(async (error) => {
             await User.findByIdAndRemove({_id:user._id}); //remove user when can't send mail
             console.error(err);
-            return res.status(400).json({registerSuccess: false, error:"Can't send mail to verify"});
+            return res.json({registerSuccess: false, error:"Can't send mail to verify"});
         })
                            
 })
@@ -80,24 +80,21 @@ router.get('/verify/:token', async (req,res) => {
 router.post('/signin', async (req,res) => {
     try {
         const {email, password} = req.body;
-        if(!email || !password){
-            return res.status(400).json({loginSuccess: false, error:"Please provide email or password!"});
-        }
         let savedUser = await User.findOne({"local.email":email})
         if(!savedUser){
-            return res.status(400).json({loginSuccess: false, error:"Invalid email or password!"});
+            return res.json({loginSuccess: false, error:"Invalid email or password!"});
         }
         if(!savedUser.local.isActive){
-            return res.status(400).json({loginSuccess: false, error:"The email has been registered but not activated"})
+            return res.json({loginSuccess: false, error:"The email has been registered but not activated"})
         }
         let match = await bcrypt.compare(password, savedUser.local.password)
         if(match){
             const token = jwt.sign({_id: savedUser._id},JWT_SECRET);
-            const {_id,username,avatar,role} = savedUser;
-            res.status(200).json({ loginSuccess: true, massage:"Login successfully!", token:token,user:{_id,username,avatar,role}})
+            const {_id,username,avatar,role,local,gender,address,phone} = savedUser;
+            res.status(200).json({ loginSuccess: true, massage:"Login successfully!", token:token,user:{_id,username,avatar,role,email:local.email,gender,address,phone}})
         }
         else{
-            return res.status(400).json({loginSuccess: false, error:"Invalid email or password!"});
+            return res.json({loginSuccess: false, error:"Invalid email or password!"});
         }
     } catch (error) {
         console.log(error);

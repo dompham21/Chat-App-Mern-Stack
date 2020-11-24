@@ -44,9 +44,10 @@ router.get('/message/get-all-conversations',checkLogin , async (req,res) => {
                             ]}
                         ]
                     }).sort({"createAt": -1}).limit(1)
-                    getUserContact.updateAt = previewLastMsg[0].createAt
-                    getUserContact.preview = previewLastMsg;
-
+                    if(previewLastMsg && previewLastMsg.length){
+                        getUserContact.updateAt = previewLastMsg[0].createAt
+                        getUserContact.preview = previewLastMsg;
+                    }
                     return getUserContact
             } else {
                     let getUserContact = contact.contacter
@@ -63,8 +64,10 @@ router.get('/message/get-all-conversations',checkLogin , async (req,res) => {
                             ]}
                         ]
                     }).sort({"createAt": -1}).limit(1)
-                    getUserContact.updateAt = previewLastMsg[0].createAt
-                    getUserContact.preview = previewLastMsg; 
+                    if(previewLastMsg && previewLastMsg.length){
+                        getUserContact.updateAt = previewLastMsg[0].createAt
+                        getUserContact.preview = previewLastMsg;
+                    }
                     return getUserContact
             }
         })

@@ -1,0 +1,32 @@
+.general-setting-container {
+    display: flex;
+    width: 100%;
+}
+
+.general-setting-upload-avatar {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    flex: 0.3;
+    align-items: center;
+}
+.general-setting-upload-curr-avatar {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 12px;
+}
+.general-setting-form {
+    color: white;
+    flex: 0.7;
+    margin-top:24px;
+}
+
+#update-infomation > .ant-row.ant-form-item > .ant-col.ant-form-item-label > label {
+    color: white;
+}
+
+label.ant-radio-wrapper > span {
+    color: white;
+
+}
+

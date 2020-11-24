@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form,Row, Col, Input, Button, Checkbox, notification } from 'antd';
+import { Form,Row, Col, Input, Button, Checkbox, notification,Alert } from 'antd';
 import './Login.css';
 import {AiOutlineGooglePlus } from 'react-icons/ai';
 import { FaFacebookF } from 'react-icons/fa';
@@ -9,9 +9,12 @@ import { loginUser } from '../../_actions/user_action';
 
 function Login(props) {
     const dispatch = useDispatch();
+    const [form] = Form.useForm();
+
     const rememberMeChecked = localStorage.getItem("rememberMe") ? true : false;
     const [rememberMe, setRememberMe] = useState(rememberMeChecked);
-    const [loading,setLoading] = useState(false)
+    const [loading,setLoading] = useState(false);
+    const [errorNotActive,setErrorNotActive] = useState(false);
 
     const handleRememberMe = () => {
         setRememberMe(!rememberMe)
@@ -20,45 +23,42 @@ function Login(props) {
     const initialPassword = localStorage.getItem("rememberMe") ? JSON.parse(localStorage.getItem("rememberMe")).password : '';
 
 
-    const handleSubmitForm = (values) => {
+    const handleSubmitForm = async (values) => {
         let dataToSubmit = {
             email: values.email,
             password: values.password
         }
         setLoading(true);
-        console.log(dataToSubmit)
-        dispatch(loginUser(dataToSubmit))
-            .then(res=>{
+        try {
+            let response =  await dispatch(loginUser(dataToSubmit))
+            if(response.payload.loginSuccess){
+                rememberMe? localStorage.setItem('rememberMe',JSON.stringify(dataToSubmit)) : localStorage.removeItem('rememberMe');
 
-                if(res.payload.loginSuccess){
-                    if(rememberMe){
-                        localStorage.setItem('rememberMe',JSON.stringify(dataToSubmit))
-                    }
-                    else {
-                        localStorage.removeItem('rememberMe');
-                    }
-                        localStorage.setItem('token',res.payload.token);
-                        localStorage.setItem('user',JSON.stringify(res.payload.user))
-                        setLoading(false);
-                    notification['success']({
-                        message: 'Login Account Success',
-                        description:
-                          'Welcome to Job help! ',
-                    });
-
+                localStorage.setItem('token',response.payload.token);
+                localStorage.setItem('user',JSON.stringify(response.payload.user))
+                setLoading(false);
+                
+                notification['success']({
+                    message: 'Login Account Success',
+                    description:
+                        'Welcome to Job help! ',
+                });
                     props.history.push("/");
-                }
-                else {
-                    notification['error']({
-                        message: 'Login Account failed',
-                        description:
-                          'Invalid email or password!',
-                    });
-                }
-            })
-            .catch(err=>{
-                console.log(err)
-            })
+            }
+            else {
+                setLoading(false);
+                response.payload.error === "The email has been registered but not activated" ?
+                setErrorNotActive(true)
+                :
+                notification['error']({
+                    message: 'Login Account failed',
+                    description: response.payload.error
+                });
+                form.resetFields();
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 
@@ -70,10 +70,16 @@ function Login(props) {
                         <div className="login-form-detail">
                             <img className="login-form-logo" alt="logo" ></img>
                             <h3 className="login-form-title">Sign into your account</h3>
+                            <Alert
+                                message="The email has been registered but not activated, please check your email has been registered and active your account "
+                                type="error"
+                                closable
+                                style={{display:errorNotActive?"block":"none",marginBottom: "12px",fontSize:"16px"}}
+                            />
                             <Form 
-                                // onKeyDown={(e)=> e.keyCode === 13 ? handleSubmitForm(e) : ''}
+                                form={form}
                                 onFinish={(values)=>handleSubmitForm(values)}
-                                name="basic"
+                                name="login-form"
                                 initialValues = {{
                                     email: initialEmail,
                                     password: initialPassword,
@@ -83,13 +89,13 @@ function Login(props) {
                                     name="email"
                                     rules={[{ required: true, message: 'Please input your email!' }]}
                                 >
-                                    <Input type="email" placeholder="Email Address"  />
+                                    <Input type="email" placeholder="Email Address" className="form-login-item-input" />
                                 </Form.Item>
                                 <Form.Item
                                     name="password"
                                     rules={[{ required: true, message: 'Please input your password!', min: 8 }]}
                                 >
-                                    <Input.Password placeholder="Password" />
+                                    <Input.Password placeholder="Password" className="form-login-item-input"/>
                                 </Form.Item>
                                 <Form.Item name="remember" valuePropName="checked" >
                                     <Checkbox className="checkbox-remember" onChange={handleRememberMe} checked={rememberMe}>Remember me</Checkbox>

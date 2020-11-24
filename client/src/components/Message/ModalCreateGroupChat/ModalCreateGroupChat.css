@@ -18,7 +18,7 @@
 .create-group-list-border {
     width: 2px;
     margin: 0 5px;
-    min-height: 540px;
+    height: 500px;
     background-color: #3e4042;
 }
 .btn-create {
