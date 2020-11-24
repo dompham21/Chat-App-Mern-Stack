@@ -23,7 +23,6 @@ function Message() {
             try {
                 let response  = await dispatch(getAllConversations())
                 setListAllConversations(response.payload.allConversations)
-    
                 let timer = setTimeout(() => {
                     setLoading(false)
                 }, 3000);
@@ -35,8 +34,8 @@ function Message() {
         fetchData();
     }, [receiveMessage])
 
-    const handleGetKey = (key) => {
-        dispatch(getKeyTabs(key))
+    const handleGetKey = async (key) => {
+        await dispatch(getKeyTabs(key))
     }
     const OperationsSlot = {
         left: <div className="message-tabs-extra-content">
@@ -50,7 +49,17 @@ function Message() {
                 />
             </div>
       };
-
+    const hanldeRenderPreviewMsg = (preview,targetId) => {
+        if( preview && preview.length){
+            if(preview[0].senderId !== targetId ){
+                return "You: " + truncate(preview[0].text) + " · "
+            }else{
+                return preview[0].sender.username+ ": " + truncate(preview[0].text) + " · "
+            }
+        }else{
+            return '';
+        }
+    }
     return (
         <div className="message-layout"> 
             <div className="loader-layout" style={{display:loading?"flex":"none"}}> 
@@ -77,11 +86,11 @@ function Message() {
                             return <TabPane
                                 tab={
                                     <div className="message-tabs-conversations-navbar">
-                                        <Avatar src={pane.avatar} className="message-list-conversations-avatar"/>                           
+                                        <Avatar src="https://firebasestorage.googleapis.com/v0/b/chat-now-3987e.appspot.com/o/group-chat-avt.jpg?alt=media&token=7ddcb8b2-cd52-425b-a137-ff5bd43e7884" className="message-list-conversations-avatar"/>                           
                                         <div className="message-list-conversations-info">
                                             <span className="message-list-conversations-name">{pane.name}</span>
-                                            <p className="message-list-conversations-description">{pane.preview.length?truncate(pane.preview[0].text):''} 
-                                                <span className="message-list-conversations-time"> · {pane.preview.length?changeTimeStamp(pane.preview[0].createAt):''}</span>
+                                                <p className="message-list-conversations-description">{hanldeRenderPreviewMsg(pane.preview,pane._id)} 
+                                                <span className="message-list-conversations-time">{pane.preview.length?changeTimeStamp(pane.preview[0].createAt):''}</span>
                                             </p>
                                         </div>
                                     </div>
@@ -98,8 +107,8 @@ function Message() {
                                         <Avatar src={pane.avatar} className="message-list-conversations-avatar"/>                           
                                         <div className="message-list-conversations-info">
                                             <span className="message-list-conversations-name">{pane.username}</span>
-                                            <p className="message-list-conversations-description">{pane.preview && pane.preview.length?truncate(pane.preview[0].text):''} 
-                                                <span className="message-list-conversations-time"> · {pane.preview && pane.preview.length?changeTimeStamp(pane.preview[0].createAt) : ''}</span>
+                                            <p className="message-list-conversations-description">{hanldeRenderPreviewMsg(pane.preview,pane._id)} 
+                                                <span className="message-list-conversations-time">{pane.preview && pane.preview.length?changeTimeStamp(pane.preview[0].createAt) : ''}</span>
                                             </p>
                                         </div>
                                     </div>

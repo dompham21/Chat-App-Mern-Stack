@@ -74,7 +74,6 @@ function ChatVideo(props) {
         })
         socket.on("server-send-cancel-req-call-listener",(response)=>{
             const streamListener = videoRefListener.current.srcObject;
-            console.log(streamListener)
             const tracksListener = streamListener.getTracks();
 
             tracksListener.forEach(function(track) {
@@ -119,7 +118,6 @@ function ChatVideo(props) {
         socket.on("server-send-reject-call-listener",response => {
           
             const streamListener = videoRefListener.current.srcObject;
-            console.log(streamListener)
             const tracksListener = streamListener.getTracks();
 
             tracksListener.forEach(function(track) {
@@ -134,15 +132,12 @@ function ChatVideo(props) {
         socket.on("server-send-accept-call-caller",response => {
             let getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
             getUserMedia({video: true, audio: false},  function(stream) {
-                console.log(stream)
-                console.log(videoRefCaller.current)
                 if(videoRefCaller.current){
                     setHiddenInfoVideo(true);
                     videoRefCaller.current.srcObject = stream;
                 }
                 var call =  peer.call(response.listenerPeerId, stream);
                 call.on('stream', function(remoteStream) {
-                    console.log(remoteStream)
                     if(videoRefReceiver.current){
                         videoRefReceiver.current.srcObject = remoteStream;
                     }
@@ -154,9 +149,7 @@ function ChatVideo(props) {
         socket.on("server-send-accept-call-listener",response => {
             let getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
             peer.on("call", function(call) {
-                console.log(call)
               getUserMedia({video: true, audio: false}, function(stream) {
-                    console.log(stream)
                   if(videoRefListener.current){
                     setHiddenInfoVideo(true)
                     setHiddenInfoVideoListener(true)
@@ -164,7 +157,6 @@ function ChatVideo(props) {
                   }
                 call.answer(stream); // Answer the call with an A/V stream.
                 call.on('stream', function(remoteStream) {
-                    console.log(remoteStream)
                     if(videoRefSend.current){
                         videoRefSend.current.srcObject = remoteStream
                     }

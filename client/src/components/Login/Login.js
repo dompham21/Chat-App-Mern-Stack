@@ -41,7 +41,7 @@ function Login(props) {
                 notification['success']({
                     message: 'Login Account Success',
                     description:
-                        'Welcome to Job help! ',
+                        'Welcome to Chat now! ',
                 });
                     props.history.push("/");
             }
@@ -54,7 +54,7 @@ function Login(props) {
                     message: 'Login Account failed',
                     description: response.payload.error
                 });
-                form.resetFields();
+                form.setFieldsValue({password:''})
             }
         } catch (error) {
             console.log(error)
@@ -68,7 +68,7 @@ function Login(props) {
                 <Col span={24}>
                     <div className="login-form-box">
                         <div className="login-form-detail">
-                            <img className="login-form-logo" alt="logo" ></img>
+                            <img className="login-form-logo" alt="logo" src="https://firebasestorage.googleapis.com/v0/b/chat-now-3987e.appspot.com/o/logo.de6401ef.svg?alt=media&token=bf87cd0c-e644-4539-9f72-bc0cb6a07e24"></img>
                             <h3 className="login-form-title">Sign into your account</h3>
                             <Alert
                                 message="The email has been registered but not activated, please check your email has been registered and active your account "

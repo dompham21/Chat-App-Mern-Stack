@@ -5,7 +5,7 @@ import './Chats.css'
 import ChatCard from './ChatCard/ChatCard';
 import InputSend from './InputSend/InputSend';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMessagesUser, afterPostMessage, getMessagesGroup } from '../../../_actions/message_action';
+import { getMessagesUser, afterPostMessage, getMessagesGroup, afterPostMessageGroup } from '../../../_actions/message_action';
 import ChatVideo from './ChatVideo/ChatVideo';
 import LoadingListMessage from '../../Loading/LoadingListMessage/LoadingListMessage';
 
@@ -23,14 +23,18 @@ function Chats(props) {
     const socket = useSelector(state => state.notification.connectSocketIo)
 
     useEffect(() => {
-      socket.on("Output Chat Message",async messageFromBackEnd => {
-        try {
-          let response = await  dispatch(afterPostMessage(messageFromBackEnd))
+      try {
+        socket.on("output-chat-message",async messageFromBackEnd => {
+          let response = await dispatch(afterPostMessage(messageFromBackEnd))
           setMessageFromBe(response.payload)
-        } catch (error) {
-          console.log(error)
-        }
       })
+        socket.on("output-chat-message-group",async messageFromBackEnd => {
+          let response = await dispatch(afterPostMessageGroup(messageFromBackEnd))
+          setMessageFromBe(response.payload)
+      })
+      } catch (error) {
+        console.log(error)
+      }
       return () => {
         socket.emit('disconnect');
         socket.off();
@@ -42,7 +46,7 @@ function Chats(props) {
     };
     
     useEffect(() => {
-        scrollToBottom()
+      scrollToBottom()
     }, [messages])
     
     useEffect(() => {
@@ -55,7 +59,7 @@ function Chats(props) {
                 setLoading(false)
             }else{
               let response = await dispatch(getMessagesUser(activeKey))
-                setMessages(response.payload)
+                setMessages(response.payload.data)
                 setLoading(false)
             }
           }else{
@@ -155,7 +159,7 @@ function Chats(props) {
         <div className="message-layout-chats">
             <div className="message-layout-chats-title">
                 <div className="message-layout-chats-title-infomation">
-                    <Avatar src={avatar} className="message-layout-chats-avatar"/>
+                    <Avatar src={avatar||'https://firebasestorage.googleapis.com/v0/b/chat-now-3987e.appspot.com/o/group-chat-avt.jpg?alt=media&token=7ddcb8b2-cd52-425b-a137-ff5bd43e7884'} className="message-layout-chats-avatar"/>
                     <span>{username}</span>
                 </div>
                 {

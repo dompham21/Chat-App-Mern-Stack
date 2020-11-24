@@ -51,6 +51,8 @@ export const ADD_NEW_GROUP_CHAT = 'add_new_group_chat'
 export const GET_MESSAGES_USER = 'get_messages_user'
 export const GET_MESSAGES_GROUP = 'get_messages_group'
 export const AFTER_POST_MESSAGE = 'after_post_message'
+export const AFTER_POST_MESSAGE_GROUP = 'after_post_message_group'
+
 
 export const GET_KEY_TABS = 'get_key_tabs'
 export const GET_DATA_TO_EMIT_CALL_VIDEO = "get_data_to_emit_call_video"

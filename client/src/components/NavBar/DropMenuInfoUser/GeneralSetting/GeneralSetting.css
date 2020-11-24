@@ -21,12 +21,17 @@
     margin-top:24px;
 }
 
-#update-infomation > .ant-row.ant-form-item > .ant-col.ant-form-item-label > label {
+#update-infomation > .ant-row.ant-form-item > .ant-col.ant-form-item-label > label, label.ant-radio-wrapper > span {
     color: white;
 }
 
-label.ant-radio-wrapper > span {
+.update-info-form-input-item, input#update-infomation_email {
+    background-color: #3a3b3c;
     color: white;
+    border: none;
 
 }
 
+input#update-infomation_email {
+   color: #88898a;
+}

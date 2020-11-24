@@ -27,21 +27,21 @@
     background-color: #4ec54e;
     border: none;
 }
+
 .btn-cancel {
     color: white;
     background-color: #ff4242;
     border: none;
 }
 
-.btn-create:hover {
+
+.btn-create:hover, .btn-create:focus {  
     background-color: #6be26b;
     color: white;
-
 }
 
 
-.btn-cancel:hover {
+.btn-cancel:hover, .btn-cancel:focus{
     background-color: #e44f50;
     color: white;
-
 }

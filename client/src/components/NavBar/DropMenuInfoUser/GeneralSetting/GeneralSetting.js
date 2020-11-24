@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Upload, Button,Avatar, Form, Input, Tooltip,Radio, message } from 'antd';
+import { Upload, Button,Avatar, Form, Input, Tooltip, Radio, message, notification } from 'antd';
 import {AiOutlineUpload} from 'react-icons/ai'
 import ImgCrop from 'antd-img-crop';
 import './GeneralSetting.css';
@@ -45,8 +45,9 @@ const formItemLayout = {
   }
 function GeneralSetting() {
     const [imageUrl,setImageUrl] = useState(null);
-    const [loading,setLoading] = useState(false);
     const [form] = Form.useForm();
+    const [loadingUpload,setLoadingUpload] = useState(false)
+    const [loadingCreate,setLoadingCreate] = useState(false)
 
     const dispatch = useDispatch()
     
@@ -54,14 +55,13 @@ function GeneralSetting() {
 
     const onChange = (info) => {
         if (info.file.status === 'uploading') {
-            setLoading(true);
+            setLoadingUpload(true);
             return;
           }
           if (info.file.status === 'done') {
-            // Get this url from response in real world.
             getBase64(info.file.originFileObj, imageUrl =>
                 setImageUrl(imageUrl),
-                setLoading(false)
+                setLoadingUpload(false)
             )
           }
       };
@@ -72,9 +72,11 @@ function GeneralSetting() {
             formData.append("file",imageUrl);
             formData.append("upload_preset","social");
             formData.append("cloud_name","dmriwkfll");
-                let response = await dispatch(uploadCloundinary(formData))
-                let uploadSuccess = await dispatch(updateAvatar(response.payload.url))
-                if(values.name === user.username && values.address === user.address &&values.phone === user.phone && values.gender === user.gender){
+            setLoadingCreate(true)
+            let response = await dispatch(uploadCloundinary(formData))
+            let uploadSuccess = await dispatch(updateAvatar(response.payload.url))
+            if(values.name === user.username && values.address === user.address && values.phone === user.phone && values.gender === user.gender){
+                if(response.payload.url){
                     let userInfo = {
                         address: user.address,
                         avatar: response.payload.url,
@@ -85,44 +87,63 @@ function GeneralSetting() {
                         username: user.username,
                         _id: user._id,
                     }
-                    console.log('a')
+                    setLoadingCreate(false)
                     localStorage.setItem("user",JSON.stringify(userInfo))
-                }else{
-                    if(uploadSuccess){
-                        let dataToSubmit = {
+                    notification['success']({
+                        message: 'Update info success',
+                        description: "Please refesh page to see a change!"
+                    });
+                }
+            }else{
+                if(uploadSuccess.payload.updateAvatarSuccess){
+                    let dataToSubmit = {
+                        address: values.address,
+                        gender: values.gender,
+                        phone: values.phone,
+                        username: upperCaseFirstName(values.name),
+                    }
+                    let updateInfo =  await dispatch(updateUserInfo(dataToSubmit))
+                    if(updateInfo.payload.updateInfoSuccess){
+                        setLoadingCreate(false)
+                        let userInfo = {
                             address: values.address,
+                            avatar: response.payload.url,
+                            email: user.email,
                             gender: values.gender,
                             phone: values.phone,
+                            role: user.role,
                             username: upperCaseFirstName(values.name),
+                            _id: user._id,
                         }
-                        let updateInfo =  await dispatch(updateUserInfo(dataToSubmit))
-                        console.log(values)
-                        if(updateInfo){
-                            let userInfo = {
-                                address: values.address,
-                                avatar: response.payload.url,
-                                email: user.email,
-                                gender: values.gender,
-                                phone: values.phone,
-                                role: user.role,
-                                username: upperCaseFirstName(values.name),
-                                _id: user._id,
-                            }
-                            localStorage.setItem("user",JSON.stringify(userInfo))
-                        }
+                        notification['success']({
+                            message: 'Update info success',
+                            description: "Please refesh page to see a change!"
+                        });
+                        localStorage.setItem("user",JSON.stringify(userInfo))
                     }
                 }
+            }
         }else{
             if(values.name === ''){
-                console.log("return")
-                return;
-            }
-            if(!isVietnamesePhoneNumber(values.phone)){
-                console.log("This is not a phone number Vietnamese!")
+                notification['error']({
+                    message: 'Update info failed',
+                    description: "Please add all the fields!"
+                });
                 return;
             }
             if(values.address === ''){
-                return
+                notification['error']({
+                    message: 'Update info failed',
+                    description: "Please add all the fields!"
+                });
+                return;
+            }
+            if(!isVietnamesePhoneNumber(values.phone)){
+                notification['error']({
+                    message: 'Update info failed',
+                    description: "This is not a phone number Vietnamese!"
+                });
+                return;
             }
             let dataToSubmit = {
                 address: values.address,
@@ -131,7 +152,8 @@ function GeneralSetting() {
                 username: upperCaseFirstName(values.name),
             }
             let updateInfo =  await dispatch(updateUserInfo(dataToSubmit))
-            if(updateInfo){
+            if(updateInfo.payload.updateInfoSuccess){
+                setLoadingCreate(false)
                 let userInfo = {
                     address: values.address,
                     avatar: user.avatar,
@@ -142,6 +164,10 @@ function GeneralSetting() {
                     username: upperCaseFirstName(values.name),
                     _id: user._id,
                 }
+                notification['success']({
+                    message: 'Update info success',
+                    description: "Please refesh page to see a change!"
+                });
                 localStorage.setItem("user",JSON.stringify(userInfo))
             }
         }
@@ -164,7 +190,7 @@ function GeneralSetting() {
                      beforeUpload={beforeUpload}
                      showUploadList={false}
                      >
-                        <Button icon={<AiOutlineUpload/>}>Upload</Button>
+                        <Button icon={<AiOutlineUpload/>} loading={loadingUpload}>Upload</Button>
                     </Upload>
                 </ImgCrop>
                 
@@ -194,7 +220,7 @@ function GeneralSetting() {
                         }
                         ]}
                     >
-                        <Input disabled />
+                        <Input disabled className="update-info-form-input-item"/>
                     </Form.Item>
                     <Form.Item
                         name="name"
@@ -206,13 +232,13 @@ function GeneralSetting() {
                         </span>
                         }
                     >
-                        <Input />
+                        <Input className="update-info-form-input-item"/>
                     </Form.Item>
                     <Form.Item
                         name="phone"
                         label="Phone Number"
                     >
-                        <Input style={{ width: '100%' }} />
+                        <Input className="update-info-form-input-item"/>
                     </Form.Item>
                     <Form.Item
                         name="gender"
@@ -227,11 +253,11 @@ function GeneralSetting() {
                         name="address"
                         label="Address"
                     >
-                        <Input />
+                        <Input className="update-info-form-input-item"/>
                     </Form.Item>
                     <Form.Item style={{display:"flex",justifyContent:"center"}}>
                         <div style={{display:"flex", justifyContent:"center", marginTop:"24px"}}>
-                                <Button className="btn-create" htmlType="submit">Create</Button>
+                                <Button className="btn-create" htmlType="submit" loading={loadingCreate}>Update</Button>
                                 <Button className="btn-cancel" onClick={handleCancelUpdate}>Cancel</Button>
                         </div>
                     </Form.Item>    

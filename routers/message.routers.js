@@ -44,6 +44,8 @@ router.get('/message/get-all-conversations',checkLogin , async (req,res) => {
                             ]}
                         ]
                     }).sort({"createAt": -1}).limit(1)
+                    .populate("sender", {username:1})
+
                     if(previewLastMsg && previewLastMsg.length){
                         getUserContact.updateAt = previewLastMsg[0].createAt
                         getUserContact.preview = previewLastMsg;
@@ -64,6 +66,8 @@ router.get('/message/get-all-conversations',checkLogin , async (req,res) => {
                             ]}
                         ]
                     }).sort({"createAt": -1}).limit(1)
+                    .populate("sender", {username:1})
+
                     if(previewLastMsg && previewLastMsg.length){
                         getUserContact.updateAt = previewLastMsg[0].createAt
                         getUserContact.preview = previewLastMsg;
@@ -155,9 +159,9 @@ router.get('/message/group/:id', checkLogin, async (req,res)=> {
 router.post('/group-chat/add-new', checkLogin, async (req,res) => {
     const {listUser,nameGroup} = req.body.data
     const currentId = req.user._id;
-    
     const usernameCurrent = req.user.username;
-    listUser.push({id:currentId.toString(),username:usernameCurrent})
+    const avatarCurrent = req.user.avatar
+    listUser.push({id:currentId.toString(),username:usernameCurrent,avatar: avatarCurrent})
     let newGroup = new ChatGroup({
         name: nameGroup,
         UserAmount: listUser.length,

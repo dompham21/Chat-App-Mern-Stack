@@ -31,13 +31,12 @@ function InputSend(props) {
         if(members){
             groupId = id;
         }
-        socket.emit("Input Chat Message",{
+        socket.emit("input-chat-message",{
             message,
             senderId,
             receiverId,
             groupId
         })
-        console.log(message)
         if (inputElement.current) {
             inputElement.current.focus();
         }

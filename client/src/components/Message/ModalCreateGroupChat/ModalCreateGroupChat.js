@@ -6,6 +6,7 @@ import {  Modal, Tooltip, Input,List,Button,Avatar,notification} from 'antd'
 import './ModalCreateGroupChat.css'
 import { searchUserGroupChat } from '../../../_actions/user_action';
 import { addNewGroupChat } from '../../../_actions/message_action';
+import { upperCaseFirstName } from '../../../util';
 
 
 function ModalCreateGroupChat() {
@@ -14,7 +15,6 @@ function ModalCreateGroupChat() {
     const [listUserSearch,setListUserSearch] = useState([])
     const [listUserAddToGroupTemp,setListUserAddToGroupTemp] = useState([])
     const [nameOfGroup,setNameOfGroup] = useState('')
-    const user = JSON.parse(localStorage.getItem('user'))
     const socket = useSelector(state => state.notification.connectSocketIo)
 
     const dispatch = useDispatch()
@@ -27,6 +27,18 @@ function ModalCreateGroupChat() {
             try {
                 let response = await dispatch(searchUserGroupChat(nameToSearch))
                 setListUserSearch(response.payload)
+                response.payload.map(item=>{
+                    refBtnAdd.current[item._id].style.display = "block"
+                    refBtnRemove.current[item._id].style.display =  "none"
+                    if(listUserAddToGroupTemp && listUserAddToGroupTemp.length){
+                        listUserAddToGroupTemp.map(i=>{
+                            if(item._id === i.id){
+                                refBtnAdd.current[item._id].style.display = "none"
+                                refBtnRemove.current[item._id].style.display =  "block"
+                            }
+                        })
+                    }
+                })
             } catch (error) {
                 console.log(error)
             }
@@ -40,33 +52,34 @@ function ModalCreateGroupChat() {
             address: address
         }
 
+        refBtnAdd.current[id].style.display = "none"
+        refBtnRemove.current[id].style.display = "block"
         setListUserAddToGroupTemp([...listUserAddToGroupTemp,infoUser]);
-        if(refBtnAdd.current){
-            refBtnAdd.current[id].style.display = "none"
-        }
-        if(refBtnRemove.current){
-            refBtnRemove.current[id].style.display = "block"
-        }
+        
     }
     const handleRemoveUserToGroup = (id,username) => {
+        refBtnRemove.current[id].style.display = "none"
+        refBtnAdd.current[id].style.display = "block"
+        
         setListUserAddToGroupTemp(listUserAddToGroupTemp.filter(item=>{
             return item.id !== id
         }))
-        if(refBtnRemove.current){
-            refBtnRemove.current[id].style.display = "none"
-        }
-        if(refBtnAdd.current){
-            refBtnAdd.current[id].style.display = "block"
-        }
+       
     }
     const handleCancelAddGroup = () => {
         listUserAddToGroupTemp.forEach(item => {
-            if( refBtnRemove.current[item.id].style.display == "block"){
-                refBtnRemove.current[item.id].style.display = "none"
-                refBtnAdd.current[item.id].style.display = "block"
+            if( refBtnRemove.current[item.id]){
+                if( refBtnRemove.current[item.id].style.display == "block"){
+                    refBtnRemove.current[item.id].style.display = "none"
+                    refBtnAdd.current[item.id].style.display = "block"
+                }
             }
+            
         })
         setListUserAddToGroupTemp([]);
+        setListUserSearch([])
+        setNameOfGroup('')
+        setNameToSearch('')
 
     }
     const handleCreateAddGroup = async () => {
@@ -78,6 +91,7 @@ function ModalCreateGroupChat() {
             });
             return;
         }
+        
         if(!nameOfGroup || nameOfGroup.length < 3 || nameOfGroup.length > 30){
             notification['error']({
                 message: 'Create group chat fail',
@@ -89,27 +103,34 @@ function ModalCreateGroupChat() {
        
         const dataToEmit = {
             listUser: listUserAddToGroupTemp,
-            nameGroup: nameOfGroup
+            nameGroup: upperCaseFirstName(nameOfGroup)
         }
         try {
             let response = await dispatch(addNewGroupChat(dataToEmit))
             socket.emit("new-group-created",response.payload)
         } catch (error) {
             console.log(error)
-        } 
+        }
         listUserAddToGroupTemp.forEach(item => {
-            if( refBtnRemove.current[item.id].style.display == "block"){
-                refBtnRemove.current[item.id].style.display = "none"
-                refBtnAdd.current[item.id].style.display = "block"
+            if(refBtnRemove.current[item.id]){
+                if( refBtnRemove.current[item.id].style.display == "block"){
+                    refBtnRemove.current[item.id].style.display = "none"
+                    refBtnAdd.current[item.id].style.display = "block"
+                }
             }
+           
         })
+        
+        setListUserAddToGroupTemp([]);
+        setListUserSearch([])
+        setNameOfGroup('')
+        setNameToSearch('')
+        
         setTimeout(() => {
             setVisible(false);
-        }, 3000); 
-        setListUserAddToGroupTemp([]);
-        setNameOfGroup('')  
-             
+        }, 3000);   
     }
+
     return (
         <>
            <Tooltip title={"Create group chat"} placement="top">
@@ -136,6 +157,7 @@ function ModalCreateGroupChat() {
                                 placeholder="Search users to add"
                                 onKeyPress={handleEnterSubmit}
                                 onChange={(val)=>(setNameToSearch(val.target.value))}
+                                value={nameToSearch}
                         />
                         {listUserSearch.length ? 
                             <List       
@@ -152,15 +174,16 @@ function ModalCreateGroupChat() {
                                             description={<p className="contact-search-list-item-description">{item.address?item.address:''}</p>}
                                         />
                                         <Button 
+                                            style={{display: "inline-block"}}
                                             className="btn-create" 
-                                            ref={el => (refBtnAdd.current[item._id] = el)}  
                                             onClick={()=>handleAddUserToGroup(item._id,item.username,item.avatar,item.address)}
+                                            ref={el => (refBtnAdd.current[item._id] = el)}  
                                         >Add to group</Button>
                                         <Button 
                                             style={{display: "none"}}
                                             className="btn-cancel" 
-                                            ref={el => (refBtnRemove.current[item._id] = el)} 
                                             onClick={()=>handleRemoveUserToGroup(item._id,item.username)}
+                                            ref={el => (refBtnRemove.current[item._id] = el)}  
                                         >Remove user</Button>
                                     </List.Item>
                                 )}
@@ -177,7 +200,7 @@ function ModalCreateGroupChat() {
                                 onChange={(val)=>{setNameOfGroup(val.target.value)}}
                                 value={nameOfGroup}
                         />
-                        {listUserSearch.length ? 
+                        {listUserAddToGroupTemp.length ? 
                             <List       
                                 itemLayout="horizontal"
                                 className="contact-search-list create-group-list-right"
