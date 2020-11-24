@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { Form,Row, Col, Input, Button, notification } from 'antd';
-import {AiOutlineTwitter,AiOutlineGooglePlus } from 'react-icons/ai';
-import { FaFacebookF,FaLinkedinIn } from 'react-icons/fa';
+import {AiOutlineGooglePlus } from 'react-icons/ai';
+import { FaFacebookF } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 
-import './Register.css';
 import { registerUser } from '../../_actions/user_action';
 import { regexPassword,upperCaseFirstName } from '../../util';
 function Register(props) {
@@ -51,7 +50,7 @@ function Register(props) {
                 <Col span={24}>
                     <div className="login-form-box">
                         <div className="login-form-detail">
-                            <img className="login-form-logo"></img>
+                            <img className="login-form-logo" alt="logo" src="https://firebasestorage.googleapis.com/v0/b/chat-now-3987e.appspot.com/o/logo.de6401ef.svg?alt=media&token=bf87cd0c-e644-4539-9f72-bc0cb6a07e24"></img>
                             <h3 className="login-form-title">Sign into your account</h3>
                             <Form 
                                  onFinish={(values)=>handleSubmitForm(values)}
@@ -132,13 +131,7 @@ function Register(props) {
                                     <a style={{background:'#4867aa',color:'white'}}><FaFacebookF/></a>
                                 </li>
                                 <li>
-                                    <a style={{background:'#33CCFF',color:'white'}}><AiOutlineTwitter/></a>
-                                </li>
-                                <li>
                                     <a style={{background:'#db4437',color:'white'}}><AiOutlineGooglePlus/></a>
-                                </li>
-                                <li>
-                                    <a style={{background:'#0177b5',color:'white'}}><FaLinkedinIn/></a>
                                 </li>
                             </ul>
                         </div>

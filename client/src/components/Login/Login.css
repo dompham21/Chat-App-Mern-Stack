@@ -131,3 +131,14 @@ span.ant-input-suffix {
     text-decoration: none;
     color:  #ff214f;
 }
+
+
+.form-login-item-input {
+    padding: 10px 15px;
+    background-color: white ;
+    color: #717171 ;
+    height: 45px;
+    border-radius: 3px;
+    border: 1px solid #dbdbdb; 
+    font-size: 15px;
+} 

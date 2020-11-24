@@ -53,7 +53,7 @@ function Notification() {
                         notification['success']({
                             message: 'Group Created Success',
                             description:
-                              'Welcome to Job help! ',
+                              'Let to talk with your friend! ',
                         });
                     })
                     return () => {

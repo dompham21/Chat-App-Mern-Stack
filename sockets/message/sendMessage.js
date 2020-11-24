@@ -14,7 +14,7 @@ let sendMessage = (io) => {
         groupIds.forEach(group=>{
             clients = checkExist(clients,group._id,socket.id)
         })
-        socket.on("Input Chat Message", async (data) => {
+        socket.on("input-chat-message", async (data) => {
             try {
                 console.log(data);
                 if(data.groupId){
@@ -28,10 +28,10 @@ let sendMessage = (io) => {
                     let savedMessage = await newMessage.save();
                     let message = await Message.model.find({ "_id": savedMessage._id })
                         .populate("sender", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
-                        console.log(clients)
+                        console.log(message)
                     if(clients[data.groupId] ){
                         clients[data.groupId].forEach(socketId => {
-                            io.sockets.connected[socketId].emit('Output Chat Message', message)
+                            io.sockets.connected[socketId].emit('output-chat-message-group', message)
                         })
                     }
                 }else {
@@ -51,12 +51,12 @@ let sendMessage = (io) => {
                        
                     if(clients[receiverId] ){
                         clients[receiverId].forEach(socketId => {
-                            io.sockets.connected[socketId].emit('Output Chat Message', message)
+                            io.sockets.connected[socketId].emit('output-chat-message', message)
                         })
                     }
                     if(clients[currentId]){
                         clients[currentId].forEach(socketId => {
-                            io.sockets.connected[socketId].emit('Output Chat Message', message)
+                            io.sockets.connected[socketId].emit('output-chat-message', message)
                         })
                     }
                 }

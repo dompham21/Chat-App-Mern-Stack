@@ -1,11 +1,13 @@
 import React from 'react';
-import { Comment, Avatar, Tooltip } from 'antd';
+import { Avatar } from 'antd';
 import moment from 'moment';
 import './ChatCard.css'
 
 function ChatCard(props) {
     const {data,isMine,startsSequence,endsSequence, showTimestamp, avatar, members} = props;
     const friendlyTimestamp = moment(data.timestamp).format('LLLL');
+  let  a = members.filter(function (obj){ return obj.id===data.senderId})
+
     return (
         <div className={[
             'message',
@@ -19,10 +21,10 @@ function ChatCard(props) {
                   { friendlyTimestamp }
                 </div>
             }
-    
             <div className="bubble-container">
                {    
-                   !isMine && endsSequence &&  <Avatar src={avatar} size="small"/>
+                   !isMine && endsSequence && !members ?  <Avatar src={avatar} size="small"/> : 
+                   endsSequence && members && !isMine ? <Avatar src={a[0].avatar} size="small"/> : ''
                } 
               <div className="bubble" title={friendlyTimestamp}>
                 { data.text }

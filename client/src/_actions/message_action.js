@@ -7,7 +7,8 @@ import {
     GET_DATA_TO_EMIT_CALL_VIDEO, 
     GET_ICE_TURN_SERVER, 
     ADD_NEW_GROUP_CHAT,
-    GET_MESSAGES_GROUP
+    GET_MESSAGES_GROUP,
+    AFTER_POST_MESSAGE_GROUP
 } from "./types";
 
 export const getAllConversations =  () => {
@@ -40,8 +41,6 @@ export const getMessagesUser =  (dataToSubmit) => {
                 "Authorization":"Bearer "+localStorage.getItem('token')
             }
         })
-        .then(response => response.data);
-   
         return {
             type: GET_MESSAGES_USER,
             payload: request
@@ -72,10 +71,20 @@ export const getMessagesGroup =  (dataToSubmit) => {
 
 
 
-export const afterPostMessage  = async (data) => {
+export const afterPostMessage  =  (data) => {
     try {
         return {
             type: AFTER_POST_MESSAGE,
+            payload: data
+        }
+    } catch (error) {
+        console.log(error)
+    }  
+}
+export const afterPostMessageGroup  =  (data) => {
+    try {
+        return {
+            type: AFTER_POST_MESSAGE_GROUP,
             payload: data
         }
     } catch (error) {

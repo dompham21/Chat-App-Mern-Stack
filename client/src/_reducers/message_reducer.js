@@ -6,7 +6,8 @@ import {
     GET_DATA_TO_EMIT_CALL_VIDEO, 
     GET_ICE_TURN_SERVER, 
     ADD_NEW_GROUP_CHAT,
-    GET_MESSAGES_GROUP
+    GET_MESSAGES_GROUP,
+    AFTER_POST_MESSAGE_GROUP
 } from '../_actions/types';
 
 
@@ -20,6 +21,8 @@ export default function(state={},action){
             return {...state,dataMessagesGroup: action.payload}
         case AFTER_POST_MESSAGE:
             return {...state,dataMessages: state.dataMessages.concat(action.payload),receiveMessage: action.payload}
+        case AFTER_POST_MESSAGE_GROUP:
+            return {...state,dataMessagesGroup:state.dataMessagesGroup.concat(action.payload),receiveMessage: action.payload}
         case GET_KEY_TABS:
             return {...state,activeKey: action.payload}
         case GET_DATA_TO_EMIT_CALL_VIDEO:
