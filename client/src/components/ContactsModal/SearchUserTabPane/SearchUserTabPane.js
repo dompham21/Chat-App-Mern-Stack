@@ -6,7 +6,7 @@ import { FaUserPlus,FaUserTimes } from 'react-icons/fa'
 import { searchUser } from '../../../_actions/user_action';
 import { useDispatch, useSelector} from 'react-redux';
 import { addContact, removeContact, approveContactReqReceived, removeContactReqReceived } from '../../../_actions/contact_action';
-import LoadingListUser from '../../LoadingPage/LoadingListUser/LoadingListUser';
+import LoadingListUser from '../../Loading/LoadingListUser/LoadingListUser';
 
 
 
@@ -23,90 +23,84 @@ function SearchUserTabPane() {
 
     const dispatch = useDispatch()
 
-    const handleEnterSubmit = (event) => {
+    const handleEnterSubmit = async (event) => {
         if(event.key === 'Enter' && nameToSearch !== ''){
             setLoading(true);
-            dispatch(searchUser(nameToSearch))
-            .then(res=>{
-                setListUser(res.payload);
-                console.log(res.payload)
+            try {
+                let response = await dispatch(searchUser(nameToSearch))
+                setListUser(response.payload);
                 setLoading(false);
-            })
-            .catch(err=>{
-                console.log(err);
-            })
+            } catch (error) {
+                console.log(error)
+            }     
         }
     }
-    const handleAddContact = (id) => {
-        dispatch(addContact(id))
-            .then(res => {
-                if(res.payload.addSuccess){
-                    refAddContact.current[id].style.display = "none";
-                    refRemoveRequest.current[id].style.display = "block";
-                    socket.emit('add-new-contact', {contactId:id})
-                }
-            })
-            .catch(err=>{
-                console.log(err);
-            })    
+    const handleAddContact = async (id) => {
+        try {
+            let response = await dispatch(addContact(id))
+            if(response.payload.addSuccess){
+                refAddContact.current[id].style.display = "none";
+                refRemoveRequest.current[id].style.display = "block";
+                socket.emit('add-new-contact', {contactId:id})
+            } 
+        } catch (error) {
+            console.log(error)
+        }             
     }
 
-    const handleRemoveContact = (id) => {
-        dispatch(removeContact(id))
-        .then(res => {
-            if(res.payload.removeSuccess){
+    const handleRemoveContact = async (id) => {
+        try {
+            let response = await dispatch(removeContact(id))
+            if(response.payload.removeSuccess){
                 refAddContact.current[id].style.display = "block";
                 refRemoveContact.current[id].style.display = "none";
                 socket.emit('remove-contact',{contactId:id})
             }
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-    const handleRemoveRequest = (id) => {
-        dispatch(removeContactReqReceived(id))
-            .then(res => {
-                if(res.payload.removeSuccess){
-                    refAddContact.current[id].style.display = "block";
-                    refRemoveRequest.current[id].style.display = "none";
-                    socket.emit('remove-req-contact-sent',{contactId:id})
-                }
-            })
-            .catch(err=>{
-                console.log(err);
-            })       
+    const handleRemoveRequest = async (id) => {
+        try {
+            let response = await dispatch(removeContactReqReceived(id))
+            if(response.payload.removeSuccess){
+                refAddContact.current[id].style.display = "block";
+                refRemoveRequest.current[id].style.display = "none";
+                socket.emit('remove-req-contact-sent',{contactId:id})
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        
     }
 
-    const handleDeleteFriend = (id) => {
-        dispatch(removeContactReqReceived(id))
-        .then(res => {
-            if(res.payload.removeSuccess){
+    const handleDeleteFriend = async (id) => {
+        try {
+            let response = await dispatch(removeContactReqReceived(id))
+            if(response.payload.removeSuccess){
                 refAddContact.current[id].style.display = "block";
                 refApproveReq.current[id].style.display = "none";
                 refRemoveReceived.current[id].style.display = "none";
                 socket.emit('remove-req-contact-received',{contactId:id})
             }
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        } catch (error) {
+            console.log(error)
+        }        
     }
 
-    const handleApproveFriendReq = (id) => {
-        dispatch(approveContactReqReceived(id))
-        .then(res => {
-            if(res.payload.approveSuccess){
+    const handleApproveFriendReq = async (id) => {
+        try {
+            let response = await dispatch(approveContactReqReceived(id))
+            if(response.payload.approveSuccess){
                 refRemoveContact.current[id].style.display = "block";
                 refApproveReq.current[id].style.display = "none";
                 refRemoveReceived.current[id].style.display = "none";
                 socket.emit('approve-request-contact-received',{contactId:id})
             }
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        } catch (error) {
+            console.log(error)
+        }
     }
     return (
             <div className="container-contact-list-user">
@@ -127,9 +121,9 @@ function SearchUserTabPane() {
                             className="contact-search-list-item"
                         >     
                             <List.Item.Meta
-                                avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" className="contact-search-list-item-avatar"/>}
-                                title={<a href="https://ant.design" className="contact-search-list-item-name">{item.username}</a>}
-                                description={<p className="contact-search-list-item-description">Lives in Hoai Nhon, Binh Dinh, Viet Nam</p>}
+                                avatar={<Avatar src={item.avatar} className="contact-search-list-item-avatar"/>}
+                                title={<span className="contact-search-list-item-name">{item.username}</span>}
+                                description={<p className="contact-search-list-item-description">{item.address?item.address:''}</p>}
                             />
                                 <Tooltip placement="top" title="Add Friend">
                                     <Badge size="small" >

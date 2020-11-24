@@ -1,5 +1,5 @@
 .login-form-box {
-    min-width: 400px;
+    width: 430px;
     margin: 0 auto;
     color: #7c7c7c;
     text-align: center;
@@ -45,11 +45,6 @@ input#basic_username   {
     height: 45px;
 }
 
-
-span.ant-input-affix-wrapper.ant-input-password {
-    padding: 0;
-    border: 1px solid #dbdbdb;
-}
 input#basic_password {
     padding: 10px 15px;
     font-size: 15px;
@@ -87,6 +82,11 @@ span.ant-input-suffix {
     width: 100%;
     margin: 0 !important;
     height: 45px;
+}
+
+.login-btn-submit:hover {
+    background: #e95472;
+
 }
 
 .login-form-detail > .login-social-contact {

@@ -1,12 +1,16 @@
 
-import axios from 'axios';
 import {
     LOGIN_USER,
     REGISTER_USER,
     LOGOUT_USER,
     SEARCH_USER,
-    SEARCH_USER_GROUP_CHAT
+    SEARCH_USER_GROUP_CHAT,
+    UPDATE_AVATAR,
+    UPDATE_INFO_USER,
+    UPDATE_PASSWORD
 } from './types';
+import axios from "axios";
+
 
 
 export const registerUser =  (dataToSubmit) => {
@@ -25,18 +29,13 @@ export const registerUser =  (dataToSubmit) => {
 }
 
 export const loginUser =  (dataToSubmit) => {
-    try {
-        const request =  axios.post(`/signin`,(dataToSubmit))
-                .then(response => response.data);
+    const request =  axios.post(`/signin`,(dataToSubmit))
+            .then(response => response.data);
 
-        return {
-            type: LOGIN_USER,
-            payload: request
-        }
-    } catch (error) {
-        console.log(error)
+    return {
+        type: LOGIN_USER,
+        payload: request
     }
-    
 }
 
 
@@ -58,6 +57,23 @@ export const logoutUser =  () => {
         console.log(error)
     }
     
+}
+
+export const updateAvatar = (data) => {
+    try {
+        const request =  axios.put(`/user/update-avatar`,{data},{
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token')            }
+        })
+        .then(res => res.data)
+        return {
+            type: UPDATE_AVATAR,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error);
+    }   
 }
 
 export const searchUser =  (query) => {
@@ -88,6 +104,59 @@ export const searchUserGroupChat = (query) => {
         .then(res => res.data.users)
         return {
             type: SEARCH_USER_GROUP_CHAT,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const uploadCloundinary = (formData) => {
+    try {
+        const request =  axios.post('https://api.cloudinary.com/v1_1/dmriwkfll/image/upload', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(res => res.data)
+        return {
+            type: SEARCH_USER_GROUP_CHAT,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const updateUserInfo = (dataToSubmit) => {
+    try {
+        const request =  axios.put('/user/update-info', dataToSubmit, {
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token')
+            }
+        })
+        .then(res => res.data)
+        return {
+            type: UPDATE_INFO_USER,
+            payload: request
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const updatePassword = (dataToSubmit) => {
+    try {
+        const request =  axios.put('/user/update-password', dataToSubmit, {
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem('token')
+            }
+        })
+        .then(res => res.data)
+        return {
+            type: UPDATE_PASSWORD,
             payload: request
         }
     } catch (error) {

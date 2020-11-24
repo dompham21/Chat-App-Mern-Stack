@@ -70,7 +70,7 @@ router.get('/contact/group-chat/find-users/:query',checkLogin, async (req,res) =
                 }
             ]
             
-        }).sort({"updateAt":-1}).limit(12)
+        }).sort({"updateAt":-1}).limit(10)
         .populate("user", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
         .populate("contacter", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
      
@@ -126,7 +126,7 @@ router.post('/contact/add-new', checkLogin, async (req,res) => {
             ]
         })
         if(matched){
-            return res.status(400).json({addSucess: false,error:"Contact already exists"})
+            return res.json({addSucess: false,error:"Contact already exists"})
         }
         else{
             //create new contact 
@@ -166,7 +166,7 @@ router.get('/contact/list-users', checkLogin, async (req,res) => {
                 }
             ]
             
-        }).sort({"updateAt":-1}).limit(12)
+        }).sort({"updateAt":-1}).limit(10)
         .populate("user", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
         .populate("contacter", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
 
@@ -201,7 +201,7 @@ router.get('/contact/waiting-accept', checkLogin, async (req,res) => {
                 }
             ]
             
-        }).sort({"createAt":-1}).limit(12)
+        }).sort({"createAt":-1}).limit(10)
         .populate("contacter", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
 
         if(contacts){
@@ -230,7 +230,7 @@ router.get('/contact/friend-request', checkLogin, async (req,res) => {
                 }
             ]
             
-        }).sort({"createAt":-1}).limit(12)
+        }).sort({"createAt":-1}).limit(10)
         .populate("user", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
 
         if(contacts){
@@ -316,7 +316,7 @@ router.put('/contact/approve-request-received', checkLogin, async (req,res) => {
         })
 
         if(approveReq.nModified == 0){
-            return res.status(400).json({approveSuccess: false})
+            return res.json({approveSuccess: false})
         }
         let newNotification = new Notification.model({
             senderId: currentId,

@@ -1,18 +1,11 @@
-input#basic_email {
-    padding: 10px 15px;
-    font-size: 15px;
-    border: 1px solid #dbdbdb;
-    outline: none;
-    color: #717171;
-    border-radius: 3px;
-    height: 45px;
-}
 
-input#basic_confirmpassword {
+.form-login-item-input {
     padding: 10px 15px;
-    font-size: 15px;
-    outline: none;
-    color: #717171;
-    border-radius: 3px;
+
+    background-color: white ;
+    color: #717171 ;
     height: 45px;
-}
+    border-radius: 3px;
+    border: 1px solid #dbdbdb; 
+    font-size: 15px;
+} 

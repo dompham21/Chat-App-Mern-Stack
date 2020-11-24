@@ -1,5 +1,6 @@
 .ant-modal-content {
-    min-height: 600px;
+    max-height: 600px;
+    height: 600px;
     background-color: #18191a;
     color: white;
 }
@@ -55,6 +56,8 @@ sup.ant-scroll-number.ant-badge-count.ant-badge-count-sm {
     width: 70%;
     margin-left: 24px;
     margin-top: 24px;
+    height: 452px;
+    overflow-x: scroll;
 }
 
 .btn-confirm-req {

@@ -23,61 +23,63 @@ function Notification() {
 
     let socketConnect;
     useEffect(() => {
-        if(token){
-            socketConnect = socket();
-            dispatch(connectSocketIo(socketConnect))
+        async function fetchData(){
+            try {
+                if(token){
+                    socketConnect = socket();
+                    await dispatch(connectSocketIo(socketConnect))
+                    
+                    socketConnect.on('response-add-new-contact',async data=>{
+                        await dispatch(notificationAddNewReq(data.currentUser))
+                    });
             
-            socketConnect.on('response-add-new-contact',data=>{
-                dispatch(notificationAddNewReq(data.currentUser))
-            });
-    
-            socketConnect.on('response-approve-request-contact-received', data => {
-                dispatch(notificationApproveReqContactReceived(data.currentUser))
-            })
-    
-            socketConnect.on('response-remove-req-contact-sent',data => {
-                dispatch(notificationRemoveReqContactSent(data.currentUser))
-            })
-    
-            socketConnect.on('response-remove-req-contact-received',data => {
-                dispatch(notificationRemoveReqContactReceived(data.currentUser))
-            })
-    
-            socketConnect.on('response-remove-contact',data => {
-                dispatch(notificationRemoveContact(data.currentUser))
-            })
-            socketConnect.on('response-new-group-created',data => {
-                dispatch(notificationCreateNewGroup(data.response))
-                notification['success']({
-                    message: 'Group Created Success',
-                    description:
-                      'Welcome to Job help! ',
-                });
-                console.log("a")
-            })
-            return () => {
-                socketConnect.emit('disconnect');
-                socketConnect.off();
+                    socketConnect.on('response-approve-request-contact-received',async data => {
+                        await dispatch(notificationApproveReqContactReceived(data.currentUser))
+                    })
+            
+                    socketConnect.on('response-remove-req-contact-sent', async data => {
+                        await dispatch(notificationRemoveReqContactSent(data.currentUser))
+                    })
+            
+                    socketConnect.on('response-remove-req-contact-received',async data => {
+                        await dispatch(notificationRemoveReqContactReceived(data.currentUser))
+                    })
+            
+                    socketConnect.on('response-remove-contact',async data => {
+                        await dispatch(notificationRemoveContact(data.currentUser))
+                    })
+                    socketConnect.on('response-new-group-created',async data => {
+                        await dispatch(notificationCreateNewGroup(data.response))
+                        notification['success']({
+                            message: 'Group Created Success',
+                            description:
+                              'Welcome to Job help! ',
+                        });
+                    })
+                    return () => {
+                        socketConnect.emit('disconnect');
+                        socketConnect.off();
+                    }
+                }
+            } catch (error) {
+                console.log(error)
             }
         }
+        fetchData();
     }, [])
     
     useEffect(() => {
-        dispatch(getNotification())
-        .then(res => {
-            setNotifications(res.payload)
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-
-        dispatch(getCountNotification())
-        .then(res => {
-            setCountNotification(res.payload.data)
-        })
-        .catch(err=>{
-            console.log(err)
-        })
+        async function fetchData(){
+            try {
+                let response = await dispatch(getNotification())
+                setNotifications(response.payload)
+                let responseCount = await dispatch(getCountNotification())
+                setCountNotification(responseCount.payload.data)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchData();
     }, [notificationAddNew,notiRemoveReqContactSent,notiRemoveReqContactReceived,removeReceivedSuccess,notiApproveReqContactReceived])
    
 
@@ -106,25 +108,20 @@ function Notification() {
       </ul>
   );
 
-const handleNotificationRead = () => {
+const handleNotificationRead =async () => {
     let targetUsers = [];
     notifications.forEach(notification => {
         return targetUsers.push(notification.senderId);
     })
-        dispatch(markNotification(targetUsers))
-        .then(res => {
-            dispatch(getCountNotification())
-            .then(res => {
-                setCountNotification(res.payload.data)
-                console.log(res.payload.data);
-            })
-            .catch(err=>{
-                console.log(err)
-            })
-        })
-        .catch(err=>{
-            console.log(err)
-        })
+    try {
+        let response = await dispatch(markNotification(targetUsers))
+        if(response){
+            let responseCount = await dispatch(getCountNotification())
+            setCountNotification(responseCount.payload.data)
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
 
     return (

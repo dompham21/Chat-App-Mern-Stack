@@ -7,22 +7,29 @@ import InputSend from './InputSend/InputSend';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMessagesUser, afterPostMessage, getMessagesGroup } from '../../../_actions/message_action';
 import ChatVideo from './ChatVideo/ChatVideo';
+import LoadingListMessage from '../../Loading/LoadingListMessage/LoadingListMessage';
 
 function Chats(props) {
     const {id,username,avatar,members} = props
     const [messages, setMessages] = useState([]);
     const [messageFromBe,setMessageFromBe] = useState([])
+    const [loading,setLoading] = useState(true)
+
     const user = JSON.parse(localStorage.getItem('user'))
-    const activeKey = useSelector(state => state.message.activeKey)
     const dispatch = useDispatch()
-    const socket = useSelector(state => state.notification.connectSocketIo)
     let messagesEnd = useRef(null);
+
+    const activeKey = useSelector(state => state.message.activeKey)
+    const socket = useSelector(state => state.notification.connectSocketIo)
+
     useEffect(() => {
-      socket.on("Output Chat Message", messageFromBackEnd => {
-          dispatch(afterPostMessage(messageFromBackEnd))
-          .then(res => {
-            setMessageFromBe(res.payload)
-          })
+      socket.on("Output Chat Message",async messageFromBackEnd => {
+        try {
+          let response = await  dispatch(afterPostMessage(messageFromBackEnd))
+          setMessageFromBe(response.payload)
+        } catch (error) {
+          console.log(error)
+        }
       })
       return () => {
         socket.emit('disconnect');
@@ -36,48 +43,37 @@ function Chats(props) {
     
     useEffect(() => {
         scrollToBottom()
-
     }, [messages])
     
     useEffect(() => {
-      if(activeKey){
-        if(members){
-          dispatch(getMessagesGroup(activeKey))
-          .then(res=> {
-            setMessages(res.payload)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-        }else{
-          dispatch(getMessagesUser(activeKey))
-          .then(res=> {
-            setMessages(res.payload)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-        }
-      }else{
-        if(members){
-          dispatch(getMessagesGroup(id))
-          .then(res=> {
-            setMessages(res.payload)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-        }else{
-          dispatch(getMessagesUser(id))
-          .then(res=> {
-            setMessages(res.payload)
-          })
-          .catch(err => {
-            console.log(err)
-          })
+      async function fetchData(){
+        try {
+          if(activeKey){
+            if(members){
+             let response = await dispatch(getMessagesGroup(activeKey))
+                setMessages(response.payload)
+                setLoading(false)
+            }else{
+              let response = await dispatch(getMessagesUser(activeKey))
+                setMessages(response.payload)
+                setLoading(false)
+            }
+          }else{
+            if(members){
+             let response = await dispatch(getMessagesGroup(id))
+                setMessages(response.payload)
+                setLoading(false)
+            }else{
+              let response = await dispatch(getMessagesUser(id))
+                setMessages(response.payload)
+                setLoading(false)
+            }
+          }
+        } catch (error) {
+          console.log(error)
         }
       }
-  
+      fetchData();
     },[messageFromBe,activeKey])
     const renderMessages = () => {
       if(messages && messages.length){
@@ -155,12 +151,11 @@ function Chats(props) {
       }
         
     }
-    console.log(messages)
     return (
         <div className="message-layout-chats">
             <div className="message-layout-chats-title">
                 <div className="message-layout-chats-title-infomation">
-                    <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" className="message-layout-chats-avatar"/>
+                    <Avatar src={avatar} className="message-layout-chats-avatar"/>
                     <span>{username}</span>
                 </div>
                 {
@@ -169,7 +164,8 @@ function Chats(props) {
             </div>
             <div className="message-layout-chats-list" >
                 <div className="message-list-container" >
-                    {renderMessages()}
+                  
+                    {loading? <LoadingListMessage/>:renderMessages()}
                     <div  ref={messagesEnd}/>
                 </div>
                

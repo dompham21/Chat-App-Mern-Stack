@@ -8,6 +8,10 @@ export const LOGOUT_USER = 'logout_user';
 
 export const SEARCH_USER = 'search_user';
 export const SEARCH_USER_GROUP_CHAT = 'search_user_group_chat'
+export const UPDATE_AVATAR = 'update_avatar'
+export const UPLOAD_CLOUDINARY = 'upload_cloudinary'
+export const UPDATE_INFO_USER = 'update_info_user'
+export const UPDATE_PASSWORD = 'update_password'
 
 // Contact
 

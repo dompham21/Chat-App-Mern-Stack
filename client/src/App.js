@@ -10,10 +10,14 @@ import Page404 from './components/Page404/Page404';
 import Message from './components/Message/Message';
 function App() {
     const location = useLocation()
-
+    const token = localStorage.getItem('token')
 
     const handleRenderNav = () => {
-        return location.pathname === '/login'||location.pathname ===  '/register' ? null : <NavBar/>
+      if(token){
+       return <NavBar/>
+      }else{
+        return null 
+      }
     }
   
     
