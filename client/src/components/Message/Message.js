@@ -25,7 +25,7 @@ function Message() {
                 setListAllConversations(response.payload.allConversations)
                 let timer = setTimeout(() => {
                     setLoading(false)
-                }, 3000);
+                }, 1000);
                 return () => clearTimeout(timer);
             } catch (error) {
                 console.log(error)

@@ -53,7 +53,6 @@ function Chats(props) {
       async function fetchData(){
         try {
           if(activeKey){
-            setLoading(true);
             if(members){
              let response = await dispatch(getMessagesGroup(activeKey))
                 setMessages(response.payload)
