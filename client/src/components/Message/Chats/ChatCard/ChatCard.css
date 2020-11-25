@@ -74,3 +74,13 @@
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
 }
+
+.message-group-name {
+    color: rgba(255, 255, 255, .5);
+    margin-left: 12px;
+    font-size: 14px;
+
+}
+.message.start.end .message-group-name{
+    margin-left: 37px;
+}

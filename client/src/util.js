@@ -17,5 +17,5 @@ export function changeTimeStamp(time){
   return  moment(time).locale('vi').startOf("seconds").fromNow()
 }
 export function truncate(str){
-    return str.length>20 ? str.substr(0,19) + '...' : str;
+    return str.length>17 ? str.substr(0,16) + '...' : str;
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Avatar } from 'antd'; 
+import { Avatar, message,Tooltip } from 'antd'; 
 import moment from 'moment';
 import './Chats.css'
 import ChatCard from './ChatCard/ChatCard';
@@ -59,7 +59,8 @@ function Chats(props) {
                 setLoading(false)
             }else{
               let response = await dispatch(getMessagesUser(activeKey))
-                setMessages(response.payload.data)
+              console.log(response.payload)
+                setMessages(response.payload)
                 setLoading(false)
             }
           }else{
@@ -89,13 +90,12 @@ function Chats(props) {
           let previous = messages[i - 1];
           let current = messages[i];
           let next = messages[i + 1];
-          let isMine;
+          let isMine = false;
           if(current.senderId == user._id){
             isMine = true;
           }
 
           let currentMoment = moment(current.createAt);
-
           let prevBySameAuthor = false;
           let nextBySameAuthor = false;
           let startsSequence = true;
@@ -105,35 +105,49 @@ function Chats(props) {
           if (previous) {
             let previousMoment = moment(previous.createAt);
             let previousDuration = moment.duration(currentMoment.diff(previousMoment));
-
-            if(previous.senderId === current.senderId){
-              prevBySameAuthor = true;
+            if(members){
+              if(previous.senderId === current.senderId){
+                prevBySameAuthor = true;
+              }
+            }else{
+              if(previous.senderId === current.senderId){
+                prevBySameAuthor = true;
+              }
+              else if(previous.receiverId === current.receiverId){
+                prevBySameAuthor = true;
+              }
             }
-            else if(previous.receiverId === current.receiverId){
-              prevBySameAuthor = true;
-            }
-            
+             
             if (prevBySameAuthor && previousDuration.as('hours') < 1) {
               startsSequence = false;
             }
-    
+
             if (previousDuration.as('hours') < 1) {
               showTimestamp = false;
             }
+    
           }
           if (next) {
-            let nextMoment = moment(next.timestamp);
+            let nextMoment = moment(next.createAt);
             let nextDuration = moment.duration(nextMoment.diff(currentMoment));
-            if(next.senderId === current.senderId){
-              nextBySameAuthor = true;
+            if(members){
+              if(next.senderId === current.senderId){
+                nextBySameAuthor = true;
+              }
+            }else{
+              if(next.senderId === current.senderId){
+                nextBySameAuthor = true;
+              }
+              else if(next.receiverId === current.receiverId){
+                nextBySameAuthor = true;
+              }
             }
-            else if(next.receiverId === current.receiverId){
-              nextBySameAuthor = true;
-            }
+
     
             if (nextBySameAuthor && nextDuration.as('hours') < 1) {
               endsSequence = false;
             }
+           
           }
     
           tempMessages.push(
@@ -163,8 +177,20 @@ function Chats(props) {
                     <span>{username}</span>
                 </div>
                 {
-                  members ? '' : <ChatVideo id={id} username={username} avatar={avatar}/>
+                  members ? 
+                    <Avatar.Group 
+                      maxCount={2} 
+                      maxPopoverPlacement={"bottom"} 
+                      maxStyle={{ color: '#f56a00', backgroundColor: '#fde3cf',width:"34px",height:"34px" }} 
+                      className="message-avatar-group"
+                    >
+                      {members.map(i=>{
+                        return  <Avatar src={i.avatar} />
+                      })}
+                    </Avatar.Group> 
+                : <ChatVideo id={id} username={username} avatar={avatar}/>
                 }
+                
             </div>
             <div className="message-layout-chats-list" >
                 <div className="message-list-container" >
