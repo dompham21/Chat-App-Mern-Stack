@@ -74,7 +74,6 @@ export const getMessagesGroup =  (dataToSubmit) => {
 
 export const afterPostMessage  =  (data) => {
     try {
-        console.log(data)
         return {
             type: AFTER_POST_MESSAGE,
             payload: data
