@@ -41,6 +41,7 @@ export const getMessagesUser =  (dataToSubmit) => {
                 "Authorization":"Bearer "+localStorage.getItem('token')
             }
         })
+        .then(response => response.data);
         return {
             type: GET_MESSAGES_USER,
             payload: request
@@ -73,6 +74,7 @@ export const getMessagesGroup =  (dataToSubmit) => {
 
 export const afterPostMessage  =  (data) => {
     try {
+        console.log(data)
         return {
             type: AFTER_POST_MESSAGE,
             payload: data

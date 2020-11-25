@@ -40,3 +40,9 @@
     overflow-y: scroll;
     padding-bottom: 10px;
 }
+
+.message-avatar-group > span.ant-avatar.ant-avatar-circle.ant-avatar-image{
+    border: none;
+    width: 38px;
+    height: 38px;
+}

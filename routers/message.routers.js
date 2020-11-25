@@ -144,8 +144,8 @@ router.get('/message/group/:id', checkLogin, async (req,res)=> {
             "receiverId": groupId
         }).sort({"createAt": -1 }).limit(15)
         .populate("sender", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
+        .populate("receiver", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1}) 
 
-        
         messages.sort((a,b)=>{
             return a.createAt-b.createAt;
         })

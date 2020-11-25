@@ -21,6 +21,8 @@ let sendMessage = (io) => {
                     let newMessage = new Message.model({
                         senderId: currentId,
                         receiverId: data.groupId,
+                        sender: currentId,
+                        receiver: data.groupId,
                         ConversationType: "group",
                         messageType: "text",
                         text: data.message
