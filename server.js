@@ -4,10 +4,9 @@ const { MONGOURI } = require('./config/key');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const initSockets = require('./sockets');
-const socketIo = require('socket.io')
 require('dotenv').config();
 
-const PORT = 5000 || process.env.PORT;
+const PORT = process.env.PORT || 5000;
 const app = express()
 //Init server with socket.io & express  
 
