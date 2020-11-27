@@ -5,7 +5,6 @@ import {
     AFTER_POST_MESSAGE, 
     GET_KEY_TABS, 
     GET_DATA_TO_EMIT_CALL_VIDEO, 
-    GET_ICE_TURN_SERVER, 
     ADD_NEW_GROUP_CHAT,
     GET_MESSAGES_GROUP,
     AFTER_POST_MESSAGE_GROUP
@@ -74,7 +73,6 @@ export const getMessagesGroup =  (dataToSubmit) => {
 
 export const afterPostMessage  =  (data) => {
     try {
-        console.log(data)
         return {
             type: AFTER_POST_MESSAGE,
             payload: data

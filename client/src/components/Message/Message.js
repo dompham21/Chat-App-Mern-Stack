@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Message.css'
 import Chats from './Chats/Chats'
-import { Tabs, Avatar, Input, Modal, Tooltip} from 'antd'
+import { Tabs, Avatar, Input } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import {AiOutlineSearch} from 'react-icons/ai'
 import { getAllConversations, getKeyTabs } from '../../_actions/message_action'
@@ -25,14 +25,14 @@ function Message() {
                 setListAllConversations(response.payload.allConversations)
                 let timer = setTimeout(() => {
                     setLoading(false)
-                }, 3000);
+                }, 1000);
                 return () => clearTimeout(timer);
             } catch (error) {
                 console.log(error)
             }
         }
         fetchData();
-    }, [receiveMessage])
+    }, [receiveMessage,dispatch])
 
     const handleGetKey = async (key) => {
         await dispatch(getKeyTabs(key))

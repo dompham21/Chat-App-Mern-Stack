@@ -32,7 +32,7 @@ export const getNotification =  () => {
 
 export const markNotification =  async (targetUsers) => {
     try {
-        const request = await axios.put('/notification/all-as-read',{targetUsers:targetUsers},{
+       await axios.put('/notification/all-as-read',{targetUsers:targetUsers},{
             headers: {
                 "Content-Type":"application/json",
                 "Authorization":"Bearer "+localStorage.getItem('token')

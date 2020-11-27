@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {  Menu, Switch, Select} from 'antd';
 import './FilterContact.css';
 const { SubMenu } = Menu;

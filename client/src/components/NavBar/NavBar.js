@@ -17,7 +17,8 @@ function NavBar() {
     const updateAvatarSuccess = useSelector(state => state.user.updateAvatarSuccess)
     useEffect(() => {
         setAvatar(user.avatar)
-    }, [updateAvatarSuccess])
+        console.log('a');
+    }, [updateAvatarSuccess,user.avatar])
 
     
     return (

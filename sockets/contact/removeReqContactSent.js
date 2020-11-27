@@ -11,7 +11,7 @@ let removeReqContactSent = (io) => {
         }
         //Check currentId existed in clients 
         clients =  checkExist(clients,currentId,socket.id)
-
+        
         socket.on("remove-req-contact-sent", (data) => {
             let contactId = data.contactId
             // emit noticatied for all socket id of contact id

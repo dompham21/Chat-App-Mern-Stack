@@ -21,14 +21,13 @@ function Notification() {
 
     const dispatch = useDispatch()
 
-    let socketConnect;
+    const socketConnect = socket();
     useEffect(() => {
+
         async function fetchData(){
             try {
                 if(token){
-                    socketConnect = socket();
                     await dispatch(connectSocketIo(socketConnect))
-                    
                     socketConnect.on('response-add-new-contact',async data=>{
                         await dispatch(notificationAddNewReq(data.currentUser))
                     });
@@ -66,7 +65,7 @@ function Notification() {
             }
         }
         fetchData();
-    }, [])
+    }, [dispatch,socketConnect,token])
     
     useEffect(() => {
         async function fetchData(){
@@ -80,7 +79,7 @@ function Notification() {
             }
         }
         fetchData();
-    }, [notificationAddNew,notiRemoveReqContactSent,notiRemoveReqContactReceived,removeReceivedSuccess,notiApproveReqContactReceived])
+    }, [notificationAddNew,notiRemoveReqContactSent,notiRemoveReqContactReceived,removeReceivedSuccess,notiApproveReqContactReceived,dispatch])
    
 
     const renderTypeNotification = (notificationType,senderName) => {

@@ -10,11 +10,10 @@ import { getDataToEmitCallVideo } from '../../../../_actions/message_action';
 
 
 function ChatVideo(props) {
-    const {id,username,avatar} = props
+    const {id,username} = props
     const user = JSON.parse(localStorage.getItem('user'))
     const [visible, setVisible] = useState(false);
     const [listenerVisible,setListenerVisible] = useState(false)
-    const [iceTurnServer,setIceTurnServer] = useState('')
     const [hiddenInfoVideo,setHiddenInfoVideo] = useState(false)
     const [hiddenInfoVideoListener,setHiddenInfoVideoListener] = useState(false)
 
@@ -63,13 +62,6 @@ function ChatVideo(props) {
             socket.emit("caller-req-call-server",dataToSubmit)
         })
         socket.on("server-send-req-call-listener",(response)=>{
-            let dataToSubmit = {
-                callerId: response.callerId,
-                listenerId: response.listenerId,
-                callerName: response.callerName,
-                listenerPeerId: response.listenerPeerId,
-                listenerName: response.listenerName
-            }
             setListenerVisible(true);
         })
         socket.on("server-send-cancel-req-call-listener",(response)=>{
@@ -171,7 +163,7 @@ function ChatVideo(props) {
             socket.emit('disconnect');
             socket.off();
         }
-      }, [])
+      }, [dispatch,socket,user.username])
 
     const handleChatVideo = () => {
         setVisible(true)

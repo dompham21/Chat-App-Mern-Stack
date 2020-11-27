@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Avatar, Badge, Popover, Tabs, Modal} from 'antd';
-import { AiOutlineUser,AiOutlineCaretDown} from 'react-icons/ai'
+import { AiOutlineCaretDown} from 'react-icons/ai'
 import {FiSettings, FiHelpCircle, FiLogOut} from 'react-icons/fi';
 
 import { useDispatch } from 'react-redux';

@@ -29,7 +29,7 @@ function ContactUserTabPane() {
             }
         }
         fetchData();
-    }, [approveContactReqReceived,removeContactSuccess,notiRemoveContact,notiApproveReqContactReceived])
+    }, [approveContactReqReceived,removeContactSuccess,notiRemoveContact,notiApproveReqContactReceived,dispatch])
 
     const handleRemoveContact = async (id) => {
         try {

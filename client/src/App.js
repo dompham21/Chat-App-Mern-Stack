@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import './App.css';
-import {Switch, useLocation} from "react-router-dom";
+import {Switch} from "react-router-dom";
 import Register from './components/Register/Register';
 import NavBar from './components/NavBar/NavBar';
 import Login from './components/Login/Login';
@@ -9,21 +9,10 @@ import PublicRouter from './PublicRouter';
 import Page404 from './components/Page404/Page404';
 import Message from './components/Message/Message';
 function App() {
-    const location = useLocation()
     const token = localStorage.getItem('token')
-
-    const handleRenderNav = () => {
-      if(token){
-       return <NavBar/>
-      }else{
-        return null 
-      }
-    }
-  
-    
   return (
     <Suspense fallback={(<div>Loading...</div>)}>
-      { handleRenderNav() }
+        <PrivateRouter exact path="*" component={NavBar} style={{display:token?"block":"none"}}/>
         <Switch>
           <PublicRouter restricted={true} component={Login} path="/login" exact/>
           <PublicRouter restricted={true} component={Register} path="/register" exact/>

@@ -69,7 +69,7 @@ function ModalCreateGroupChat() {
     const handleCancelAddGroup = () => {
         listUserAddToGroupTemp.forEach(item => {
             if( refBtnRemove.current[item.id]){
-                if( refBtnRemove.current[item.id].style.display == "block"){
+                if( refBtnRemove.current[item.id].style.display === "block"){
                     refBtnRemove.current[item.id].style.display = "none"
                     refBtnAdd.current[item.id].style.display = "block"
                 }
@@ -113,7 +113,7 @@ function ModalCreateGroupChat() {
         }
         listUserAddToGroupTemp.forEach(item => {
             if(refBtnRemove.current[item.id]){
-                if( refBtnRemove.current[item.id].style.display == "block"){
+                if( refBtnRemove.current[item.id].style.display === "block"){
                     refBtnRemove.current[item.id].style.display = "none"
                     refBtnAdd.current[item.id].style.display = "block"
                 }

@@ -8,7 +8,6 @@ function FriendRequestTabPane() {
     const [friendRequestList,setFriendRequestList] = useState([]);
     const  notificationAddNew = useSelector(state => state.notification.notificationAddNew)
     const  notiRemoveReqContactSent = useSelector(state => state.notification.notiRemoveReqContactSent)
-    const  notiRemoveReqContactReceived = useSelector(state => state.notification.notiRemoveReqContactReceived)
     const removeReceivedSuccess = useSelector(state => state.contact.removeReceivedSuccess)
     const approveContactReceived = useSelector(state => state.contact.approveContactReqReceived)
     const socket = useSelector(state => state.notification.connectSocketIo)
@@ -29,7 +28,7 @@ function FriendRequestTabPane() {
             }      
         }
         fetchData()
-    }, [notificationAddNew,notiRemoveReqContactSent,removeReceivedSuccess,approveContactReceived])
+    }, [notificationAddNew,notiRemoveReqContactSent,removeReceivedSuccess,approveContactReceived,dispatch])
 
     const handleDeleteFriend = async (id) => {
         try {

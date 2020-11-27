@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Avatar, message,Tooltip } from 'antd'; 
+import { Avatar } from 'antd'; 
 import moment from 'moment';
 import './Chats.css'
 import ChatCard from './ChatCard/ChatCard';
@@ -18,7 +18,6 @@ function Chats(props) {
     const user = JSON.parse(localStorage.getItem('user'))
     const dispatch = useDispatch()
     let messagesEnd = useRef(null);
-
     const activeKey = useSelector(state => state.message.activeKey)
     const socket = useSelector(state => state.notification.connectSocketIo)
 
@@ -27,11 +26,11 @@ function Chats(props) {
         socket.on("output-chat-message",async messageFromBackEnd => {
           let response = await dispatch(afterPostMessage(messageFromBackEnd))
           setMessageFromBe(response.payload)
-      })
+        })
         socket.on("output-chat-message-group",async messageFromBackEnd => {
           let response = await dispatch(afterPostMessageGroup(messageFromBackEnd))
           setMessageFromBe(response.payload)
-      })
+        })
       } catch (error) {
         console.log(error)
       }
@@ -39,15 +38,12 @@ function Chats(props) {
         socket.emit('disconnect');
         socket.off();
       }
-    }, [])
+    }, [dispatch,socket])
 
-    const scrollToBottom = () => {
-        messagesEnd.current.scrollIntoView({ behavior: "smooth" });
-    };
-    
     useEffect(() => {
-      scrollToBottom()
-    }, [messages])
+      messagesEnd.current.scrollIntoView({ behavior: "smooth" });
+      console.log('a');
+    }, [messages,activeKey])
     
     useEffect(() => {
       async function fetchData(){
@@ -59,7 +55,6 @@ function Chats(props) {
                 setLoading(false)
             }else{
               let response = await dispatch(getMessagesUser(activeKey))
-              console.log(response.payload)
                 setMessages(response.payload)
                 setLoading(false)
             }
@@ -79,7 +74,7 @@ function Chats(props) {
         }
       }
       fetchData();
-    },[messageFromBe,activeKey])
+    },[messageFromBe,activeKey,dispatch,id,members])
     const renderMessages = () => {
       if(messages && messages.length){
         let i = 0;
@@ -91,7 +86,7 @@ function Chats(props) {
           let current = messages[i];
           let next = messages[i + 1];
           let isMine = false;
-          if(current.senderId == user._id){
+          if(current.senderId === user._id){
             isMine = true;
           }
 
@@ -194,9 +189,8 @@ function Chats(props) {
             </div>
             <div className="message-layout-chats-list" >
                 <div className="message-list-container" >
-                  
                     {loading? <LoadingListMessage/>:renderMessages()}
-                    <div  ref={messagesEnd}/>
+                    <div  ref={messagesEnd} style={{ float:"left", clear: "both" }}/>
                 </div>
                
             </div>

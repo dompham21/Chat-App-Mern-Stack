@@ -118,7 +118,9 @@ function Register(props) {
                                 >
                                     <Input.Password placeholder="Confirm Password" className="form-login-item-input input-password"/>
                                 </Form.Item>
-                                <Form.Item >
+                                <Form.Item 
+                                    name="submit"
+                                >
                                     <Button type="primary" htmlType="submit" className="login-btn-submit" loading={loading}>
                                     Signup
                                     </Button>
