@@ -102,7 +102,9 @@ function Login(props) {
                                     <Link to="/#" className="forgot-password">Forgot Password</Link>
                                 </Form.Item>
 
-                                <Form.Item >
+                                <Form.Item 
+                                    name="submit"
+                                >
                                     <Button  type="primary" htmlType="submit" className="login-btn-submit" loading={loading}>
                                         Login
                                     </Button>

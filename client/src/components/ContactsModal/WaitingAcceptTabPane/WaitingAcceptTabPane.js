@@ -28,7 +28,7 @@ function WaitingAcceptTabPane() {
             }   
         }
         fetchData();
-    }, [removeSuccess,addSuccess,notiRemoveReqContactReceived,notiApproveReqContactReceived])
+    }, [removeSuccess,addSuccess,notiRemoveReqContactReceived,notiApproveReqContactReceived,dispatch])
     
     const handleRemoveContact = async (id) => {
        try {

@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {  Input, List, Avatar, Badge, Tooltip,Button} from 'antd';
 import './SearchUserTabPane.css';
 import { AiOutlineSearch } from 'react-icons/ai'
 import { FaUserPlus,FaUserTimes } from 'react-icons/fa'
 import { searchUser } from '../../../_actions/user_action';
 import { useDispatch, useSelector} from 'react-redux';
-import { addContact, removeContact, approveContactReqReceived, removeContactReqReceived } from '../../../_actions/contact_action';
+import { addContact, removeContact, approveContactReqReceived, removeContactReqReceived, removeContactReq } from '../../../_actions/contact_action';
 import LoadingListUser from '../../Loading/LoadingListUser/LoadingListUser';
 
 
@@ -75,7 +75,7 @@ function SearchUserTabPane() {
     const handleRemoveRequest = async (id) => {
         try {
             setLoadingRemoveReq(true);
-            let response = await dispatch(removeContactReqReceived(id))
+            let response = await dispatch(removeContactReq(id))
             if(response.payload.removeSuccess){
                 setLoadingRemoveReq(false);
                 refAddContact.current[id].style.display = "block";

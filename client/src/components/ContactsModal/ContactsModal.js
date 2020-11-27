@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Tabs, Menu, Badge , Modal} from 'antd';
+import { Tabs, Badge , Modal} from 'antd';
 import './ContactsModal.css';
 import {AiOutlineUserAdd} from 'react-icons/ai'
-
 import SearchUserTabPane from './SearchUserTabPane/SearchUserTabPane';
 import ContactUserTabPane from './ContactUserTabPane/ContactUserTabPane';
 import WaitingAcceptTabPane from './WaitingAcceptTabPane/WaitingAcceptTabPane';
@@ -52,7 +51,9 @@ function ContactsModal() {
         notiRemoveReqContactSent,
         notiRemoveReqContactReceived,
         removeReceivedSuccess,
-        approveContactReceived])
+        approveContactReceived,
+        dispatch
+    ])
 
     return (
         <>

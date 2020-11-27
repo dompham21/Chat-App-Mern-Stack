@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { AiFillCamera } from 'react-icons/ai'
 import { BsFillMicFill,BsImage} from 'react-icons/bs'
 import { FaSmile } from 'react-icons/fa'
@@ -8,18 +8,16 @@ import 'emoji-mart/css/emoji-mart.css'
 import { Picker } from 'emoji-mart'
 
 import { Input, Form, Button} from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
+import {  useSelector } from 'react-redux'
 
 function InputSend(props) {
-    const [form] = Form.useForm();
     const user = JSON.parse(localStorage.getItem('user'))
-    const dispatch = useDispatch()
     const inputElement = useRef(null);
     const [showPickerEmoji,setShowPickerEmoji] = useState(false);
     const [text,setText] = useState('');
     const socket = useSelector(state => state.notification.connectSocketIo)
 
-    const {id, usename, avatar,members} = props
+    const {id, members} = props
     const handleSubmitMessage = () => {
         if(text=== ''){
             return;
@@ -27,6 +25,7 @@ function InputSend(props) {
         let message = text;
         let senderId = user._id;
         let receiverId = id;
+
         let groupId;
         if(members){
             groupId = id;
