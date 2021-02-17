@@ -120,9 +120,6 @@ function Login(props) {
                                 </li>
                             </ul>
                         </div>
-                        <audio
-                            src="https://vnso-zn-5-tf-mp3-s1-zmp3.zadn.vn/eebc1db194f67da824e7/1446155206559973695?authen=exp=1613633161~acl=/eebc1db194f67da824e7/*~hmac=e8333250dcf1e99289decfc5ff526c87&fs=MTYxMzQ2MDM2MTAwOHx3ZWJWNnwwfDExOC4xMDmUsICdUngOTMdUngMA"
-                        />
                         <div className="login-footer">
                             <span>Don't have an account?<Link to ='/register'> Register here</Link></span>
                         </div>
