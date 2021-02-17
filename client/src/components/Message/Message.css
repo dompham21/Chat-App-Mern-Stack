@@ -9,7 +9,6 @@
 .message-tabs-list-conversations > .ant-tabs-nav {
     width: 350px;
     overflow-y: scroll;
-    height: 100%;
     background-color: #242526;
     border-right: 1px solid #3e4042;
 
@@ -134,4 +133,32 @@
 .nothing-message {
     height: calc(100vh - 63px);
     background-color: #18191a;
+}
+
+@media only screen and (max-width: 900px) {
+    .message-tabs-list-conversations > .ant-tabs-nav {
+        width: 100px;
+    }
+    .message-tabs-list-conversations > .ant-tabs-nav:hover {
+        width: 120px;
+    }
+    .message-list-contact-search { 
+        display: none;
+    }
+    .message-list-conversations-info { 
+        display: none;
+    }
+    span.ant-avatar.ant-avatar-circle.ant-avatar-image.message-list-conversations-avatar {
+        width: 70px;
+        height: 70px;
+    }
+    .message-tabs-extra-content > div > svg {
+        display: none;
+    }
+    .message-tabs-list-conversations > .ant-tabs-nav > div >div > .ant-tabs-tab {
+        padding: 0 5px;
+    }
+    .message-tabs-list-conversations > .ant-tabs-nav > div > .ant-tabs-nav-list {
+        padding: 0 5px 0 12px;
+    }
 }
