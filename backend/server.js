@@ -4,6 +4,7 @@ const { MONGOURI } = require('./config/key');
 const bodyParser = require('body-parser');
 const initSockets = require('./sockets');
 require('dotenv').config();
+const path = require('path')
 
 const PORT = process.env.PORT || 5000;
 const app = express()
@@ -43,7 +44,6 @@ app.use(require('./routers/user.routers'))
 
 if(process.env.NODE_ENV=="production"){
     app.use(express.static(path.join(__dirname, '../client', 'build')));
-    const path = require('path')
     app.get("*",(req,res)=>{
         res.sendFile(path.resolve(__dirname,'client','build','index.html'))
     })
