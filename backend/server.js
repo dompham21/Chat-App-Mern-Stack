@@ -11,10 +11,9 @@ const app = express()
 
 const server = new (require("http").Server)(app);
 const io = require('socket.io').listen(server);
-const path = require('path')
 
 initSockets(io);
-console.log("url: " + MONGOURI)
+
 //Init mongodb
 mongoose.connect(MONGOURI, {
     useNewUrlParser: true, 
@@ -44,8 +43,9 @@ app.use(require('./routers/user.routers'))
 
 if(process.env.NODE_ENV=="production"){
     app.use(express.static(path.join(__dirname, '../client', 'build')));
+    const path = require('path')
     app.get("*",(req,res)=>{
-        res.sendFile(path.join(__dirname, '../client', 'build', 'index.html'));
+        res.sendFile(path.resolve(__dirname,'client','build','index.html'))
     })
 }
 
