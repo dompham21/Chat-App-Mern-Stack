@@ -14,7 +14,7 @@ const io = require('socket.io').listen(server);
 const path = require('path')
 
 initSockets(io);
-
+console.log("url: " + MONGOURI)
 //Init mongodb
 mongoose.connect(MONGOURI, {
     useNewUrlParser: true, 
