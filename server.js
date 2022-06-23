@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { MONGOURI } = require('./config/key');
 const bodyParser = require('body-parser');
-const passport = require('passport');
 const initSockets = require('./sockets');
 require('dotenv').config();
 
@@ -10,13 +9,12 @@ const PORT = process.env.PORT || 5000;
 const app = express()
 //Init server with socket.io & express  
 
-const server = require("http").Server(app);
+const server = new (require("http").Server)(app);
 const io = require('socket.io').listen(server);
 
 initSockets(io);
 
 //Init mongodb
-
 mongoose.connect(MONGOURI, {
     useNewUrlParser: true, 
     useUnifiedTopology: true
@@ -35,9 +33,6 @@ mongoose.connection.on('error',(err)=>{
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(require('./routers/auth.routers'));
 app.use(require('./routers/contact.routers'));

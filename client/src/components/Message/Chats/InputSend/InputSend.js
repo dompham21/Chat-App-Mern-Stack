@@ -1,6 +1,4 @@
 import React, { useState, useRef } from 'react'
-import { AiFillCamera } from 'react-icons/ai'
-import { BsFillMicFill,BsImage} from 'react-icons/bs'
 import { FaSmile } from 'react-icons/fa'
 import { MdSend } from 'react-icons/md'
 import './InputSend.css'
@@ -15,6 +13,7 @@ function InputSend(props) {
     const inputElement = useRef(null);
     const [showPickerEmoji,setShowPickerEmoji] = useState(false);
     const [text,setText] = useState('');
+    // @ts-ignore
     const socket = useSelector(state => state.notification.connectSocketIo)
 
     const {id, members} = props
@@ -30,12 +29,15 @@ function InputSend(props) {
         if(members){
             groupId = id;
         }
+        console.log(message)
+
         socket.emit("input-chat-message",{
             message,
             senderId,
             receiverId,
             groupId
         })
+
         if (inputElement.current) {
             inputElement.current.focus();
         }
@@ -66,18 +68,14 @@ function InputSend(props) {
     }
     return (
         <div className="message-input-send-layout">
-            <ul className="message-input-send-option">
-                <li><AiFillCamera/></li>
-                <li><BsFillMicFill/></li>
-                <li><BsImage/></li>
-            </ul>
+            
            <Form
                 onFinish={handleSubmitMessage}
                 className="message-form-submit"
                 onKeyPress={(e)=>handleEnterSubmit(e)}
            >
                 <Form.Item
-                    name="message"
+                    // name="message"
                     className="message-input-send-form-item"
                 >
                     <Input 
@@ -98,7 +96,7 @@ function InputSend(props) {
                     />
                 </Form.Item>
                 <Form.Item
-                    name="btn-send"
+                    // name="btn-send"
                 >
                     <Button  htmlType="submit" className="message-btn-submit">
                         <MdSend className="message-input-send-enterbtn" />

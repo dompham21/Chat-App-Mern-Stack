@@ -9,15 +9,15 @@ const userOnlineOffline = require("./status/userOnlineOffline");
 const groupChat = require("./message/groupChat");
 
 const initSockets = (io) => {
+    sendMessage(io);
     addNewContact(io);
     removeReqContactReceived(io);
     removeReqContactSent(io);
     approveReqContactReceived(io);
     removeContact(io);
-    sendMessage(io);
     chatVideo(io);
     userOnlineOffline(io);
-    groupChat(io)
+    groupChat(io);
 }
 
 module.exports = initSockets;

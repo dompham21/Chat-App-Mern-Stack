@@ -1,9 +1,12 @@
 const { checkExist, removeAndDelete } = require("../configSocket/configSocket");
 const Message  = require("../../models/message.models");
 const GroupChat = require("../../models/chatGroup.models")
+
 let sendMessage = (io) => {
     let clients = {};
     io.on("connection", async (socket) => {
+
+
         let currentId = socket.handshake.query.currentId
         let groupIds;
         groupIds = await GroupChat.find({
@@ -16,7 +19,6 @@ let sendMessage = (io) => {
         })
         socket.on("input-chat-message", async (data) => {
             try {
-                console.log(data);
                 if(data.groupId){
                     let newMessage = new Message.model({
                         senderId: currentId,
@@ -30,8 +32,8 @@ let sendMessage = (io) => {
                     let savedMessage = await newMessage.save();
                     let message = await Message.model.find({ "_id": savedMessage._id })
                         .populate("sender", {_id:1, username:1, address: 1, avatar: 1, phone: 1, "local.email":1, gender: 1})
-                        console.log(message)
-                    if(clients[data.groupId] ){
+                    
+                        if(clients[data.groupId] ){
                         clients[data.groupId].forEach(socketId => {
                             io.sockets.connected[socketId].emit('output-chat-message-group', message)
                         })

@@ -128,14 +128,6 @@ function Register(props) {
                                 </Form.Item>
                                 
                             </Form>
-                            <ul className="login-social-contact">
-                                <li >
-                                    <a style={{background:'#4867aa',color:'white'}}><FaFacebookF/></a>
-                                </li>
-                                <li>
-                                    <a style={{background:'#db4437',color:'white'}}><AiOutlineGooglePlus/></a>
-                                </li>
-                            </ul>
                         </div>
                         <div className="login-footer">
                             <span>Already a member?<Link to ='/login'> Login here</Link></span>

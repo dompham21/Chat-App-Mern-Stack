@@ -1,6 +1,7 @@
 {
-  "name": "client",
-  "version": "0.1.0",
+  "homepage": "https://awesome-app.vercel.app",
+  "name": "chat-app",
+  "version": "1.0.0",
   "private": true,
   "proxy": "http://localhost:5000",
   "dependencies": {

@@ -14,7 +14,12 @@ function Message() {
     const [listAllConversations, setListAllConversations] = useState([])
     const [loading,setLoading] = useState(true)
     const dispatch = useDispatch()
+    // @ts-ignore
     const receiveMessage = useSelector(state => state.message.receiveMessage)
+    // @ts-ignore
+    const approveContactReceived = useSelector(state => state.contact.approveContactReqReceived)
+    // @ts-ignore
+    const notiApproveReqContactReceived = useSelector(state => state.notification.notiApproveReqContactReceived)
 
  
    
@@ -22,6 +27,7 @@ function Message() {
         async function fetchData(){
             try {
                 let response  = await dispatch(getAllConversations())
+                // @ts-ignore
                 setListAllConversations(response.payload.allConversations)
                 let timer = setTimeout(() => {
                     setLoading(false)
@@ -32,7 +38,9 @@ function Message() {
             }
         }
         fetchData();
-    }, [receiveMessage,dispatch])
+    }, [receiveMessage,dispatch, approveContactReceived, notiApproveReqContactReceived])
+
+    
 
     const handleGetKey = async (key) => {
         await dispatch(getKeyTabs(key))

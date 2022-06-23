@@ -10,15 +10,12 @@ const sendMail = require('../config/mailer');
 const  transMail   = require('../lang/vn');
 const { v4: uuidv4 } = require('uuid');
 
-const passport = require('passport');
-const initPassportFacebook = require('../passport/facebook');
-const initPassportGoogle = require('../passport/google');
+
 const salt = bcrypt.genSaltSync(10);
 
 const checkLogin = require('../middlewares/checkLogin');
 
-initPassportFacebook();
-initPassportGoogle();
+
 
 router.post('/signup', async (req,res) => {
     const {name, email, password, confirmPassword} = req.body;
@@ -58,7 +55,7 @@ router.post('/signup', async (req,res) => {
         })
         .catch(async (error) => {
             await User.findByIdAndRemove({_id:user._id}); //remove user when can't send mail
-            console.error(err);
+            console.error(error);
             return res.json({registerSuccess: false, error:"Can't send mail to verify"});
         })
                            
@@ -104,11 +101,5 @@ router.post('/signin', async (req,res) => {
 router.get('/logout',checkLogin,  (req,res) => {
     return res.status(200).json({msg:"Logout successfully"})
 })
-router.get('/auth/facebook', passport.authenticate("facebook", {scope: ["email"]}))
 
-router.get('/auth/facebook/callback', passport.authenticate("facebook"))
-
-router.get('/auth/google', passport.authenticate("google", {scope: ["email"]}))
-
-router.get('/auth/goole/callback', passport.authenticate("google"))
 module.exports = router;

@@ -6,7 +6,6 @@ import ChatCard from './ChatCard/ChatCard';
 import InputSend from './InputSend/InputSend';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMessagesUser, afterPostMessage, getMessagesGroup, afterPostMessageGroup } from '../../../_actions/message_action';
-import ChatVideo from './ChatVideo/ChatVideo';
 import LoadingListMessage from '../../Loading/LoadingListMessage/LoadingListMessage';
 
 function Chats(props) {
@@ -42,7 +41,6 @@ function Chats(props) {
 
     useEffect(() => {
       messagesEnd.current.scrollIntoView({ behavior: "smooth" });
-      console.log('a');
     }, [messages,activeKey])
     
     useEffect(() => {
@@ -172,7 +170,7 @@ function Chats(props) {
                     <span>{username}</span>
                 </div>
                 {
-                  members ? 
+                  members && 
                     <Avatar.Group 
                       maxCount={2} 
                       maxPopoverPlacement={"bottom"} 
@@ -183,7 +181,7 @@ function Chats(props) {
                         return  <Avatar src={i.avatar} />
                       })}
                     </Avatar.Group> 
-                : <ChatVideo id={id} username={username} avatar={avatar}/>
+               
                 }
                 
             </div>

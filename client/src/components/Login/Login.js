@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Form,Row, Col, Input, Button, Checkbox, notification,Alert } from 'antd';
 import './Login.css';
-import {AiOutlineGooglePlus } from 'react-icons/ai';
-import { FaFacebookF } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import { loginUser } from '../../_actions/user_action';
@@ -111,14 +109,7 @@ function Login(props) {
                                 </Form.Item>
                                 
                             </Form>
-                            <ul className="login-social-contact">
-                                <li >
-                                    <a href="/#" style={{background:'#4867aa',color:'white'}}><FaFacebookF/></a>
-                                </li>
-                                <li>
-                                    <Link to="/#" style={{background:'#db4437',color:'white'}}><AiOutlineGooglePlus/></Link>
-                                </li>
-                            </ul>
+                
                         </div>
                         <div className="login-footer">
                             <span>Don't have an account?<Link to ='/register'> Register here</Link></span>

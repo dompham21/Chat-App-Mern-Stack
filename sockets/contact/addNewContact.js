@@ -3,6 +3,7 @@ const { checkExist,removeAndDelete } = require("../configSocket/configSocket");
 let addNewContact = (io) => {
     let clients = {};
     io.on("connection",(socket) => {
+        
         let currentId = socket.handshake.query.currentId
         let currentUser = {
             id: socket.handshake.query.currentId,
