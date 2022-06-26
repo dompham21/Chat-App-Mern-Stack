@@ -1,4 +1,11 @@
-# MERN: Full-stack Chat Application
+<h1 align="center">Chat now: Mern-stack Chat Application</h1>
+<br/>
+
+<p align="center">
+  <a href="https://github.com/dompham21/Imusicvn-SpringBoot-NextJs"><img alt="license" src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
+</p> 
+
+## [View Demo](https://chatnow21.herokuapp.com)
 
 #### Introduction
 
