@@ -24,7 +24,7 @@ This application provides users with the following features
 * A **Private Chat** functionality where users can chat with other users privately.
 * A **Group Chat** functionality where users can chat with group friend users.
 * Real-time updates to the user list, conversation list, and conversation messages.
-* Real-time notication to add friend, remove friend. 
+* Real-time notification to add friend, remove friend. 
 * Search and add friend with other users.
 * Send mail to verify user.
 * Change infomation user and password.
@@ -52,7 +52,7 @@ This application provides users with the following features
 ##### List waiting to accept 
 ![Register](https://res.cloudinary.com/dmriwkfll/image/upload/v1656214480/Screen_Shot_2022-06-26_at_10.33.42_yfp1er.png)
 <br/><br/>
-##### List notication
+##### List notification
 ![Register](https://res.cloudinary.com/dmriwkfll/image/upload/v1656214479/Screen_Shot_2022-06-26_at_10.33.58_s4bqwg.png)
 <br/><br/>
 ##### Infomation user
